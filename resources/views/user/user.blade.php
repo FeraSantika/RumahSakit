@@ -45,12 +45,6 @@
                                 <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="all" style="width: 20px;">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck1">
-                                                    <label class="form-check-label" for="customCheck1">&nbsp;</label>
-                                                </div>
-                                            </th>
                                             <th>Role</th>
                                             <th>Username</th>
                                             <th>Email</th>
@@ -64,13 +58,7 @@
                                         @foreach ($dtUser as $item)
                                             <tr>
                                                 <td>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="customCheck2">
-                                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    {{$item->role->Role_name}}
+                                                    {{ $item->role->Role_name }}
                                                 </td>
                                                 <td>
                                                     {{ $item->User_name }}
@@ -91,14 +79,15 @@
                                                     <a href="{{ route('user.edit', $item->User_id) }}" class="action-icon">
                                                         <i class="mdi mdi-square-edit-outline"></i>
                                                     </a>
+                                                    <a href="javascript:void(0);" class="action-icon"
+                                                        onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->User_id }}').submit();">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </a>
                                                     <form id="delete-form-{{ $item->User_id }}"
-                                                        action="{{ route('user.destroy', $item->User_id) }}" method="POST">
+                                                        action="{{ route('user.destroy', $item->User_id) }}"
+                                                        method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <a href="javascript:void(0);" class="action-icon"
-                                                            onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->User_id }}').submit();">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </a>
                                                     </form>
                                                 </td>
                                             </tr>

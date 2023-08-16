@@ -47,34 +47,35 @@
                                         <tr>
                                             <th>ID Poli</th>
                                             <th>Nama Poli</th>
-                                            <th style="width: 95px;">Action</th>
+                                            <th style="width: 100px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($poli as $item)
-                                        <tr>
-                                            <td>
-                                                {{ $item->id_poli }}
-                                            </td>
+                                            <tr>
+                                                <td>
+                                                    {{ $item->id_poli }}
+                                                </td>
 
-                                            <td>
-                                                {{ $item->nama_poli }}
-                                            </td>
+                                                <td>
+                                                    {{ $item->nama_poli }}
+                                                </td>
 
-                                            <td class="table-action">
-                                                <a href="{{ route('poli.edit', $item->id_poli) }}" class="action-icon">
-                                                    <i class="mdi mdi-square-edit-outline"></i>
-                                                </a>
-                                                <form id="delete-form-{{ $item->id_poli }}" action="{{ route('poli.destroy', $item->id_poli) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
+                                                <td class="table-action">
+                                                    <a href="{{ route('poli.edit', $item->id_poli) }}" class="action-icon">
+                                                        <i class="mdi mdi-square-edit-outline"></i>
+                                                    </a>
                                                     <a href="javascript:void(0);" class="action-icon"
                                                         onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->id_poli }}').submit();">
                                                         <i class="mdi mdi-delete"></i>
                                                     </a>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                                    <form id="delete-form-{{ $item->id_poli }}"
+                                                        action="{{ route('poli.destroy', $item->id_poli) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>

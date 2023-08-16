@@ -45,12 +45,6 @@
                                 <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="all" style="width: 10px;">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck1">
-                                                    <label class="form-check-label" for="customCheck1">&nbsp;</label>
-                                                </div>
-                                            </th>
                                             <th>Name Role</th>
                                             <th>Menu</th>
                                             <th style="width: 95px;">Action</th>
@@ -58,38 +52,33 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($dtRole as $item)
-                                        <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck2">
-                                                    <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                {{ $item->Role_name }}
-                                            </td>
-                                            <td>
-                                                @foreach ($item->rolemenu as $role )
-                                                {{ $role->menu->Menu_name }}
-                                                @if (!$loop->last)
-                                                    ,
-                                                @endif
-                                                @endforeach
-                                            </td>
-                                            <td class="table-action">
-                                                <a href="{{ route('role.edit', $item->Role_id) }}" class="action-icon">
-                                                    <i class="mdi mdi-square-edit-outline"></i>
-                                                </a>
-                                                <form id="delete-form-{{ $item->Role_id }}" action="{{ route('role.destroy', $item->Role_id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
+                                            <tr>
+                                                <td>
+                                                    {{ $item->Role_name }}
+                                                </td>
+                                                <td>
+                                                    @foreach ($item->rolemenu as $role)
+                                                        {{ $role->menu->Menu_name }}
+                                                        @if (!$loop->last)
+                                                            ,
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td class="table-action">
+                                                    <a href="{{ route('role.edit', $item->Role_id) }}" class="action-icon">
+                                                        <i class="mdi mdi-square-edit-outline"></i>
+                                                    </a>
                                                     <a href="javascript:void(0);" class="action-icon"
                                                         onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->Role_id }}').submit();">
                                                         <i class="mdi mdi-delete"></i>
                                                     </a>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                                    <form id="delete-form-{{ $item->Role_id }}"
+                                                        action="{{ route('role.destroy', $item->Role_id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>

@@ -28,8 +28,8 @@
                         <div class="card-body">
                             <div class="row mb-2">
                                 <div class="col-sm-2">
-                                    <a href="{{ route('pasien.create') }}" class="btn btn-danger mb-2"><i
-                                            class="mdi mdi-plus-circle me-2"></i> Add Pasien</a>
+                                    <a href="{{ route('daftar.online.create') }}" class="btn btn-danger mb-2"><i
+                                            class="mdi mdi-plus-circle me-2"></i> Add Pendaftaran</a>
                                 </div>
                                 <div class="col-sm-5"></div>
                                 <div class="col-sm-5">
@@ -48,11 +48,10 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">No.</th>
-                                                <th scope="col">Kode Pasien</th>
-                                                <th scope="col">NIK</th>
+                                                <th scope="col">Kode Pendaftaran</th>
                                                 <th scope="col">Nama Pasien</th>
-                                                <th scope="col">Tempat lahir</th>
-                                                <th scope="col">Tanggal Lahir</th>
+                                                <th scope="col">Poli</th>
+                                                <th scope="col">Keluhan</th>
                                                 <th scope="col" class="text-end">Action</th>
                                             </tr>
                                         </thead>
@@ -60,7 +59,7 @@
                                             @php
                                                 $rowNumber = 1;
                                             @endphp
-                                            @foreach ($dtpasien as $item)
+                                            {{-- @foreach ($dtpasien as $item)
                                                 <tr>
                                                     <td>{{ $rowNumber }}</td>
                                                     <td>{{ $item->pasien_kode }}</td>
@@ -99,21 +98,21 @@
                                                 @php
                                                     $rowNumber++;
                                                 @endphp
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
-                    <div class="mt-3 text-center">
+                    {{-- <div class="mt-3 text-center">
                         <div class="pagination">
                             {{ $dtpasien->links('pagination::bootstrap-4') }}
                         </div>
                         <p class="mt-2">
                             Menampilkan {{ $dtpasien->count() }} data dari {{ $dtpasien->total() }} total data.
                         </p>
-                    </div>
+                    </div> --}}
                 </div> <!-- end col -->
             </div>
             <!-- end row -->
@@ -122,7 +121,7 @@
 
     </div>
 @endsection
-@section('script')
+{{-- @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
             $("#search-btn").click(function() {
@@ -181,4 +180,4 @@
             }
         });
     </script>
-@endsection
+@endsection --}}

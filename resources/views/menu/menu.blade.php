@@ -42,32 +42,20 @@
                             </div>
 
                             <div class="table-responsive">
-                                <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
+                                <table class="table table-centered w-100 table-nowrap mb-0" id="products-datatable">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="all" style="width: 20px;">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck1">
-                                                    <label class="form-check-label" for="customCheck1">&nbsp;</label>
-                                                </div>
-                                            </th>
-                                            <th>Name</th>
-                                            <th>Link</th>
-                                            <th>Category</th>
-                                            <th>Menu sub</th>
-                                            <th>Menu Position</th>
-                                            <th style="width: 85px;">Action</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Link</th>
+                                            <th scope="col">Category</th>
+                                            <th scope="col">Menu sub</th>
+                                            <th scope="col">Menu Position</th>
+                                            <th scope="col" style="width: 85px;" class="text-end">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($dtMenu as $item)
                                             <tr>
-                                                <td>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="customCheck2">
-                                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                                    </div>
-                                                </td>
                                                 <td>
                                                     {{ $item->Menu_name }}
                                                 </td>
@@ -80,21 +68,21 @@
                                                 <td>
                                                     {{ $item->submenu_name }}
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     {{ $item->Menu_position }}
                                                 </td>
-                                                <td class="table-action">
+                                                <td class="text-end">
                                                     <a href="{{ route('menu.edit', $item->Menu_id) }}" class="action-icon">
                                                         <i class="mdi mdi-square-edit-outline"></i>
                                                     </a>
+                                                    <a href="javascript:void(0);" class="action-icon"
+                                                            onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->Menu_id }}').submit();">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </a>
                                                     <form id="delete-form-{{ $item->Menu_id }}"
                                                         action="{{ route('menu.destroy', $item->Menu_id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <a href="javascript:void(0);" class="action-icon"
-                                                            onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->Menu_id }}').submit();">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </a>
                                                     </form>
 
 

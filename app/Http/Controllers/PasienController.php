@@ -9,7 +9,7 @@ class PasienController extends Controller
 {
     public function index()
     {
-        $dtpasien =  DataPasien::all();
+        $dtpasien =  DataPasien::paginate(10);
         return view('pasien.pasien', compact('dtpasien'));
     }
 
@@ -38,13 +38,19 @@ class PasienController extends Controller
 
     public function store(Request $request)
     {
+        $existingPasien = DataPasien::where('pasien_NIK', $request->NIK)->first();
+
+        if ($existingPasien) {
+            return back()->withInput()->with('error', 'NIK sudah terdaftar. Mohon gunakan NIK lain.');
+        }
+
         $pasien = DataPasien::create([
             'pasien_nama' => $request->nama,
             'pasien_NIK' => $request->NIK,
             'pasien_kode' => $request->kode,
             'pasien_tempat_lahir' => $request->tempat,
             'pasien_tgl_lahir' => $request->tgl,
-            'pasien_gender' => $request->gender,
+            'pasien_jenis_kelamin' => $request->gender,
             'pasien_alamat' => $request->alamat,
             'pasien_agama' => $request->agama,
             'pasien_status' => $request->perkawinan,
@@ -86,10 +92,10 @@ class PasienController extends Controller
             'pasien_NIK' => $request->NIK,
             'pasien_tempat_lahir' => $request->tempat,
             'pasien_tgl_lahir' => $request->tgl,
-            'pasien_gender' => $request->gender,
+            'pasien_jenis_kelamin' => $request->gender,
             'pasien_alamat' => $request->alamat,
             'pasien_agama' => $request->agama,
-            'pasien_status' => $request->status,
+            'pasien_status' => $request->perkawinan,
             'pasien_pekerjaan' => $request->pekerjaan,
             'pasien_kewarganegaraan' => $request->kewarganegaraan,
         ];
@@ -125,10 +131,16 @@ class PasienController extends Controller
             ->orWhere('pasien_NIK', 'LIKE', '%' . $request->get('cari') . '%')
             ->orWhere('pasien_tempat_lahir', 'LIKE', '%' . $request->get('cari') . '%')
             ->orWhere('pasien_tgl_lahir', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_gender', 'LIKE', '%' . $request->get('cari') . '%')
+            ->orWhere('pasien_jenis_kelamin', 'LIKE', '%' . $request->get('cari') . '%')
             ->orWhere('pasien_alamat', 'LIKE', '%' . $request->get('cari') . '%')
             ->get();
 
         return response()->json($data);
+    }
+
+    public function detail($id)
+    {
+        $dtpasien =  DataPasien::where('pasien_id', $id)->first();
+        return view('pasien.detailpasien', compact('dtpasien'));
     }
 }

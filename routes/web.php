@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\DaftaronlineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,7 @@ Route::get('/admin/pasien/edit/{id}', [PasienController::class, 'edit'])->name('
 Route::post('/admin/pasien/update/{id}', [PasienController::class, 'update'])->name('pasien.update');
 Route::delete('/admin/pasien/destroy/{id}', [PasienController::class, 'destroy'])->name('pasien.destroy');
 Route::get('/search/pasien', [PasienController::class, 'search'])->name('search.pasien');
+Route::get('/admin/pasien/detail/{id}', [PasienController::class, 'detail'])->name('detail.pasien');
 
 Route::get('/admin/poli', [PoliController::class, 'index'])->name('poli');
 Route::get('/admin/poli/create', [PoliController::class, 'create'])->name('poli.create');
@@ -78,6 +80,9 @@ Route::get('/admin/menu/edit/{id}', [MenuController::class, 'edit'])->name('menu
 Route::post('/admin/menu/update/{id}', [MenuController::class, 'update'])->name('menu.update');
 Route::delete('/admin/menu/destroy/{id}', [MenuController::class, 'destroy'])->name('menu.destroy');
 
+Route::get('/admin/daftar-online', [DaftaronlineController::class, 'index'])->name('daftar.online');
+Route::get('/admin/daftar-online/create', [DaftaronlineController::class, 'create'])->name('daftar.online.create');
+Route::get('/autocomplete_pasien', [DaftaronlineController::class, 'autocomplete'])->name('autocomplete_pasien');
 
 
 

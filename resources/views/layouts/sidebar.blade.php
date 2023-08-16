@@ -98,13 +98,19 @@
                 </div>
             </li>
 
-
-
             <li class="side-nav-item">
                 <a href="{{route('poli')}}"
                     class="side-nav-link {{ Route::current()->getName() == 'poli' ? 'active' : '' }}">
                     <i class="uil-label"></i>
                     <span> Poli </span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{route('daftar.online')}}"
+                    class="side-nav-link">
+                    <i class="uil-medical-square"></i>
+                    <span> Daftar Online </span>
                 </a>
             </li>
 
