@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataObat;
 use App\Models\DataPasien;
 use Illuminate\Http\Request;
 
@@ -24,14 +25,9 @@ class PasienController extends Controller
         } else {
             $lastId = 0;
         }
-
         $nextId = $lastId + 1;
-
         $paddedId = str_pad($nextId, $length, '0', STR_PAD_LEFT);
         $pasienCode = $prefix . $paddedId;
-
-
-
         return view('pasien.create', compact('dtpasien', 'lastpasien', 'pasienCode'));
     }
 
@@ -112,14 +108,14 @@ class PasienController extends Controller
         return redirect()->route('pasien');
     }
 
-    // public function autocomplete(Request $request)
-    // {
-    //     $data = DataBarang::select("nama_barang as value", "kode_barang")
-    //         ->where('nama_barang', 'LIKE', '%' . $request->get('cari') . '%')
-    //         ->get();
+    public function autocomplete(Request $request)
+    {
+        $data = DataObat::select("nama_obat as label", "kode_kategori as value", "harga_jual as label1", "diskon_obat as label2", "stok_obat as label3")
+            ->where('nama_obat', 'LIKE', '%' . $request->get('cari') . '%')
+            ->get();
 
-    //     return response()->json($data);
-    // }
+        return response()->json($data);
+    }
 
     public function search(Request $request)
     {

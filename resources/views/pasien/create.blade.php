@@ -91,7 +91,7 @@
 
                     <div class="row">
                         <div class="mt-3 text-center">
-                            <a class="btn btn-success" href="javascript:void(0);" onclick="history.back();">Kembali</a>
+                            <a class="btn btn-danger" href="javascript:void(0);" onclick="window.history.back();">Kembali</a>
                             <button class="btn btn-primary" id="submit" type="submit">Tambah</button>
                         </div>
                     </div>
@@ -137,6 +137,7 @@
                     "_token": token
                 },
                 success: function(response) {
+                    console.log(NIK);
                     if (response.error) {
                         swal.fire({
                             icon: 'error',
@@ -175,8 +176,6 @@
                             });
                         }
                     }
-                    console.log(response.data);
-                    console.log(newpasienCode);
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr.responseText);

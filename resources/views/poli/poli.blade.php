@@ -45,14 +45,19 @@
                                 <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
                                     <thead class="table-light">
                                         <tr>
+                                            <th>No.</th>
                                             <th>ID Poli</th>
                                             <th>Nama Poli</th>
                                             <th style="width: 100px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $rowNumber = 1;
+                                        @endphp
                                         @foreach ($poli as $item)
                                             <tr>
+                                                <td>{{ $rowNumber }}</td>
                                                 <td>
                                                     {{ $item->id_poli }}
                                                 </td>
@@ -76,6 +81,9 @@
                                                     </form>
                                                 </td>
                                             </tr>
+                                            @php
+                                                $rowNumber++;
+                                            @endphp
                                         @endforeach
                                     </tbody>
                                 </table>

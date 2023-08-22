@@ -12,11 +12,10 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Master User</a></li>
-                                <li class="breadcrumb-item active">User</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Akses Poli</a></li>
                             </ol>
                         </div>
-                        <h4 class="page-title">User</h4>
+                        <h4 class="page-title">Akses Poli</h4>
                     </div>
                 </div>
             </div>
@@ -28,8 +27,8 @@
                         <div class="card-body">
                             <div class="row mb-2">
                                 <div class="col-sm-5">
-                                    <a href="{{ route('user.create') }}" class="btn btn-danger mb-2"><i
-                                            class="mdi mdi-plus-circle me-2"></i> Add User</a>
+                                    <a href="{{ route('akses-poli.create') }}" class="btn btn-danger mb-2"><i
+                                            class="mdi mdi-plus-circle me-2"></i> Add Akses Poli</a>
                                 </div>
                                 <div class="col-sm-7">
                                     <div class="text-sm-end">
@@ -46,52 +45,35 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>No.</th>
-                                            <th>Role</th>
                                             <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Gender</th>
-                                            <th>User Token</th>
-                                            <th>Photo</th>
-                                            <th style="width: 85px;">Action</th>
+                                            <th>Poli</th>
+                                            <th style="width: 95px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             $rowNumber = 1;
                                         @endphp
-                                        @foreach ($dtUser as $item)
+                                        @foreach ($dtaksespoli as $item)
                                             <tr>
+                                                <td>{{ $rowNumber }}</td>
                                                 <td>
-                                                    {{ $rowNumber }}
+                                                    {{ $item->user->User_name }}
                                                 </td>
                                                 <td>
-                                                    {{ $item->role->Role_name }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->User_name }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->User_email }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->User_gender }}
-                                                </td>
-                                                <td>
-                                                    {{ $item->User_token }}
-                                                </td>
-                                                <td>
-                                                    <img src="{{ asset($item->User_photo) }}" width="100px">
+                                                    {{ $item->poli->nama_poli }}
                                                 </td>
                                                 <td class="table-action">
-                                                    <a href="{{ route('user.edit', $item->User_id) }}" class="action-icon">
+                                                    <a href="{{ route('akses-poli.edit', $item->id_akses_poli) }}"
+                                                        class="action-icon">
                                                         <i class="mdi mdi-square-edit-outline"></i>
                                                     </a>
                                                     <a href="javascript:void(0);" class="action-icon"
-                                                        onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->User_id }}').submit();">
+                                                        onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->id_akses_poli }}').submit();">
                                                         <i class="mdi mdi-delete"></i>
                                                     </a>
-                                                    <form id="delete-form-{{ $item->User_id }}"
-                                                        action="{{ route('user.destroy', $item->User_id) }}"
+                                                    <form id="delete-form-{{ $item->id_akses_poli }}"
+                                                        action="{{ route('akses-poli.destroy', $item->id_akses_poli) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')

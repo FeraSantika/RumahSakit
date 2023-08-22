@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\DataPoli;
+use App\Models\DataUser;
+use App\Models\DataPasien;
+use App\Models\DataAksesPoli;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PendaftaranPasien extends Model
 {
@@ -14,13 +18,21 @@ class PendaftaranPasien extends Model
         'kode_pendaftaran',
         'pasien_id',
         'id_poli',
+        'keluhan',
     ];
 
-    public function pasien(){
-        return $this->hasMany(DataPasien::class, 'pasien_id', 'pasien_id');
+    public function pasien()
+    {
+        return $this->belongsTo(DataPasien::class, 'pasien_id', 'pasien_id');
     }
 
-    public function poli(){
-        return $this->hasMany(DataPoli::class, 'id_poli', 'id_poli');
+    public function poli()
+    {
+        return $this->belongsTo(DataPoli::class, 'id_poli', 'id_poli');
+    }
+
+    public function aksespoli()
+    {
+        return $this->belongsTo(DataAksesPoli::class, 'id_poli', 'id_poli');
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('data_pasien', function (Blueprint $table) {
             $table->bigIncrements('pasien_id');
             $table->char('pasien_kode');
-            $table->integer('pasien_NIK');
+            $table->char('pasien_NIK');
             $table->char('pasien_nama');
             $table->char('pasien_tempat_lahir');
             $table->date('pasien_tgl_lahir');

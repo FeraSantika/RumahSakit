@@ -101,16 +101,48 @@
             <li class="side-nav-item">
                 <a href="{{route('poli')}}"
                     class="side-nav-link {{ Route::current()->getName() == 'poli' ? 'active' : '' }}">
-                    <i class="uil-label"></i>
+                    <i class="ri-file-add-line"></i>
                     <span> Poli </span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{route('akses-poli')}}"
+                    class="side-nav-link">
+                    <i class="ri-file-user-line"></i>
+                    <span> Akses Poli </span>
                 </a>
             </li>
 
             <li class="side-nav-item">
                 <a href="{{route('daftar.online')}}"
                     class="side-nav-link">
-                    <i class="uil-medical-square"></i>
+                    <i class="ri-calendar-event-line"></i>
                     <span> Daftar Online </span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{route('list-daftar-pasien')}}"
+                    class="side-nav-link">
+                    <i class="uil-clipboard-notes"></i>
+                    <span> List Daftar Pasien</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{route('kategori')}}"
+                    class="side-nav-link">
+                    <i class=" uil-tablets"></i>
+                    <span>Kategori Obat</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{route('obat')}}"
+                    class="side-nav-link">
+                    <i class=" uil-capsule"></i>
+                    <span> Obat</span>
                 </a>
             </li>
 

@@ -45,6 +45,7 @@
                                 <table class="table table-centered w-100 table-nowrap mb-0" id="products-datatable">
                                     <thead class="table-light">
                                         <tr>
+                                            <th>No.</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Link</th>
                                             <th scope="col">Category</th>
@@ -54,8 +55,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $rowNumber = 1;
+                                        @endphp
                                         @foreach ($dtMenu as $item)
                                             <tr>
+                                                <td>
+                                                    {{ $rowNumber }}
+                                                </td>
                                                 <td>
                                                     {{ $item->Menu_name }}
                                                 </td>
@@ -76,18 +83,20 @@
                                                         <i class="mdi mdi-square-edit-outline"></i>
                                                     </a>
                                                     <a href="javascript:void(0);" class="action-icon"
-                                                            onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->Menu_id }}').submit();">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </a>
+                                                        onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->Menu_id }}').submit();">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </a>
                                                     <form id="delete-form-{{ $item->Menu_id }}"
-                                                        action="{{ route('menu.destroy', $item->Menu_id) }}" method="POST">
+                                                        action="{{ route('menu.destroy', $item->Menu_id) }}"
+                                                        method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                     </form>
-
-
                                                 </td>
                                             </tr>
+                                            @php
+                                                $rowNumber++;
+                                            @endphp
                                         @endforeach
                                     </tbody>
                                 </table>

@@ -41,4 +41,8 @@ class DataUser extends Authenticatable
         return $this->hasMany(Transaksi_barang_keluar::class, 'kode_kasir', 'User_id');
     }
 
+    public function poliakses(){
+        return $this->belongsTo(DataAksesPoli::class,'id_user', 'User_id' );
+    }
+
 }

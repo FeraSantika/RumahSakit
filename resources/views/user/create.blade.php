@@ -49,7 +49,7 @@
                         <div class="col-md-10 {{ $errors->has('role') ? 'has-error' : '' }}">
                             <select name="role" id="role" class="form-control">
                                 @foreach ($dtRole as $item)
-                                <option value="{{$item->Role_id}}">{{$item->Role_name}}</option>
+                                    <option value="{{ $item->Role_id }}">{{ $item->Role_name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -71,8 +71,11 @@
                         </div>
                     </div>
 
-                    <div class="mt-3 text-center">
-                        <button class="btn btn-primary" type="submit">Tambah</button>
+                    <div class="row">
+                        <div class="mt-3 text-center">
+                            <a class="btn btn-danger" href="javascript:void(0);" onclick="history.back();">Kembali</a>
+                            <button class="btn btn-primary" id="submit" type="submit">Tambah</button>
+                        </div>
                     </div>
                 </form>
             </div>

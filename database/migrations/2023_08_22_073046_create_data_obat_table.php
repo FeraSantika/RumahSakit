@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pendaftaran_pasien', function (Blueprint $table) {
-            $table->bigIncrements('id_pendaftaran');
-            $table->char('kode_pendaftaran');
-            $table->integer('pasien_id');
-            $table->integer('id_poli');
-            $table->text('keluhan');
-            $table->date('tgl_daftar')->nullable();
+        Schema::create('data_obat', function (Blueprint $table) {
+            $table->bigIncrements('kode_obat');
+            $table->integer('kode_kategori');
+            $table->string('nama_obat');
+            $table->integer('harga_jual');
+            $table->integer('diskon_obat');
+            $table->integer('stok_obat');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pendaftaran_pasien');
+        Schema::dropIfExists('data_obat');
     }
 };

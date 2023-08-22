@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ObatController;
 use App\Http\Controllers\PoliController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -10,10 +11,13 @@ use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\BaseUiController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\AksespoliController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DaftaronlineController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\DaftaronlineController;
+use App\Http\Controllers\ListdaftarpasienController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +69,7 @@ Route::post('/admin/pasien/update/{id}', [PasienController::class, 'update'])->n
 Route::delete('/admin/pasien/destroy/{id}', [PasienController::class, 'destroy'])->name('pasien.destroy');
 Route::get('/search/pasien', [PasienController::class, 'search'])->name('search.pasien');
 Route::get('/admin/pasien/detail/{id}', [PasienController::class, 'detail'])->name('detail.pasien');
+Route::get('/autocomplete_obat', [PasienController::class, 'autocomplete'])->name('autocomplete_obat');
 
 Route::get('/admin/poli', [PoliController::class, 'index'])->name('poli');
 Route::get('/admin/poli/create', [PoliController::class, 'create'])->name('poli.create');
@@ -82,8 +87,31 @@ Route::delete('/admin/menu/destroy/{id}', [MenuController::class, 'destroy'])->n
 
 Route::get('/admin/daftar-online', [DaftaronlineController::class, 'index'])->name('daftar.online');
 Route::get('/admin/daftar-online/create', [DaftaronlineController::class, 'create'])->name('daftar.online.create');
+Route::post('/admin/daftar-online/store', [DaftaronlineController::class, 'store'])->name('daftar.online.store');
+Route::get('/admin/daftar-online/edit/{id}', [DaftaronlineController::class, 'edit'])->name('daftar.online.edit');
+Route::post('/admin/daftar-online/update/{id}', [DaftaronlineController::class, 'update'])->name('daftar.online.update');
+Route::delete('/admin/daftar-online/destroy/{id}', [DaftaronlineController::class, 'destroy'])->name('daftar.online.destroy');
 Route::get('/autocomplete_pasien', [DaftaronlineController::class, 'autocomplete'])->name('autocomplete_pasien');
 
+Route::get('/admin/akses-poli', [AksespoliController::class, 'index'])->name('akses-poli');
+Route::get('/admin/akses-poli/create', [AksespoliController::class, 'create'])->name('akses-poli.create');
+Route::post('/admin/akses-poli/store', [AksespoliController::class, 'store'])->name('akses-poli.store');
+Route::get('/admin/akses-poli/edit/{id}', [AksespoliController::class, 'edit'])->name('akses-poli.edit');
+Route::post('/admin/akses-poli/update/{id}', [AksespoliController::class, 'update'])->name('akses-poli.update');
+Route::delete('/admin/akses-poli/destroy/{id}', [AksespoliController::class, 'destroy'])->name('akses-poli.destroy');
 
+Route::get('/admin/list-daftar-pasien', [ListdaftarpasienController::class, 'index'])->name('list-daftar-pasien');
 
+Route::get('/admin/obat', [ObatController::class, 'index'])->name('obat');
+Route::get('/admin/obat/create', [ObatController::class, 'create'])->name('obat.create');
+Route::post('/admin/obat/store', [ObatController::class, 'store'])->name('obat.store');
+Route::get('/admin/obat/edit/{id}', [ObatController::class, 'edit'])->name('obat.edit');
+Route::post('/admin/obat/update/{id}', [ObatController::class, 'update'])->name('obat.update');
+Route::delete('/admin/obat/destroy/{id}', [ObatController::class, 'destroy'])->name('obat.destroy');
 
+Route::get('/admin/kategori', [KategoriController::class, 'index'])->name('kategori');
+Route::get('/admin/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
+Route::post('/admin/kategori/store', [KategoriController::class, 'store'])->name('kategori.store');
+Route::get('/admin/kategori/edit/{id}', [KategoriController::class, 'edit'])->name('kategori.edit');
+Route::post('/admin/kategori/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+Route::delete('/admin/kategori/destroy/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');

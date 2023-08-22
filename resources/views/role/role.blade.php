@@ -45,14 +45,21 @@
                                 <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
                                     <thead class="table-light">
                                         <tr>
+                                            <th>No.</th>
                                             <th>Name Role</th>
                                             <th>Menu</th>
                                             <th style="width: 95px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $rowNumber = 1;
+                                        @endphp
                                         @foreach ($dtRole as $item)
                                             <tr>
+                                                <td>
+                                                    {{ $rowNumber }}
+                                                </td>
                                                 <td>
                                                     {{ $item->Role_name }}
                                                 </td>
@@ -79,6 +86,9 @@
                                                     </form>
                                                 </td>
                                             </tr>
+                                            @php
+                                                $rowNumber++;
+                                            @endphp
                                         @endforeach
                                     </tbody>
                                 </table>

@@ -12,10 +12,10 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pendaftaran Pasien</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">List Daftar Pasien</a></li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Pendaftaran Pasien</h4>
+                        <h4 class="page-title">List Daftar Pasien</h4>
                     </div>
                 </div>
             </div>
@@ -26,19 +26,19 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-2">
-                                <div class="col-sm-2">
+                                {{-- <div class="col-sm-2">
                                     <a href="{{ route('daftar.online.create') }}" class="btn btn-danger mb-2"><i
                                             class="mdi mdi-plus-circle me-2"></i> Add Pendaftaran</a>
-                                </div>
+                                </div> --}}
                                 <div class="col-sm-5"></div>
-                                <div class="col-sm-5">
+                                {{-- <div class="col-sm-5">
                                     <div class="input-group">
                                         <input type="text" class="typeahead form-control" name="search" id="search"
                                             placeholder="Cari Pasien">
                                         <button class="input-group-text btn btn-primary btn-sm" type="button"
                                             id="search-btn"><i class="uil-search-alt"></i></button>
                                     </div>
-                                </div><!-- end col-->
+                                </div><!-- end col--> --}}
                             </div>
 
                             <div class="card-body pt-0">
@@ -58,7 +58,7 @@
                                             @php
                                                 $rowNumber = 1;
                                             @endphp
-                                            @foreach ($dtpendaftaran as $item)
+                                            @foreach ($dtpendaftar as $item)
                                                 <tr>
                                                     <td>{{ $rowNumber }}</td>
                                                     <td>{{ $item->kode_pendaftaran }}</td>
@@ -74,21 +74,10 @@
                                                     </td>
                                                     <td>{{ $item->keluhan }}</td>
                                                     <td class="text-end">
-                                                        <a href="{{ route('daftar.online.edit', $item->id_pendaftaran) }}"
-                                                            class="action-icon">
-                                                            <i class="mdi mdi-square-edit-outline"></i>
-                                                        </a>
-                                                        <a href="{{ route('daftar.online.destroy', $item->id_pendaftaran) }}"
-                                                            class="action-icon"
-                                                            onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->id_pendaftaran }}').submit();">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </a>
-                                                        <form id="delete-form-{{ $item->id_pendaftaran }}"
-                                                            action="{{ route('daftar.online.destroy', $item->id_pendaftaran) }}"
-                                                            method="POST" style="display: none;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
+                                                        <a href="{{ route('detail.pasien', $item->pasien_id) }}"
+                                                            type="button" class="btn btn-primary"
+                                                            data-transaksi-id=""
+                                                            onclick="">Lihat Detail</a>
                                                     </td>
                                                 </tr>
                                                 @php
