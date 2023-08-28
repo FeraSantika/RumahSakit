@@ -13,7 +13,7 @@ class DaftaronlineController extends Controller
 {
     public function index()
     {
-        $dtpendaftaran = PendaftaranPasien::with('pasien', 'poli')->get();
+        $dtpendaftaran = PendaftaranPasien::with('pasien', 'poli')->paginate(10);
         return view('daftar-online.daftar', compact('dtpendaftaran'));
     }
 
@@ -57,11 +57,14 @@ class DaftaronlineController extends Controller
 
     public function store(Request $request)
     {
+        $status_pasien = $request->input('status', 'Umum');
+
         $daftar = PendaftaranPasien::create([
             'kode_pendaftaran' => $request->kode,
             'pasien_id' => $request->pasien_id,
             'id_poli' => $request->poli,
             'keluhan' => $request->keluhan,
+            'status_pasien' => $status_pasien,
         ]);
 
         $prefix = 'DFTR';
@@ -99,6 +102,7 @@ class DaftaronlineController extends Controller
         $dtpendaftaran = [
             'id_poli' => $request->poli,
             'keluhan' => $request->keluhan,
+            'status_pasien' => $request->status_pasien
         ];
 
         PendaftaranPasien::where('id_pendaftaran', $id)->update($dtpendaftaran);
@@ -108,8 +112,26 @@ class DaftaronlineController extends Controller
 
     public function destroy($id)
     {
-        $dt = PendaftaranPasien::where('id_pendaftaran', $id);
-        $dt->delete();
+        PendaftaranPasien::where('id_pendaftaran', $id)->delete();
         return redirect()->route('daftar.online');
+    }
+
+    public function search(Request $request)
+    {
+        $searchTerm = $request->get('cari');
+
+        $data = PendaftaranPasien::with('pasien', 'poli')
+            ->where(function ($query) use ($searchTerm) {
+                $query->whereHas('pasien', function ($subquery) use ($searchTerm) {
+                    $subquery->where('pasien_nama', 'LIKE', '%' . $searchTerm . '%');
+                })
+                    ->orWhere('kode_pendaftaran', 'LIKE', '%' . $searchTerm . '%')
+                    ->orWhereHas('poli', function ($subquery) use ($searchTerm) {
+                        $subquery->where('nama_poli', 'LIKE', '%' . $searchTerm . '%');
+                    });
+            })
+            ->get();
+
+        return response()->json($data);
     }
 }

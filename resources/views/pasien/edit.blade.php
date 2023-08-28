@@ -5,8 +5,8 @@
         <div class="content bg-white border">
             <div class="m-5">
 
-                <form action="{{ route('pasien.update', $dtpasien->pasien_id) }}" method="POST" class="mb-3"
-                    id="pasien-form" enctype="multipart/form-data">
+                <form action="{{ route('pasien.update', $dtpasien->pasien_id) }}" method="POST" class="mb-3" id="pasien-form"
+                    enctype="multipart/form-data">
                     @csrf
 
                     <div class="row mb-3">
@@ -42,16 +42,30 @@
                                     value="{{ $dtpasien->pasien_tgl_lahir ?? '' }}">
                             </div>
                             <div class="mb-3">
-                                <label for="gender" class="form-label-md-6">Jenis Kelamin</label>
+                                <label class="form-label-md-6">Jenis Kelamin</label>
                                 <div class="{{ $errors->has('gender') ? 'has-error' : '' }}">
-                                    <select name="gender" id="gender" class="form-select">
-                                        <option value="Laki-laki"
-                                            {{ $dtpasien->pasien_jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Male
-                                        </option>
-                                        <option value="Perempuan"
-                                            {{ $dtpasien->pasien_jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Female
-                                        </option>
-                                    </select>
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                    id="genderLaki" value="Laki-laki"
+                                                    {{ $dtpasien->pasien_jenis_kelamin == 'Laki-laki' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="genderLaki">
+                                                    Laki-laki
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                    id="genderPerempuan" value="Perempuan"
+                                                    {{ $dtpasien->pasien_jenis_kelamin == 'Perempuan' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="genderPerempuan">
+                                                    Perempuan
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -83,17 +97,28 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="perkawinan" class="form-label-md-6">Status Perkawinan</label>
-                                <div class="{{ $errors->has('perkawinan') ? 'has-error' : '' }}">
-                                    <select name="perkawinan" class="form-select" id="perkawinan">
-                                        <option value="Belum Kawin"
-                                            {{ $dtpasien->pasien_status == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin
-                                        </option>
-                                        <option value="Kawin"
-                                            {{ $dtpasien->pasien_status == 'Kawin' ? 'selected' : '' }}>Kawin
-                                        </option>
-                                    </select>
+                            <div class="row mb-3">
+                                <label class="form-label-md-6">Status Perkawinan</label>
+                                <div class="row mt-2">
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="perkawinan"
+                                                id="perkawinan" value="Belum Kawin"
+                                                {{ $dtpasien->pasien_status == 'Belum Kawin' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="perkawinan">
+                                                Belum Kawin
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="perkawinan" id="perkawinan"
+                                                value="Kawin" {{ $dtpasien->pasien_status == 'Kawin' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="perkawin">
+                                                Kawin
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3">

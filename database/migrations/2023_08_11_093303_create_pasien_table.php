@@ -18,7 +18,7 @@ return new class extends Migration
             $table->char('pasien_nama');
             $table->char('pasien_tempat_lahir');
             $table->date('pasien_tgl_lahir');
-            $table->enum('pasien_jenis_kelamin', ['Laki-laki', 'Perempuan']);
+            $table->char('pasien_jenis_kelamin');
             $table->char('pasien_alamat');
             $table->enum('pasien_agama', ['Islam', 'Kristen protestan', 'Kristen katolik', 'Hindu', 'Budha', 'Khonghucu']);
             $table->enum('pasien_status', ['Belum Kawin', 'Kawin']);

@@ -30,12 +30,15 @@
                                     <a href="{{ route('kategori.create') }}" class="btn btn-danger mb-2"><i
                                             class="mdi mdi-plus-circle me-2"></i> Add Kategori</a>
                                 </div>
-                                <div class="col-sm-7">
+                                <div class="col-md-2"></div>
+                                <div class="col-sm-5">
                                     <div class="text-sm-end">
-                                        {{-- <button type="button" class="btn btn-success mb-2 me-1"><i
-                                            class="mdi mdi-cog-outline"></i></button>
-                                    <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                                    <button type="button" class="btn btn-light mb-2">Export</button> --}}
+                                        <div class="input-group">
+                                            <input type="text" class="typeahead form-control" name="search"
+                                                id="search" placeholder="Cari Tindakan">
+                                            <button class="input-group-text btn btn-primary btn-sm" type="button"
+                                                id="search-btn"><i class="uil-search-alt"></i></button>
+                                        </div>
                                     </div>
                                 </div><!-- end col-->
                             </div>
@@ -49,7 +52,7 @@
                                             <th style="width: 95px;">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="data-kategori">
                                         @php
                                             $rowNumber = 1;
                                         @endphp
@@ -85,9 +88,73 @@
                             </div>
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
+                    <div class="mt-3 text-center">
+                        <div class="pagination">
+                            {{ $dtkategori->links('pagination::bootstrap-4') }}
+                        </div>
+                        <p class="mt-2">
+                            Menampilkan {{ $dtkategori->count() }} data dari {{ $dtkategori->total() }} total data.
+                        </p>
+                    </div>
                 </div> <!-- end col -->
             </div>
             <!-- end row -->
         </div> <!-- container -->
     </div>
+@endsection
+@section('script')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#search-btn").click(function() {
+                var searchTerm = $("#search").val();
+                performSearch(searchTerm);
+            });
+
+            function performSearch(searchTerm) {
+                $.ajax({
+                    url: "{{ route('search.kategori') }}",
+                    type: 'GET',
+                    dataType: "json",
+                    data: {
+                        cari: searchTerm
+                    },
+                    success: function(data) {
+                        displaySearchResults(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+
+            function displaySearchResults(data) {
+                var resultList = "";
+                var rowNumber = 1;
+
+                if (data.length > 0) {
+                    data.forEach(function(item) {
+                        resultList += "<tr>" +
+                            "<td>" + rowNumber + "</td>" +
+                            "<td>" + item.nama_kategori + "</td>" +
+                            "<td><a href='tindakan/edit/" + item.kode_kategori + "' class='action-icon'>" +
+                            "<i class='mdi mdi-square-edit-outline'></i></a>" +
+                            "<a href='tindakan/destroy/" + item.kode_kategori + "' class='action-icon'>" +
+                            "<i class='mdi mdi-delete'></i></a></td>" +
+                            "</tr>";
+
+                        rowNumber++;
+                    });
+                } else {
+                    resultList = "<tr><td colspan='12'>Tidak ada hasil ditemukan.</td></tr>";
+                }
+
+                $("#data-kategori").html(resultList);
+            }
+
+            function resetSearchResults() {
+                var searchTerm = $("#search").val();
+                $("#data-kategori").empty();
+            }
+        });
+    </script>
 @endsection

@@ -62,7 +62,7 @@
                                 <input type="date" name="tgl" id="tgl" class="form-control" readonly>
                             </div>
                             <div class="mb-3">
-                                <label for="jenis+kelamin" class="form-label-md-6">Jenis Kelamin Pasien</label>
+                                <label for="jenis_kelamin" class="form-label-md-6">Jenis Kelamin Pasien</label>
                                 <input type="text" name="jenis_kelamin" id="jenis_kelamin" class="form-control" readonly>
                             </div>
                         </div>
@@ -76,15 +76,48 @@
                             <textarea name="keluhan" id="keluhan" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="mt-3 text-center">
-                            <a class="btn btn-danger" href="javascript:void(0);" onclick="history.back();">Kembali</a>
-                            <button class="btn btn-primary" id="submit" type="submit">Daftar</button>
+
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="form-label-md-6">Status Pasien</label>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="status" id="umum"
+                                                value="Umum" checked>
+                                            <label class="form-check-label" for="umum">
+                                                Umum
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="status" id="bpjs"
+                                                value="BPJS">
+                                            <label class="form-check-label" for="bpjs">
+                                                BPJS
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </form>
+
             </div>
+
+            <div class="row">
+                <div class="mt-3 text-center">
+                    <a class="btn btn-danger" href="javascript:void(0);" onclick="history.back();">Kembali</a>
+                    <button class="btn btn-primary" id="submit" type="submit">Daftar</button>
+                </div>
+            </div>
+            </form>
         </div>
+    </div>
     </div>
 @endsection
 @section('script')
@@ -131,6 +164,7 @@
             let tgl = $('#tgl').val();
             let keluhan = $('#keluhan').val();
             let jenis_kelamin = $('#jenis_kelamin').val();
+            let status = $("input[name='status']:checked").val();
             let token = $("meta[name='csrf-token']").attr("content");
 
             $.ajax({
@@ -145,6 +179,7 @@
                     "nik": nik,
                     "tgl": tgl,
                     "keluhan": keluhan,
+                    "status": status,
                     "jenis_kelamin": jenis_kelamin,
                     "_token": token
                 },
@@ -166,6 +201,7 @@
                             $('#nik').val('');
                             $('#tgl').val('');
                             $('#keluhan').val('');
+                            $('#status').val('');
                             $('#jenis_kelamin').val('');
 
                             swal.fire({

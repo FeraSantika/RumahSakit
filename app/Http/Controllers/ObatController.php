@@ -10,7 +10,7 @@ class ObatController extends Controller
 {
     public function index()
     {
-        $dtobat = DataObat::with('kategori')->get();
+        $dtobat = DataObat::with('kategori')->paginate(10);
         return view('obat.obat', compact('dtobat'));
     }
 
@@ -55,5 +55,15 @@ class ObatController extends Controller
     {
         Dataobat::where('kode_obat', $id)->delete();
         return redirect()->route('obat');
+    }
+
+    public function search(Request $request)
+    {
+        $searchTerm = $request->get('cari');
+
+        $data = DataObat::where('nama_obat', 'LIKE', '%' . $searchTerm . '%')
+            ->with('kategori')->get();
+
+        return response()->json($data);
     }
 }

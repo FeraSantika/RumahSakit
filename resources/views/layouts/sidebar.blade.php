@@ -146,6 +146,14 @@
                 </a>
             </li>
 
+            <li class="side-nav-item">
+                <a href="{{route('tindakan')}}"
+                    class="side-nav-link">
+                    <i class=" uil-syringe"></i>
+                    <span> Master Tindakan</span>
+                </a>
+            </li>
+
             {{-- <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sidebarTransaksi" aria-expanded="false"
                     aria-controls="sidebarDashboards" class="side-nav-link">

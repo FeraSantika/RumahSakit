@@ -36,13 +36,27 @@
                                 <label for="tgl" class="form-label-md-6">Tanggal lahir</label>
                                 <input type="date" name="tgl" id="tgl" class="form-control">
                             </div>
-                            <div class="mb-3">
-                                <label for="gender" class="form-label-md-6">Jenis Kelamin</label>
-                                <div class="{{ $errors->has('gender') ? 'has-error' : '' }}">
-                                    <select name="gender" id="gender" class="form-select">
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
+                            <div class="row mb-3">
+                                <label class="form-label-md-6">Jenis Kelamin</label>
+                                <div class="row mt-2">
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="gender" id="laki"
+                                                value="Laki-laki" checked>
+                                            <label class="form-check-label" for="laki">
+                                                Laki-laki
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="gender" id="perempuan"
+                                                value="Perempuan">
+                                            <label class="form-check-label" for="perempuan">
+                                                Perempuan
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -64,13 +78,27 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="perkawinan" class="form-label-md-6">Status Perkawinan</label>
-                                <div class="{{ $errors->has('perkawinan') ? 'has-error' : '' }}">
-                                    <select name="perkawinan" class="form-select" id="perkawinan">
-                                        <option value="Belum Kawin">Belum Kawin</option>
-                                        <option value="Kawin">Kawin</option>
-                                    </select>
+                            <div class="row mb-3">
+                                <label class="form-label-md-6">Status Perkawinan</label>
+                                <div class="row mt-2">
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="perkawinan" id="belumkawin"
+                                                value="Belum Kawin" checked>
+                                            <label class="form-check-label" for="belumkawin">
+                                                Belum Kawin
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="perkawinan"
+                                                id="kawin" value="Kawin">
+                                            <label class="form-check-label" for="kawin">
+                                                Kawin
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -91,7 +119,8 @@
 
                     <div class="row">
                         <div class="mt-3 text-center">
-                            <a class="btn btn-danger" href="javascript:void(0);" onclick="window.history.back();">Kembali</a>
+                            <a class="btn btn-danger" href="javascript:void(0);"
+                                onclick="window.history.back();">Kembali</a>
                             <button class="btn btn-primary" id="submit" type="submit">Tambah</button>
                         </div>
                     </div>
@@ -110,10 +139,10 @@
             let nama = $('#nama').val();
             let tempat = $('#tempat').val();
             let tgl = $('#tgl').val();
-            let gender = $('#gender').val();
+            let gender = $("input[name='gender']:checked").val();
             let alamat = $('#alamat').val();
             let agama = $('#agama').val();
-            let status = $('#perkawinan').val();
+            let status = $("input[name='perkawinan']:checked").val();
             let pekerjaan = $('#pekerjaan').val();
             let kewarganegaraan = $('#kewarganegaraan').val();
             let token = $("meta[name='csrf-token']").attr("content");
@@ -128,7 +157,7 @@
                     "nama": nama,
                     "tempat": tempat,
                     "tgl": tgl,
-                    "gender": gender,
+                    "jenis_kelamin": gender,
                     "alamat": alamat,
                     "agama": agama,
                     "perkawinan": status,

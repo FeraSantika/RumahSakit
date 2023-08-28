@@ -160,14 +160,12 @@
                             "<td>" + item.pasien_nama + "</td>" +
                             "<td>" + item.pasien_tempat_lahir + "</td>" +
                             "<td>" + item.pasien_tgl_lahir + "</td>" +
-                            "<td><a href='javascript:void(0);' class='action-icon' onclick='edit(" + item
-                            .pasien_kode + ")'>" +
+                            "<td><a href='pasien/edit/" + item.pasien_id + "' class='action-icon'>" +
                             "<i class='mdi mdi-square-edit-outline'></i></a>" +
-                            "<a href='javascript:void(0)' onclick='hapus(" + item.pasien_kode +
-                            ")' class='action-icon'>" +
+                            "<a href='pasien/destroy/" + item.pasien_id + "' class='action-icon'>" +
                             "<i class='mdi mdi-delete'></i></a>" +
-                            "<a href='javascript:void(0);' class='action-icon' onclick='detail(" + item
-                            .pasien_kode + ")'>" +
+                            "<a href='pasien/detail/" + item.pasien_id +
+                            "' class='action-icon'>" +
                             "<i class='uil-file-search-alt'></i></a></td>" +
                             "</tr>";
 
@@ -178,6 +176,11 @@
                 }
 
                 $("#data-pasien").html(resultList);
+            }
+
+            function resetSearchResults() {
+                var searchTerm = $("#search").val();
+                $("#data-pasien").empty();
             }
         });
     </script>

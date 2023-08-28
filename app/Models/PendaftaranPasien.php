@@ -19,6 +19,7 @@ class PendaftaranPasien extends Model
         'pasien_id',
         'id_poli',
         'keluhan',
+        'status_pasien'
     ];
 
     public function pasien()

@@ -49,8 +49,10 @@
                                                 <th scope="col">No.</th>
                                                 <th scope="col">Kode Pendaftaran</th>
                                                 <th scope="col">Nama Pasien</th>
+                                                <th scope="col">Status Pasien</th>
                                                 <th scope="col">Poli</th>
                                                 <th scope="col">Keluhan</th>
+                                                <th scope="col">Status Pemeriksaan</th>
                                                 <th scope="col" class="text-end">Action</th>
                                             </tr>
                                         </thead>
@@ -68,36 +70,58 @@
                                                         @endif
                                                     </td>
                                                     <td>
+                                                        @if ($item->status_pasien === 'Umum')
+                                                            <span class="badge bg-success">{{ $item->status_pasien }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger">{{ $item->status_pasien }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
                                                         @if (isset($item->poli))
                                                             {{ $item->poli->nama_poli }}
                                                         @endif
                                                     </td>
                                                     <td>{{ $item->keluhan }}</td>
+                                                    <td>
+                                                        @if ($item->status_pemeriksaan === 'Tertangani')
+                                                            <span
+                                                                class="badge bg-success">{{ $item->status_pemeriksaan }}</span>
+                                                        @else
+                                                            <span
+                                                                class="badge bg-danger">{{ $item->status_pemeriksaan }}</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-end">
-                                                        <a href="{{ route('detail.pasien', $item->pasien_id) }}"
-                                                            type="button" class="btn btn-primary"
-                                                            data-transaksi-id=""
-                                                            onclick="">Lihat Detail</a>
+                                                        @if ($item->status_pemeriksaan === 'Belum tertangani')
+                                                            <a href="{{ route('detail.list-daftar-pasien', $item->pasien_id) }}"
+                                                                type="button" class="btn btn-primary" data-transaksi-id=""
+                                                                onclick="">Lihat Detail</a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @php
                                                     $rowNumber++;
                                                 @endphp
                                             @endforeach
+                                            @if (session('diagnosa_updated'))
+                                                <div class="alert alert-success">
+                                                    Pengisian data diagnosa berhasil!
+                                                </div>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
-                    {{-- <div class="mt-3 text-center">
+                    <div class="mt-3 text-center">
                         <div class="pagination">
-                            {{ $dtpasien->links('pagination::bootstrap-4') }}
+                            {{ $dtpendaftar->links('pagination::bootstrap-4') }}
                         </div>
                         <p class="mt-2">
-                            Menampilkan {{ $dtpasien->count() }} data dari {{ $dtpasien->total() }} total data.
+                            Menampilkan {{ $dtpendaftar->count() }} data dari {{ $dtpendaftar->total() }} total data.
                         </p>
-                    </div> --}}
+                    </div>
                 </div> <!-- end col -->
             </div>
             <!-- end row -->

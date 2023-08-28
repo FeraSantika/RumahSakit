@@ -51,6 +51,7 @@
                                                 <th scope="col">Nama Pasien</th>
                                                 <th scope="col">Poli</th>
                                                 <th scope="col">Keluhan</th>
+                                                <th scope="col">Status Pemeriksaan</th>
                                                 <th scope="col" class="text-end">Action</th>
                                             </tr>
                                         </thead>
@@ -73,18 +74,27 @@
                                                         @endif
                                                     </td>
                                                     <td>{{ $item->keluhan }}</td>
+                                                    <td>
+                                                        @if ($item->status_pemeriksaan === 'Tertangani')
+                                                            <span
+                                                                class="badge bg-success">{{ $item->status_pemeriksaan }}</span>
+                                                        @else
+                                                            <span
+                                                                class="badge bg-danger">{{ $item->status_pemeriksaan }}</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-end">
                                                         <a href="{{ route('daftar.online.edit', $item->id_pendaftaran) }}"
                                                             class="action-icon">
                                                             <i class="mdi mdi-square-edit-outline"></i>
                                                         </a>
-                                                        <a href="{{ route('daftar.online.destroy', $item->id_pendaftaran) }}"
+                                                        <a href="{{ route('daftar-online.destroy', $item->id_pendaftaran) }}"
                                                             class="action-icon"
                                                             onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->id_pendaftaran }}').submit();">
                                                             <i class="mdi mdi-delete"></i>
                                                         </a>
                                                         <form id="delete-form-{{ $item->id_pendaftaran }}"
-                                                            action="{{ route('daftar.online.destroy', $item->id_pendaftaran) }}"
+                                                            action="{{ route('daftar-online.destroy', $item->id_pendaftaran) }}"
                                                             method="POST" style="display: none;">
                                                             @csrf
                                                             @method('DELETE')
@@ -101,14 +111,14 @@
                             </div>
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
-                    {{-- <div class="mt-3 text-center">
+                    <div class="mt-3 text-center">
                         <div class="pagination">
-                            {{ $dtpasien->links('pagination::bootstrap-4') }}
+                            {{ $dtpendaftaran->links('pagination::bootstrap-4') }}
                         </div>
                         <p class="mt-2">
-                            Menampilkan {{ $dtpasien->count() }} data dari {{ $dtpasien->total() }} total data.
+                            Menampilkan {{ $dtpendaftaran->count() }} data dari {{ $dtpendaftaran->total() }} total data.
                         </p>
-                    </div> --}}
+                    </div>
                 </div> <!-- end col -->
             </div>
             <!-- end row -->
@@ -117,7 +127,7 @@
 
     </div>
 @endsection
-{{-- @section('script')
+@section('script')
     <script type="text/javascript">
         $(document).ready(function() {
             $("#search-btn").click(function() {
@@ -127,7 +137,7 @@
 
             function performSearch(searchTerm) {
                 $.ajax({
-                    url: "{{ route('search.pasien') }}",
+                    url: "{{ route('search.daftar-pasien') }}",
                     type: 'GET',
                     dataType: "json",
                     data: {
@@ -148,22 +158,23 @@
 
                 if (data.length > 0) {
                     data.forEach(function(item) {
+                        var statusButtonClass = item.status_pemeriksaan === 'Tertangani' ? 'btn-success' :
+                            'btn-danger';
+
                         resultList += "<tr>" +
                             "<td>" + rowNumber + "</td>" +
-                            "<td>" + item.pasien_kode + "</td>" +
-                            "<td>" + item.pasien_NIK + "</td>" +
-                            "<td>" + item.pasien_nama + "</td>" +
-                            "<td>" + item.pasien_tempat_lahir + "</td>" +
-                            "<td>" + item.pasien_tgl_lahir + "</td>" +
-                            "<td><a href='javascript:void(0);' class='action-icon' onclick='edit(" + item
-                            .pasien_kode + ")'>" +
+                            "<td>" + item.kode_pendaftaran + "</td>" +
+                            "<td>" + item.pasien.pasien_nama + "</td>" +
+                            "<td>" + item.poli.nama_poli + "</td>" +
+                            "<td>" + item.keluhan + "</td>" +
+                            "<td><button class='btn " + statusButtonClass + " btn-sm'>" + item
+                            .status_pemeriksaan + "</button></td>" +
+                            "<td><a href='daftar-online/edit/" + item.id_pendaftaran +
+                            "' class='action-icon'>" +
                             "<i class='mdi mdi-square-edit-outline'></i></a>" +
-                            "<a href='javascript:void(0)' onclick='hapus(" + item.pasien_kode +
-                            ")' class='action-icon'>" +
-                            "<i class='mdi mdi-delete'></i></a>" +
-                            "<a href='javascript:void(0);' class='action-icon' onclick='detail(" + item
-                            .pasien_kode + ")'>" +
-                            "<i class='uil-file-search-alt'></i></a></td>" +
+                            "<a href='daftar-online/destroy/" + item.id_pendaftaran +
+                            "' class='action-icon'>" +
+                            "<i class='mdi mdi-delete'></i></a></td>" +
                             "</tr>";
 
                         rowNumber++;
@@ -174,6 +185,11 @@
 
                 $("#data-pasien").html(resultList);
             }
+
+            function resetSearchResults() {
+                var searchTerm = $("#search").val();
+                $("#data-pasien").empty();
+            }
         });
     </script>
-@endsection --}}
+@endsection

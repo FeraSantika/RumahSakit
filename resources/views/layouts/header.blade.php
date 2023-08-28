@@ -36,5 +36,5 @@
 <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script> --}}
 
 <!-- Theme Config Js -->
-{{-- <script src="{{ asset('assets/js/hyper-config.js') }}"></script> --}}
+<script src="{{ asset('assets/js/hyper-config.js') }}"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> --}}
