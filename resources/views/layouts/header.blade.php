@@ -38,3 +38,9 @@
 <!-- Theme Config Js -->
 <script src="{{ asset('assets/js/hyper-config.js') }}"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> --}}
+
+<!-- Select2 css -->
+<link href="assets/vendor/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+
+<!--  Select2 Js -->
+<script src="assets/vendor/select2/js/select2.min.js"></script>

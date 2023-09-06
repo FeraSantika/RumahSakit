@@ -76,7 +76,8 @@
                             <a class="nav-link" href="">Kasir</a>
                         </li> --}}
                         <li>
-                            <a class="nav-link {{ Route::current()->getName() == 'pasien' ? 'active' : '' }}" href="{{route('pasien')}}">Pasien</a>
+                            <a class="nav-link {{ Route::current()->getName() == 'pasien' ? 'active' : '' }}"
+                                href="{{ route('pasien') }}">Pasien</a>
                         </li>
                     </ul>
                 </div>
@@ -99,58 +100,117 @@
             </li>
 
             <li class="side-nav-item">
-                <a href="{{route('poli')}}"
-                    class="side-nav-link {{ Route::current()->getName() == 'poli' ? 'active' : '' }}">
+                <a data-bs-toggle="collapse" href="#sidebarPoli" aria-expanded="false" aria-controls="sidebarDashboards"
+                    class="side-nav-link">
                     <i class="ri-file-add-line"></i>
-                    <span> Poli </span>
+                    <span> Master Poli </span>
                 </a>
+                <div class="collapse" id="sidebarPoli">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'poli' ? 'active' : '' }}"
+                                href="{{ route('poli') }}">Poli</a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'akses-poli' ? 'active' : '' }}"
+                                href="{{ route('akses-poli') }}">Akses Poli</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
             <li class="side-nav-item">
-                <a href="{{route('akses-poli')}}"
-                    class="side-nav-link">
-                    <i class="ri-file-user-line"></i>
-                    <span> Akses Poli </span>
-                </a>
-            </li>
-
-            <li class="side-nav-item">
-                <a href="{{route('daftar.online')}}"
-                    class="side-nav-link">
+                <a data-bs-toggle="collapse" href="#sidebarDaftar" aria-expanded="false"
+                    aria-controls="sidebarDashboards" class="side-nav-link">
                     <i class="ri-calendar-event-line"></i>
-                    <span> Daftar Online </span>
+                    <span> Pendaftaran Pasien </span>
                 </a>
+                <div class="collapse" id="sidebarDaftar">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'daftar.online' ? 'active' : '' }}"
+                                href="{{ route('daftar.online') }}">Pendaftaran Rawat Jalan</a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'daftar.pasieninap' ? 'active' : '' }}"
+                                href="{{ route('daftar.pasieninap') }}">Pendaftaran Rawat Inap</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
             <li class="side-nav-item">
-                <a href="{{route('list-daftar-pasien')}}"
-                    class="side-nav-link">
+                <a data-bs-toggle="collapse" href="#sidebarListpasien" aria-expanded="false"
+                    aria-controls="sidebarDashboards" class="side-nav-link">
                     <i class="uil-clipboard-notes"></i>
-                    <span> List Daftar Pasien</span>
+                    <span> List Daftar Pasien </span>
                 </a>
+                <div class="collapse" id="sidebarListpasien">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'list-daftar-pasien' ? 'active' : '' }}"
+                                href="{{ route('list-daftar-pasien') }}">Rawat Jalan</a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'list-daftar-pasienInap' ? 'active' : '' }}"
+                                href="{{route('list-daftar-pasienInap')}}">Rawat Inap</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
             <li class="side-nav-item">
-                <a href="{{route('kategori')}}"
-                    class="side-nav-link">
-                    <i class=" uil-tablets"></i>
-                    <span>Kategori Obat</span>
-                </a>
-            </li>
-
-            <li class="side-nav-item">
-                <a href="{{route('obat')}}"
-                    class="side-nav-link">
-                    <i class=" uil-capsule"></i>
-                    <span> Obat</span>
-                </a>
-            </li>
-
-            <li class="side-nav-item">
-                <a href="{{route('tindakan')}}"
-                    class="side-nav-link">
+                <a href="{{ route('tindakan') }}" class="side-nav-link">
                     <i class=" uil-syringe"></i>
                     <span> Master Tindakan</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#sidebarObat" aria-expanded="false"
+                    aria-controls="sidebarDashboards" class="side-nav-link">
+                    <i class="uil-tablets"></i>
+                    <span> Master Obat </span>
+                </a>
+                <div class="collapse" id="sidebarObat">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'kategori' ? 'active' : '' }}"
+                                href="{{ route('kategori') }}">Kategori Obat</a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ Route::current()->getName() == 'obat' ? 'active' : '' }}"
+                                href="{{ route('obat') }}">Obat</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{ route('transaksi-obat') }}" class="side-nav-link">
+                    <i class="uil-money-bill"></i>
+                    <span> Transaksi Obat</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{ route('transaksi-pembayaran') }}" class="side-nav-link">
+                    <i class="uil-money-bill"></i>
+                    <span> Transaksi Pembayaran</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{ route('rumah_sakit') }}" class="side-nav-link">
+                    <i class="ri-hospital-line"></i>
+                    <span> Master Rumah Sakit</span>
+                </a>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="{{ route('kamar_inap') }}" class="side-nav-link">
+                    <i class="uil-bed"></i>
+                    <span>Kamar Inap</span>
                 </a>
             </li>
 

@@ -115,18 +115,18 @@ class PasienController extends Controller
         return redirect()->route('pasien');
     }
 
-    // public function autocomplete(Request $request)
-    // {
-    //     $data = DataObat::with('kategori')->select(
-    //         "nama_obat as label",
-    //         DB::raw("(SELECT nama_kategori FROM kategori WHERE kategori.kode_kategori = data_obat.kode_kategori) as value"),
-    //         "kode_obat as kode",
-    //     )
-    //         ->where('nama_obat', 'LIKE', '%' . $request->get('cari') . '%')
-    //         ->get();
+    public function autocomplete(Request $request)
+    {
+        $data = DataObat::with('kategori')->select(
+            "nama_obat as label",
+            DB::raw("(SELECT nama_kategori FROM kategori WHERE kategori.kode_kategori = data_obat.kode_kategori) as value"),
+            "kode_obat as kode",
+        )
+            ->where('nama_obat', 'LIKE', '%' . $request->get('cari') . '%')
+            ->get();
 
-    //     return response()->json($data);
-    // }
+        return response()->json($data);
+    }
 
     public function search(Request $request)
     {
@@ -151,7 +151,6 @@ class PasienController extends Controller
         $dtlistobat =  ListDaftarObat::where('kode_pasien', $dtpasien->pasien_kode)->get();
         $dtlisttindakan =  ListDaftarTindakan::where('kode_pasien', $dtpasien->pasien_kode)->get();
 
-        dd($dtpasien);
         return view('pasien.detailpasien', compact('dtpasien', 'dtlistobat', 'dtlisttindakan'));
     }
 

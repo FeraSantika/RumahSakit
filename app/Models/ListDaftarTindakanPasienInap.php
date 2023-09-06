@@ -5,20 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ListDaftarTindakan extends Model
+class ListDaftarTindakanPasienInap extends Model
 {
     use HasFactory;
-    public $table = 'list_daftar_tindakan_pasien';
+    public $table = 'list_daftar_tindakan_pasienInap';
     protected $fillable = [
         'list_id',
         'kode_pendaftaran',
         'nama_tindakan',
-        'harga_tindakan'
+        'harga_tindakan',
+        'tanggal'
     ];
 
     public function daftar()
     {
-        return $this->belongsTo(PendaftaranPasien::class, 'kode_pendaftaran', 'kode_pendaftaran');
+        return $this->belongsTo(PendaftaranPasienInap::class, 'kode_pendaftaran', 'kode_pendaftaran');
     }
 
     public function tindakan()

@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('list_daftar_obat_pasien', function (Blueprint $table) {
-            $table->bigIncrements('list_id');
+        Schema::create('kamar_pasien_inap', function (Blueprint $table) {
+            $table->bigIncrements('id_kamar_pasieninap');
+            $table->date('tanggal_masuk');
+            $table->date('tanggal_keluar');
+            $table->integer('id_kamar_inap');
             $table->char('kode_pendaftaran');
-            $table->char('nama_obat');
-            $table->char('kategori_obat');
-            $table->integer('qty');
-            $table->enum('status', ['Ada', 'Tidak ada']);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('list_daftar_obat_pasien');
+        Schema::dropIfExists('kamar_pasien_inap');
     }
 };

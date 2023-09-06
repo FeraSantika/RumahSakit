@@ -14,11 +14,17 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\TindakanController;
 use App\Http\Controllers\AksespoliController;
+use App\Http\Controllers\KamarInapController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\RumahsakitController;
 use App\Http\Controllers\DaftaronlineController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\TransaksiObatController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\ListdaftarpasienController;
+use App\Http\Controllers\TransaksiPembayaranController;
+use App\Http\Controllers\ListdaftarpasienInapController;
+use App\Http\Controllers\PendaftaranPasienInapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,7 +76,6 @@ Route::post('/admin/pasien/update/{id}', [PasienController::class, 'update'])->n
 Route::delete('/admin/pasien/destroy/{id}', [PasienController::class, 'destroy'])->name('pasien.destroy');
 Route::get('/search/pasien', [PasienController::class, 'search'])->name('search.pasien');
 Route::get('/admin/pasien/detail/{id}', [PasienController::class, 'detail'])->name('detail.pasien');
-
 
 Route::get('/admin/poli', [PoliController::class, 'index'])->name('poli');
 Route::get('/admin/poli/create', [PoliController::class, 'create'])->name('poli.create');
@@ -145,3 +150,59 @@ Route::get('/admin/tindakan/edit/{id}', [TindakanController::class, 'edit'])->na
 Route::post('/admin/tindakan/update/{id}', [TindakanController::class, 'update'])->name('tindakan.update');
 Route::delete('/admin/tindakan/destroy/{id}', [TindakanController::class, 'destroy'])->name('tindakan.destroy');
 Route::get('/search/tindakan', [TindakanController::class, 'search'])->name('search.tindakan');
+
+Route::get('/admin/transaksi-obat', [TransaksiObatController::class, 'index'])->name('transaksi-obat');
+Route::get('/admin/transaksi-obat/detail/{id}', [TransaksiObatController::class, 'detail'])->name('transaksi-obat.detail');
+Route::post('/admin/transaksi-obat/detail/obat/{id}', [TransaksiObatController::class, 'updateObat'])->name('transaksi-obat.detail.update');
+Route::post('/admin/transaksi-obat/detail/updatelistobat', [TransaksiObatController::class, 'updatelist'])->name('transaksi-obat.list.update');
+Route::get('/search/transaksi-obat', [TransaksiObatController::class, 'search'])->name('search.transaksi-obat');
+
+Route::get('/admin/transaksi-pembayaran', [TransaksiPembayaranController::class, 'index'])->name('transaksi-pembayaran');
+Route::get('/admin/transaksi-pembayaran/detail/{id}', [TransaksipembayaranController::class, 'detail'])->name('transaksi-pembayaran.detail');
+Route::post('/admin/transaksi-pembayaran/detail/update/{id}', [TransaksipembayaranController::class, 'transaksi'])->name('transaksi-pembayaran.detail.update');
+Route::post('/admin/transaksi-pembayaran/detail/update/print/{id}', [TransaksipembayaranController::class, 'print'])->name('transaksi-pembayaran.detail.print');
+
+Route::get('/admin/rumah_sakit', [RumahsakitController::class, 'index'])->name('rumah_sakit');
+Route::get('/admin/rumah_sakit/create', [RumahsakitController::class, 'create'])->name('rumah_sakit.create');
+Route::post('/admin/rumah_sakit/store', [RumahsakitController::class, 'store'])->name('rumah_sakit.store');
+Route::get('/admin/rumah_sakit/edit/{id}', [RumahsakitController::class, 'edit'])->name('rumah_sakit.edit');
+Route::post('/admin/rumah_sakit/update/{id}', [RumahsakitController::class, 'update'])->name('rumah_sakit.update');
+Route::delete('/admin/rumah_sakit/destroy/{id}', [RumahsakitController::class, 'destroy'])->name('rumah_sakit.destroy');
+
+Route::get('/admin/daftar-pasieninap', [PendaftaranPasienInapController::class, 'index'])->name('daftar.pasieninap');
+Route::get('/admin/daftar-pasieninap/create', [PendaftaranPasienInapController::class, 'create'])->name('daftar.pasieninap.create');
+Route::post('/admin/daftar-pasieninap/store', [PendaftaranPasienInapController::class, 'store'])->name('daftar.pasieninap.store');
+Route::get('/admin/daftar-pasieninap/edit/{id}', [PendaftaranPasienInapController::class, 'edit'])->name('daftar.pasieninap.edit');
+Route::post('/admin/daftar-pasieninap/update/{id}', [PendaftaranPasienInapController::class, 'update'])->name('daftar.pasieninap.update');
+Route::delete('/admin/daftar-pasieninap/destroy/{id}', [PendaftaranPasienInapController::class, 'destroy'])->name('daftar-pasieninap.destroy');
+Route::get('/autocomplete_pasieninap', [PendaftaranPasienInapController::class, 'autocomplete'])->name('autocomplete_pasieninap');
+Route::get('/search/daftar-pasieninap', [PendaftaranPasienInapController::class, 'search'])->name('search.daftar-pasieninap');
+
+Route::get('/admin/kamar_inap', [KamarInapController::class, 'index'])->name('kamar_inap');
+Route::get('/admin/kamar_inap/create', [KamarInapController::class, 'create'])->name('kamar_inap.create');
+Route::post('/admin/kamar_inap/store', [KamarInapController::class, 'store'])->name('kamar_inap.store');
+Route::get('/admin/kamar_inap/edit/{id}', [KamarInapController::class, 'edit'])->name('kamar_inap.edit');
+Route::post('/admin/kamar_inap/update/{id}', [KamarInapController::class, 'update'])->name('kamar_inap.update');
+Route::delete('/admin/kamar_inap/destroy/{id}', [KamarInapController::class, 'destroy'])->name('kamar_inap.destroy');
+
+Route::get('/admin/list-daftar-pasienInap', [ListdaftarpasienInapController::class, 'index'])->name('list-daftar-pasienInap');
+Route::get('/search/list-daftar-pasienInap', [ListdaftarpasienInapController::class, 'search'])->name('search.list-daftar-pasienInap');
+Route::get('/admin/list-daftar-pasienInap/detail/{id}', [ListdaftarpasienInapController::class, 'detail'])->name('detail.list-daftar-pasienInap');
+Route::get('/autocomplete_obat_pasienInap', [ListdaftarpasienInapController::class, 'autocomplete'])->name('autocomplete_obat_pasienInap');
+Route::get('/autocomplete_tindakan_pasienInap', [ListdaftarpasienInapController::class, 'autocomplete_tindakan'])->name('autocomplete_tindakan_pasienInap');
+Route::get('/admin/pasienInap/detail/destroy/{id}', [ListdaftarpasienInapController::class, 'destroylist'])->name('listdaftarobat_pasienInap.destroy');
+Route::post('/admin/pasienInap/detail/updatelist', [ListdaftarpasienInapController::class, 'updatelist'])->name('listdaftarobat_pasienInap.update');
+Route::post('/admin/pasienInap/detail/insertlistobat', [ListdaftarpasienInapController::class, 'insertlistobat'])->name('detail.insertobatpasien');
+Route::get('/admin/pasienInap/detail/destroy-tindakan/{id}', [ListdaftarpasienInapController::class, 'destroytindakan'])->name('listdaftartindakan_pasienInap.destroy');
+Route::post('/admin/pasienInap/detail/insertlist-tindakan', [ListdaftarpasienInapController::class, 'inserttindakan'])->name('listdaftartindakan_pasienInap.insert');
+
+Route::get('/admin/pasienInap/detail/riwayat/{id}', [ListdaftarpasienInapController::class, 'detailriwayat'])->name('detail.riwayat.pasienInap');
+Route::get('/autocomplete_kamar_pasienInap', [ListdaftarpasienInapController::class, 'autocomplete_kamar'])->name('autocomplete_kamar_pasienInap');
+Route::post('/admin/pasienInap/detail/insertkamarpasien', [ListdaftarpasienInapController::class, 'insertkamarpasien'])->name('detail.insertkamarpasien');
+Route::post('/admin/pasienInap/detail/updatekamarpasien', [ListdaftarpasienInapController::class, 'updatekamarpasien'])->name('detail.updatekamarpasien');
+Route::get('/admin/pasienInap/detail/destroykamarpasien/{id}', [ListdaftarpasienInapController::class, 'destroykamarpasien'])->name('detail.destroykamarpasien');
+Route::post('/admin/pasienInap/detail/insertdiagnosapasien', [ListdaftarpasienInapController::class, 'insertdiagnosapasien'])->name('detail.insertdiagnosapasien');
+Route::post('/admin/pasienInap/detail/diagnosa', [ListdaftarpasienInapController::class, 'updatediagnosapasien'])->name('detail.updatediagnosapasien');
+Route::get('/admin/pasienInap/detail/destroydiagnosa/{id}', [ListdaftarpasienInapController::class, 'destroydiagnosapasien'])->name('detail.destroydiagnosapasien');
+Route::get('/api/get_obat', [ListdaftarpasienInapController::class, 'getObat'])->name('detail.insertobatoption');
+Route::get('/admin/pasienInap/detail/datakamarpasien/{id}', [ListdaftarpasienInapController::class, 'datakamar'])->name('data-kamar');

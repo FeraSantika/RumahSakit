@@ -13,9 +13,10 @@
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">List Daftar Pasien</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">List Daftar Pasien Rawat Jalan</a></li>
                             </ol>
                         </div>
-                        <h4 class="page-title">List Daftar Pasien</h4>
+                        <h4 class="page-title">List Daftar Pasien Rawat Jalan</h4>
                     </div>
                 </div>
             </div>
@@ -47,6 +48,7 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">No.</th>
+                                                <th scope="col">Dokter</th>
                                                 <th scope="col">Kode Pendaftaran</th>
                                                 <th scope="col">Nama Pasien</th>
                                                 <th scope="col">Status Pasien</th>
@@ -63,6 +65,14 @@
                                             @foreach ($dtpendaftar as $item)
                                                 <tr>
                                                     <td>{{ $rowNumber }}</td>
+                                                    <td>
+                                                        @if ($item->aksespoli)
+                                                            {{ $item->aksespoli->user->User_name }}
+                                                        @else
+                                                            Akses Poli Not Available
+                                                        @endif
+                                                    </td>
+
                                                     <td>{{ $item->kode_pendaftaran }}</td>
                                                     <td>
                                                         @if (isset($item->pasien))
@@ -93,7 +103,7 @@
                                                     </td>
                                                     <td class="text-end">
                                                         @if ($item->status_pemeriksaan === 'Belum tertangani')
-                                                            <a href="{{ route('detail.list-daftar-pasien', $item->pasien_id) }}"
+                                                            <a href="{{ route('detail.list-daftar-pasien', $item->kode_pendaftaran) }}"
                                                                 type="button" class="btn btn-primary" data-transaksi-id=""
                                                                 onclick="">Lihat Detail</a>
                                                         @endif

@@ -12,11 +12,11 @@ class PoliController extends Controller
         $poli = DataPoli::all();
         return view('poli.poli', compact('poli'));
     }
+
     public function create()
     {
         return view('poli.create');
     }
-
 
     public function store(Request $request)
     {

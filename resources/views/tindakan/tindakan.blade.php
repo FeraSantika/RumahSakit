@@ -64,7 +64,7 @@
                                                     {{ $item->nama_tindakan }}
                                                 </td>
                                                 <td>
-                                                    {{ $item->harga_tindakan }}
+                                                    {{ number_format( $item->harga_tindakan, 0, ',', '.') }}
                                                 </td>
                                                 <td class="table-action">
                                                     <a href="{{ route('tindakan.edit', $item->id_tindakan) }}"

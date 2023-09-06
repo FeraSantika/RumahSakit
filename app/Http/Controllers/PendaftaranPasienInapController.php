@@ -2,26 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataPoli;
 use App\Models\DataPasien;
 use Illuminate\Http\Request;
-use App\Models\PendaftaranPasien;
-use App\Models\pendaftaran_pasien;
+use App\Models\PendaftaranPasienInap;
 
-
-class DaftaronlineController extends Controller
+class PendaftaranPasienInapController extends Controller
 {
     public function index()
     {
-        $dtpendaftaran = PendaftaranPasien::with('pasien', 'poli')->paginate(10);
-        return view('daftar-rawatjalan.daftar', compact('dtpendaftaran'));
+        $dtpendaftaran = PendaftaranPasienInap::with('pasien')->paginate(10);
+        return view('daftar-rawatinap.daftar', compact('dtpendaftaran'));
     }
 
     public function create(Request $request)
     {
         $prefix = 'DFTR';
         $length = 4;
-        $lastpendaftaran = PendaftaranPasien::orderBy('id_pendaftaran', 'desc')->first();
+        $lastpendaftaran = PendaftaranPasienInap::orderBy('id_pendaftaran', 'desc')->first();
         if ($lastpendaftaran) {
             $lastId = (int) substr($lastpendaftaran->kode_pendaftaran, strlen($prefix));
         } else {
@@ -34,9 +31,8 @@ class DaftaronlineController extends Controller
         $pendaftaranCode = $prefix . $paddedId;
 
         $dtpasien = DataPasien::get();
-        $dtpoli = DataPoli::get();
 
-        return view('daftar-rawatjalan.create', compact('dtpasien', 'dtpoli', 'lastpendaftaran', 'pendaftaranCode'));
+        return view('daftar-rawatinap.create', compact('dtpasien', 'lastpendaftaran', 'pendaftaranCode'));
     }
 
     public function autocomplete(Request $request)
@@ -53,17 +49,16 @@ class DaftaronlineController extends Controller
     {
         $status_pasien = $request->input('status', 'Umum');
 
-        $daftar = PendaftaranPasien::create([
+        $daftar = PendaftaranPasienInap::create([
             'kode_pendaftaran' => $request->kode,
             'pasien_id' => $request->pasien_id,
-            'id_poli' => $request->poli,
             'keluhan' => $request->keluhan,
             'status_pasien' => $status_pasien,
         ]);
 
         $prefix = 'DFTR';
         $length = 4;
-        $lastpendaftaran = PendaftaranPasien::orderBy('id_pendaftaran', 'desc')->first();
+        $lastpendaftaran = PendaftaranPasienInap::orderBy('id_pendaftaran', 'desc')->first();
         if ($lastpendaftaran) {
             $lastId = (int) substr($lastpendaftaran->kode_pendaftaran, strlen($prefix));
         } else {
@@ -86,43 +81,38 @@ class DaftaronlineController extends Controller
     public function edit($id)
     {
         $dtpasien = DataPasien::get();
-        $dtpoli = DataPoli::get();
-        $dtpendaftaran =  PendaftaranPasien::where('id_pendaftaran', $id)->with('pasien', 'poli')->first();
-        return view('daftar-rawatjalan.edit', compact('dtpendaftaran', 'dtpasien', 'dtpoli'));
+        $dtpendaftaran =  PendaftaranPasienInap::where('id_pendaftaran', $id)->with('pasien')->first();
+        return view('daftar-rawatinap.edit', compact('dtpendaftaran', 'dtpasien'));
     }
 
     public function update(Request $request, $id)
     {
         $dtpendaftaran = [
-            'id_poli' => $request->poli,
             'keluhan' => $request->keluhan,
             'status_pasien' => $request->status_pasien
         ];
 
-        PendaftaranPasien::where('id_pendaftaran', $id)->update($dtpendaftaran);
+        PendaftaranPasienInap::where('id_pendaftaran', $id)->update($dtpendaftaran);
 
-        return redirect()->route('daftar.online');
+        return redirect()->route('daftar.pasieninap');
     }
 
     public function destroy($id)
     {
-        PendaftaranPasien::where('id_pendaftaran', $id)->delete();
-        return redirect()->route('daftar.online');
+        PendaftaranPasienInap::where('id_pendaftaran', $id)->delete();
+        return redirect()->route('daftar.pasieninap');
     }
 
     public function search(Request $request)
     {
         $searchTerm = $request->get('cari');
 
-        $data = PendaftaranPasien::with('pasien', 'poli')
+        $data = PendaftaranPasienInap::with('pasien')
             ->where(function ($query) use ($searchTerm) {
                 $query->whereHas('pasien', function ($subquery) use ($searchTerm) {
                     $subquery->where('pasien_nama', 'LIKE', '%' . $searchTerm . '%');
                 })
-                    ->orWhere('kode_pendaftaran', 'LIKE', '%' . $searchTerm . '%')
-                    ->orWhereHas('poli', function ($subquery) use ($searchTerm) {
-                        $subquery->where('nama_poli', 'LIKE', '%' . $searchTerm . '%');
-                    });
+                    ->orWhere('kode_pendaftaran', 'LIKE', '%' . $searchTerm . '%');
             })
             ->get();
 

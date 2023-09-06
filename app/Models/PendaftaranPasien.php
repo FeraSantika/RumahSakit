@@ -19,7 +19,12 @@ class PendaftaranPasien extends Model
         'pasien_id',
         'id_poli',
         'keluhan',
-        'status_pasien'
+        'status_pasien',
+        'status_obat',
+        'petugas',
+        'grandtotal',
+        'dibayar',
+        'kembalian'
     ];
 
     public function pasien()
@@ -35,5 +40,25 @@ class PendaftaranPasien extends Model
     public function aksespoli()
     {
         return $this->belongsTo(DataAksesPoli::class, 'id_poli', 'id_poli');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(DataUser::class, 'petugas', 'User_id');
+    }
+
+    public function obat()
+    {
+        return $this->belongsTo(DataObat::class, 'petugas', 'User_id');
+    }
+
+    public function listobat()
+    {
+        return $this->belongsTo(ListDaftarObat::class, 'kode_pendaftaran', 'kode_pendaftaran');
+    }
+
+    public function listtindakan()
+    {
+        return $this->belongsTo(ListDaftarTindakan::class, 'kode_pendaftaran', 'kode_pendaftaran');
     }
 }

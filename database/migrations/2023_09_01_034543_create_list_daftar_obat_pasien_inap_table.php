@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('list_daftar_obat_pasien', function (Blueprint $table) {
+        Schema::create('list_daftar_obat_pasienInap', function (Blueprint $table) {
             $table->bigIncrements('list_id');
             $table->char('kode_pendaftaran');
             $table->char('nama_obat');
             $table->char('kategori_obat');
             $table->integer('qty');
             $table->enum('status', ['Ada', 'Tidak ada']);
+            $table->date('tanggal');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('list_daftar_obat_pasien');
+        Schema::dropIfExists('list_daftar_obat_pasien_inap');
     }
 };

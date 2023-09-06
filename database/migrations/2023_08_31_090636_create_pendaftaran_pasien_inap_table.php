@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pendaftaran_pasien', function (Blueprint $table) {
+        Schema::create('pendaftaran_pasien_inap', function (Blueprint $table) {
             $table->bigIncrements('id_pendaftaran');
             $table->char('kode_pendaftaran');
             $table->integer('pasien_id');
-            $table->integer('id_poli');
             $table->text('keluhan');
             $table->date('tgl_daftar')->nullable();
             $table->enum('status_pasien', ['Umum', 'BPJS']);
@@ -35,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pendaftaran_pasien');
+        Schema::dropIfExists('pendaftaran_pasien_inap');
     }
 };

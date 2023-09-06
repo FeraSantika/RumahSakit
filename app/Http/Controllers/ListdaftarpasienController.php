@@ -25,7 +25,8 @@ class ListdaftarpasienController extends Controller
                 $query->where('User_id', $user->User_id);
             })
             ->paginate(10);
-        return view('listdaftarpasien.listdaftarpasien', compact('dtpendaftar'));
+
+        return view('listpasienrawatjalan.listdaftarpasien', compact('dtpendaftar'));
     }
 
     public function autocomplete(Request $request)
@@ -60,33 +61,42 @@ class ListdaftarpasienController extends Controller
 
     public function detail($id)
     {
-        $dtpasien =  DataPasien::where('pasien_id', $id)->first();
-        $dtlistobat =  ListDaftarObat::where('kode_pasien', $dtpasien->pasien_kode)->get();
-        $dtlisttindakan =  ListDaftarTindakan::where('kode_pasien', $dtpasien->pasien_kode)->get();
-        $dtdiagnosa = PendaftaranPasien::where('pasien_id', $dtpasien->pasien_id)->orderBy('kode_pendaftaran', 'desc')->first();
-        $dtriwayat = PendaftaranPasien::where('pasien_id', $dtpasien->pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('poli')->get();
-        $diagnosa = PendaftaranPasien::get();
+        $dtpendaftar = PendaftaranPasien::where('kode_pendaftaran', $id)->with('pasien')->get();
+        $dtlistobat =  ListDaftarObat::where('kode_pendaftaran', $id)->get();
+        $dtlisttindakan =  ListDaftarTindakan::where('kode_pendaftaran', $id)->get();
 
-        return view('listdaftarpasien.detailpasien', compact('dtpasien', 'dtlistobat', 'dtlisttindakan', 'dtdiagnosa', 'dtriwayat', 'diagnosa'));
+        foreach ($dtpendaftar as $pendaftaran) {
+            $pasien_id = $pendaftaran->pasien_id;
+            $dtriwayat = PendaftaranPasien::where('pasien_id', $pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('poli', 'user', 'listobat', 'listtindakan')->get();
+        }
+        return view('listpasienrawatjalan.detailpasien', compact('dtpendaftar', 'dtriwayat', 'dtlistobat', 'dtlisttindakan'));
+
+        // $dtpasien =  DataPasien::where('pasien_id', $id)->first();
+        // $dtlistobat =  ListDaftarObat::where('kode_pasien', $dtpasien->pasien_kode)->get();
+        // $dtlisttindakan =  ListDaftarTindakan::where('kode_pasien', $dtpasien->pasien_kode)->get();
+        // $dtdiagnosa = PendaftaranPasien::where('pasien_id', $dtpasien->pasien_id)->orderBy('kode_pendaftaran', 'desc')->first();
+        // $dtriwayat = PendaftaranPasien::where('pasien_id', $dtpasien->pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('poli', 'user', 'pasien.daftarobat', 'pasien.daftartindakan')->get();
+        // $diagnosa = PendaftaranPasien::where('kode_pendaftaran', $dtdiagnosa->kode_pendaftaran)->get();
+        // return view('listdaftarpasien.detailpasien', compact('dtpendaftar','dtpasien', 'dtlistobat', 'dtlisttindakan', 'dtdiagnosa', 'dtriwayat', 'diagnosa'));
     }
 
 
     public function insertlist(Request $request)
     {
         $dataobat = DataObat::where('nama_obat', $request->search)->with('kategori')->first();
-        $dtpasien =  DataPasien::where('pasien_kode', $request->kode)->first();
+        $dtpasien =  PendaftaranPasien::where('kode_pendaftaran', $request->kode)->first();
 
         if ($dataobat && $dtpasien) {
             $listdaftarobat = ListDaftarObat::create([
                 'nama_obat' => $dataobat->nama_obat,
-                'kode_pasien' => $dtpasien->pasien_kode,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
                 'kategori_obat' => $dataobat->kategori->nama_kategori,
                 'qty' => 1
             ]);
 
             $description_data = [
                 'nama_obat' => $dataobat->nama_obat,
-                'kode_pasien' => $dtpasien->pasien_kode,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
                 'kategori_obat' => $dataobat->kategori->nama_kategori,
                 'qty' => 1,
                 'list_id' => $listdaftarobat->id,
@@ -147,18 +157,18 @@ class ListdaftarpasienController extends Controller
     public function inserttindakan(Request $request)
     {
         $datatindakan = DataTindakan::where('nama_tindakan', $request->search)->first();
-        $dtpasien =  DataPasien::where('pasien_kode', $request->kode)->first();
+        $dtpasien =  PendaftaranPasien::where('kode_pendaftaran', $request->kode)->first();
 
         if ($datatindakan && $dtpasien) {
             $listdaftartindakan = ListDaftarTindakan::create([
                 'nama_tindakan' => $datatindakan->nama_tindakan,
-                'kode_pasien' => $dtpasien->pasien_kode,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
                 'harga_tindakan' => $datatindakan->harga_tindakan,
             ]);
 
             $description_data = [
                 'nama_tindakan' => $datatindakan->nama_tindakan,
-                'kode_pasien' => $dtpasien->pasien_kode,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
                 'harga_tindakan' => $datatindakan->harga_tindakan,
                 'list_id' => $listdaftartindakan->id,
             ];
@@ -191,24 +201,14 @@ class ListdaftarpasienController extends Controller
 
     public function updateDiagnosa(Request $request, $id)
     {
-        $daftarTindakanExists = ListDaftarTindakan::where('kode_pasien', $request->kode)->exists();
+        $user = Auth::user();
+        $updatedData = [
+            'diagnosa' => $request->diagnosa,
+            'status_pemeriksaan' => 'Tertangani',
+            'petugas' => $user->User_id
+        ];
 
-        if ($daftarTindakanExists) {
-            $updatedData = [
-                'diagnosa' => $request->diagnosa,
-                'status_pemeriksaan' => 'Tertangani',
-            ];
-
-            PendaftaranPasien::where('kode_pendaftaran', $id)->update($updatedData);
-            return response()->json(['success' => true]);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Data gagal disimpan karena tidak ada daftar tindakan.']);
-        }
-    }
-
-    public function detailriwayat($id)
-    {
-        $riwayat = PendaftaranPasien::find($id);
-        return view('listdaftarpasien.detailpasien', compact('riwayat'));
+        PendaftaranPasien::where('kode_pendaftaran', $id)->update($updatedData);
+        return response()->json(['success' => true]);
     }
 }

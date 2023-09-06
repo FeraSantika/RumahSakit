@@ -13,9 +13,10 @@
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Pendaftaran Pasien</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pendaftaran Pasien Rawat Inap</a></li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Pendaftaran Pasien</h4>
+                        <h4 class="page-title">Pendaftaran Pasien Rawat Inap</h4>
                     </div>
                 </div>
             </div>
@@ -27,7 +28,7 @@
                         <div class="card-body">
                             <div class="row mb-2">
                                 <div class="col-sm-2">
-                                    <a href="{{ route('daftar.online.create') }}" class="btn btn-danger mb-2"><i
+                                    <a href="{{ route('daftar.pasieninap.create') }}" class="btn btn-danger mb-2"><i
                                             class="mdi mdi-plus-circle me-2"></i> Add Pendaftaran</a>
                                 </div>
                                 <div class="col-sm-5"></div>
@@ -49,7 +50,6 @@
                                                 <th scope="col">No.</th>
                                                 <th scope="col">Kode Pendaftaran</th>
                                                 <th scope="col">Nama Pasien</th>
-                                                <th scope="col">Poli</th>
                                                 <th scope="col">Keluhan</th>
                                                 <th scope="col">Status Pemeriksaan</th>
                                                 <th scope="col" class="text-end">Action</th>
@@ -68,11 +68,6 @@
                                                             {{ $item->pasien->pasien_nama }}
                                                         @endif
                                                     </td>
-                                                    <td>
-                                                        @if (isset($item->poli))
-                                                            {{ $item->poli->nama_poli }}
-                                                        @endif
-                                                    </td>
                                                     <td>{{ $item->keluhan }}</td>
                                                     <td>
                                                         @if ($item->status_pemeriksaan === 'Tertangani')
@@ -84,17 +79,17 @@
                                                         @endif
                                                     </td>
                                                     <td class="text-end">
-                                                        <a href="{{ route('daftar.online.edit', $item->id_pendaftaran) }}"
+                                                        <a href="{{ route('daftar.pasieninap.edit', $item->id_pendaftaran) }}"
                                                             class="action-icon">
                                                             <i class="mdi mdi-square-edit-outline"></i>
                                                         </a>
-                                                        <a href="{{ route('daftar-online.destroy', $item->id_pendaftaran) }}"
+                                                        <a href="{{ route('daftar-pasieninap.destroy', $item->id_pendaftaran) }}"
                                                             class="action-icon"
                                                             onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->id_pendaftaran }}').submit();">
                                                             <i class="mdi mdi-delete"></i>
                                                         </a>
                                                         <form id="delete-form-{{ $item->id_pendaftaran }}"
-                                                            action="{{ route('daftar-online.destroy', $item->id_pendaftaran) }}"
+                                                            action="{{ route('daftar-pasieninap.destroy', $item->id_pendaftaran) }}"
                                                             method="POST" style="display: none;">
                                                             @csrf
                                                             @method('DELETE')
@@ -137,7 +132,7 @@
 
             function performSearch(searchTerm) {
                 $.ajax({
-                    url: "{{ route('search.daftar-pasien') }}",
+                    url: "{{ route('search.daftar-pasieninap') }}",
                     type: 'GET',
                     dataType: "json",
                     data: {
@@ -165,14 +160,13 @@
                             "<td>" + rowNumber + "</td>" +
                             "<td>" + item.kode_pendaftaran + "</td>" +
                             "<td>" + item.pasien.pasien_nama + "</td>" +
-                            "<td>" + item.poli.nama_poli + "</td>" +
                             "<td>" + item.keluhan + "</td>" +
                             "<td><button class='btn " + statusButtonClass + " btn-sm'>" + item
                             .status_pemeriksaan + "</button></td>" +
-                            "<td><a href='daftar-online/edit/" + item.id_pendaftaran +
+                            "<td><a href='daftar-pasieninap/edit/" + item.id_pendaftaran +
                             "' class='action-icon'>" +
                             "<i class='mdi mdi-square-edit-outline'></i></a>" +
-                            "<a href='daftar-online/destroy/" + item.id_pendaftaran +
+                            "<a href='daftar-pasieninap/destroy/" + item.id_pendaftaran +
                             "' class='action-icon'>" +
                             "<i class='mdi mdi-delete'></i></a></td>" +
                             "</tr>";
