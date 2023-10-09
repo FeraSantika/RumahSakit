@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMenu;
 use App\Models\DataPoli;
+use App\Models\DataRoleMenu;
 use Illuminate\Http\Request;
 
 class PoliController extends Controller
@@ -10,17 +12,23 @@ class PoliController extends Controller
     public function index()
     {
         $poli = DataPoli::all();
-        return view('poli.poli', compact('poli'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('poli.poli', compact('poli', 'menu', 'roleuser'));
     }
 
     public function create()
     {
-        return view('poli.create');
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('poli.create', compact('menu', 'roleuser'));
     }
 
     public function store(Request $request)
     {
-         $request->validate([
+        $request->validate([
             'nama' => 'required',
         ]);
 
@@ -34,7 +42,10 @@ class PoliController extends Controller
     public function edit($id)
     {
         $poli = DataPoli::where('id_poli', $id)->first();
-        return view('poli.edit', compact('poli'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('poli.edit', compact('poli', 'menu', 'roleuser'));
     }
 
     public function update(Request $request, $id)

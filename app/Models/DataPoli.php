@@ -13,4 +13,8 @@ class DataPoli extends Model
         'id_poli',
         'nama_poli',
     ];
+
+    public function antrian(){
+        return $this->belongsTo(DataAntrian::class, 'id_poli', 'id_poli');
+    }
 }

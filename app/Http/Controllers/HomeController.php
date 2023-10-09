@@ -4,13 +4,22 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\DataMenu;
+use App\Models\DataUser;
 use App\Models\DataBarang;
+use App\Models\DataPasien;
+use App\Models\DataPoli;
 use App\Models\Verifytoken;
+use App\Models\DataRoleMenu;
 use App\Models\DataSupplier;
 use Illuminate\Http\Request;
+use App\Models\ListDaftarObat;
+use App\Models\PendaftaranPasien;
 use Illuminate\Support\Facades\DB;
+use App\Models\PendaftaranPasienInap;
 use App\Models\Transaksi_barang_masuk;
 use App\Models\Transaksi_barang_keluar;
+use App\Models\ListDaftarObatPasienInap;
 
 class HomeController extends Controller
 {
@@ -31,60 +40,101 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // $tbk =  Transaksi_barang_masuk::count('transaksi_id');
-        // $tbm =  Transaksi_barang_keluar::count('transaksi_id');
-        // $customers = Transaksi_barang_keluar::count('customer');
-        // $products = DataBarang::count('kode_barang');
-        // $transactions = $tbk + $tbm;
-        // $suppliers = DataSupplier::count('kode_supplier');
+        $pasienjalan =  PendaftaranPasien::count('id_pendaftaran');
 
-        // $startDate = Carbon::now()->startOfMonth();
-        // $endDate = Carbon::now()->endOfMonth();
+        $pasienumum = PendaftaranPasien::where('status_pasien', 'Umum')
+            ->count();
+        $pasienbpjs = PendaftaranPasien::where('status_pasien', 'BPJS')
+            ->count();
+        $pasientertangani = PendaftaranPasien::where('status_pemeriksaan', 'Tertangani')
+            ->count();
+
+        $pasieninap =  PendaftaranPasienInap::count('id_pendaftaran');
+
+        $pasieninapumum = PendaftaranPasienInap::where('status_pasien', 'Umum')->count();
+        $pasieninapbpjs = PendaftaranPasienInap::where('status_pasien', 'BPJS')
+            ->count();
+        $pasieninaptertangani = PendaftaranPasienInap::where('status_pemeriksaan', 'Tertangani')
+            ->count();
+        $pasien = DataPasien::count('pasien_id');
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        $dokter = DataUser::where('Role_id', 2)->count('User_id');
+        $poli = DataPoli::count('id_poli');
+
+        $obatrawatjalan = ListDaftarObat::sum('qty');
+        $obatrawatinap = ListDaftarObatPasienInap::sum('qty');
+        $obat = $obatrawatjalan + $obatrawatinap;
+
+        $startDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now()->endOfMonth();
 
         // Membuat array data tanggal untuk seluruh bulan
-        // $labels = [];
-        // $currentDate = $startDate->copy();
-        // while ($currentDate <= $endDate) {
-        //     $labels[] = $currentDate->format('d M Y');
-        //     $currentDate->addDay();
-        // }
+        $labels = [];
+        $currentDate = $startDate->copy();
+        while ($currentDate <= $endDate) {
+            $labels[] = $currentDate->format('d M Y');
+            $currentDate->addDay();
+        }
 
-        // Mengambil data transaksi masuk dari database
-        // $tbkData = Transaksi_barang_masuk::select(
-        //     DB::raw('DATE(tanggal_tbm) as tanggal'),
-        //     DB::raw('COUNT(transaksi_id) as total')
-        // )
-        //     ->whereBetween('tanggal_tbm', [$startDate, $endDate])
-        //     ->groupBy('tanggal')
-        //     ->orderBy('tanggal')
-        //     ->get();
+        // Mengambil data Pendaftaran Pasien Rawat Jalan dari database
+        $pasienjalanData = PendaftaranPasien::select(
+            DB::raw('DATE(created_at) as tanggal'),
+            DB::raw('COUNT(id_pendaftaran) as total')
+        )
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('tanggal')
+            ->orderBy('tanggal')
+            ->get();
 
-        // Mengambil data transaksi keluar dari database
-        // $tbmData = Transaksi_barang_keluar::select(
-        //     DB::raw('DATE(tanggal_tbk) as tanggal'),
-        //     DB::raw('COUNT(transaksi_id) as total')
-        // )
-        //     ->whereBetween('tanggal_tbk', [$startDate, $endDate])
-        //     ->groupBy('tanggal')
-        //     ->orderBy('tanggal')
-        //     ->get();
+        // Mengambil data Pendaftaran Pasien Rawat Inap dari database
+        $pasieninapData = PendaftaranPasienInap::select(
+            DB::raw('DATE(created_at) as tanggal'),
+            DB::raw('COUNT(id_pendaftaran) as total')
+        )
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('tanggal')
+            ->orderBy('tanggal')
+            ->get();
 
         // Membuat array data total transaksi berdasarkan tanggal
-        // $totalsTbk = [];
-        // $totalsTbm = [];
-        // foreach ($labels as $label) {
-        //     $tanggal = Carbon::createFromFormat('d M Y', $label)->format('Y-m-d');
-        //     $transaksiTbk = $tbkData->firstWhere('tanggal', $tanggal);
-        //     $transaksiTbm = $tbmData->firstWhere('tanggal', $tanggal);
-        //     $totalsTbk[] = $transaksiTbk ? $transaksiTbk->total : 0;
-        //     $totalsTbm[] = $transaksiTbm ? $transaksiTbm->total : 0;
-        // }
+        $totalspasienjalan = [];
+        $totalspasieninap = [];
+        foreach ($labels as $label) {
+            $tanggal = Carbon::createFromFormat('d M Y', $label)->format('Y-m-d');
+            $transaksipasienjalan = $pasienjalanData->firstWhere('tanggal', $tanggal);
+            $transaksipasieninap = $pasieninapData->firstWhere('tanggal', $tanggal);
+            $totalspasienjalan[] = $transaksipasienjalan ? $transaksipasienjalan->total : 0;
+            $totalspasieninap[] = $transaksipasieninap ? $transaksipasieninap->total : 0;
+        }
 
-        // $datesFromMasuk = Transaksi_barang_masuk::pluck('tanggal_tbm')->toArray();
-        // $datesFromKeluar = Transaksi_barang_keluar::pluck('tanggal_tbk')->toArray();
-        // $allDates = array_unique(array_merge($datesFromMasuk, $datesFromKeluar));
+        $datesFrompasienjalan = PendaftaranPasien::pluck('created_at')->toArray();
+        $datesFrompasieninap = PendaftaranPasienInap::pluck('created_at')->toArray();
+        $allDates = array_unique(array_merge($datesFrompasienjalan, $datesFrompasieninap));
 
-        return view('home');
+        return view('home', compact(
+            'pasienjalan',
+            'pasieninap',
+            'allDates',
+            'totalspasienjalan',
+            'totalspasieninap',
+            'labels',
+            'pasien',
+            'menu',
+            'roleuser',
+            'obat',
+            'dokter',
+            'poli',
+            'pasienumum',
+            'pasienbpjs',
+            'pasientertangani',
+            'pasieninapumum',
+            'pasieninapbpjs',
+            'pasieninaptertangani'
+        ));
+
+        // return view('home', compact('customers', 'products', 'transactions', 'suppliers', 'tbk', 'tbm', 'allDates', 'totalsTbk', 'totalsTbm', 'labels'));
 
         // return view('home');
         //$get_user = User::where('email', auth()->user()->email)->first();
@@ -119,5 +169,11 @@ class HomeController extends Controller
 
     // public function tampil() {
     //     return view('dashboard-analytics');
+    // }
+
+    // public function sidebar()
+    // {
+    //     $menus = DataMenu::all();
+    //     return view('layouts.sidebar', compact('menus'));
     // }
 }

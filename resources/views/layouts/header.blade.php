@@ -32,15 +32,6 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-{{-- <link href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui-min.css" rel="stylesheet">
-<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script> --}}
-
 <!-- Theme Config Js -->
 <script src="{{ asset('assets/js/hyper-config.js') }}"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> --}}
-
-<!-- Select2 css -->
-<link href="assets/vendor/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-
-<!--  Select2 Js -->
-<script src="assets/vendor/select2/js/select2.min.js"></script>

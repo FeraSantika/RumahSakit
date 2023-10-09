@@ -92,9 +92,6 @@
                         <div class="pagination">
                             {{ $dtkategori->links('pagination::bootstrap-4') }}
                         </div>
-                        <p class="mt-2">
-                            Menampilkan {{ $dtkategori->count() }} data dari {{ $dtkategori->total() }} total data.
-                        </p>
                     </div>
                 </div> <!-- end col -->
             </div>

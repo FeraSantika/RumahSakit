@@ -17,7 +17,6 @@ return new class extends Migration
             $table->integer('pasien_id');
             $table->integer('id_poli');
             $table->text('keluhan');
-            $table->date('tgl_daftar')->nullable();
             $table->enum('status_pasien', ['Umum', 'BPJS']);
             $table->text('diagnosa')->nullable();
             $table->text('petugas');

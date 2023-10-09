@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMenu;
+use App\Models\DataRoleMenu;
 use App\Models\DataTindakan;
 use Illuminate\Http\Request;
 
@@ -10,12 +12,18 @@ class TindakanController extends Controller
     public function index()
     {
         $dttindakan = DataTindakan::paginate(10);
-        return view('tindakan.tindakan', compact('dttindakan'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('tindakan.tindakan', compact('dttindakan', 'menu', 'roleuser'));
     }
 
     public function create()
     {
-        return view('tindakan.create');
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('tindakan.create',compact('roleuser', 'menu'));
     }
 
     public function store(Request $request)
@@ -30,8 +38,11 @@ class TindakanController extends Controller
 
     public function edit($id)
     {
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
         $dttindakan = DataTindakan::where('id_tindakan', $id)->first();
-        return view('tindakan.edit', compact('dttindakan'));
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('tindakan.edit', compact('dttindakan', 'roleuser', 'menu'));
     }
 
     public function update(Request $request, $id_tindakan)

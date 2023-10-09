@@ -4,7 +4,7 @@
         <h3>Pendaftaran Pasien</h3>
         <div class="content bg-white border border-light">
             <div class="m-3">
-                <form action="{{ route('daftar.online.store') }}" method="POST" class="mb-3" id="pasien-form"
+                <form action="{{ route('daftar-pasienjalan.store') }}" method="POST" class="mb-3" id="pasien-form"
                     enctype="multipart/form-data">
                     @csrf
 
@@ -33,7 +33,7 @@
                         <div class="col-md-2">
                             <label for="search" class="form-label-md-6"> Detail Pasien</label>
                         </div>
-                        <div class="col-md-10">
+                        <div class="col-md-4">
                             <div class="input-group">
                                 <input class="typeahead form-control" name="search" id="search" class="form-control"
                                     placeholder="NIK | Nama pasien">
@@ -41,6 +41,10 @@
                                     <i class="ri-check-fill"></i>
                                 </button>
                             </div>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ route('pasien.create') }}" class="btn btn-success mb-2"><i
+                                    class="mdi mdi-plus-circle me-2"></i> Add Pasien</a>
                         </div>
                     </div>
 
@@ -153,7 +157,7 @@
             });
         });
 
-        var simpan = "{{ route('daftar.online.store') }}";
+        var simpan = "{{ route('daftar-pasienjalan.store') }}";
         $('#submit').click(function(e) {
             e.preventDefault();
             let kodedaftar = $('#kode').val();

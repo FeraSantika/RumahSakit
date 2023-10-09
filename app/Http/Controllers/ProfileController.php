@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMenu;
 use App\Models\DataRole;
 use App\Models\DataUser;
+use App\Models\DataRoleMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,8 +17,10 @@ class ProfileController extends Controller
         $user = auth()->user();
         $dtUser = DataUser::with('role')->where('User_id', $user->User_id)->first();
         $dtRole = DataRole::all();
-
-        return view('profile.edit', compact('user', 'dtRole', 'dtUser'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('profile.edit', compact('user', 'dtRole', 'dtUser', 'menu', 'roleuser'));
     }
 
 
@@ -43,7 +47,10 @@ class ProfileController extends Controller
 
     public function editPassword()
     {
-        return view('profile.edit-password');
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('profile.edit-password', compact('menu', 'roleuser'));
     }
 
     public function updatePassword(Request $request)

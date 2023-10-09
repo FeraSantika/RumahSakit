@@ -1,0 +1,242 @@
+@extends('main')
+@section('style')
+    <style>
+        .text-customcolor {
+            color: #your_color_code;
+        }
+    </style>
+@endsection
+@section('content')
+    @if (Auth::user()->isDokter() || Auth::user()->isAdmin())
+        <div class="content">
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <form class="d-flex">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-light" id="dash-daterange">
+                                        <span class="input-group-text bg-primary border-primary text-white">
+                                            <i class="mdi mdi-calendar-range font-13"></i>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                            <h4 class="page-title">Dashboard</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-6 col-lg-4">
+                        <h5>Dashboard Dokter</h5>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="card widget-flat">
+                                    <div class="card-body">
+                                        <a href="{{ route('pasien') }}">
+                                            <div class="float-end">
+                                                <i class="mdi mdi-account-multiple widget-icon"></i>
+                                            </div>
+                                            <h5 class="text-muted fw-normal mt-0" title="Number of Customers">
+                                                Pasien</h5>
+                                            <h3 class="mt-3 mb-3">{{ $pasien }}</h3>
+                                        </a>
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col-->
+
+                            <div class="col-sm-6">
+                                <div class="card widget-flat">
+                                    <div class="card-body">
+                                        <a href="{{ route('tindakan') }}">
+                                            <div class="float-end">
+                                                <i class="mdi mdi-stethoscope widget-icon"></i>
+                                            </div>
+                                            <h5 class="text-muted fw-normal mt-0" title="Number of Orders">Tindakan
+                                            </h5>
+                                            <h3 class="mt-3 mb-3">{{ $tindakan }}</h3>
+                                        </a>
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col-->
+                        </div> <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="card widget-flat">
+                                    <div class="card-body">
+                                        <a href="{{ route('obat') }}">
+                                            <div class="float-end">
+                                                <i class="mdi mdi-pill widget-icon"></i>
+                                            </div>
+                                            <h5 class="text-muted fw-normal mt-0" title="Average Revenue">Obat
+                                            </h5>
+                                            <h3 class="mt-3 mb-3">{{ $obat }}</h3>
+                                        </a>
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col-->
+
+                            <div class="col-sm-6">
+                                <div class="card widget-flat">
+                                    <div class="card-body">
+                                        <a href="{{ route('poli') }}">
+                                            <div class="float-end">
+                                                <i class="mdi mdi-hospital-building widget-icon"></i>
+                                            </div>
+                                            <h5 class="text-muted fw-normal mt-0" title="Growth">Poli</h5>
+                                            <h3 class="mt-3 mb-3">{{ $poli }}</h3>
+                                        </a>
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col-->
+                        </div> <!-- end row -->
+                    </div> <!-- end col -->
+                    <div class="col-xl-6 col-lg-4">
+                        @if (isset($jadwaldokter) && count($jadwaldokter) > 0)
+                            <h5>Jadwal Dokter</h5>
+                            <div class="accordion" id="accordionExample">
+                                @foreach ($jadwaldokter as $key => $jadwal)
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading{{ $key }}">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapse{{ $key }}" aria-expanded="true"
+                                                aria-controls="collapse{{ $key }}">
+                                                {{ $jadwal->nama_hari }}
+                                            </button>
+                                        </h2>
+                                        <div id="collapse{{ $key }}"
+                                            class="accordion-collapse collapse {{ $key === 0 ? 'show' : '' }}"
+                                            aria-labelledby="heading{{ $key }}"
+                                            data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <strong>{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="card mb-2">
+                                <h5 class="eader-title text-center">Jadwal Belum ditambahkan</h5>
+
+                            </div>
+                        @endif
+
+                    </div><!-- end col -->
+                </div><!-- end row -->
+                <div class="row mt-5">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="d-flex card-header justify-content-between align-items-center">
+                                <h4 class="header-title">Pendaftaran Pasien</h4>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="chart-content-bg">
+                                    <div class="row text-center">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <a href="{{ route('list-daftar-pasienJalan') }}">
+                                                        <p class="text-muted mb-0 mt-3">Pasien Rawat Jalan</p>
+                                                        <h2 class="fw-normal mb-3">
+                                                            <small
+                                                                class="mdi mdi-checkbox-blank-circle text-primary align-middle me-1"></small>
+                                                            <span>{{ $pasienjalan }}</span>
+                                                        </h2>
+                                                    </a>
+                                                </div>
+                                                <div class="col-sm-6 mt-3">
+                                                    <p class="text-start"><small
+                                                            class="mdi mdi-checkbox-blank-circle text-info align-middle me-1"></small>Pasien
+                                                        Umum : <b>{{ $pasienumum }}</b></p>
+                                                    <p class="text-start"><small
+                                                            class="mdi mdi-checkbox-blank-circle text-danger align-middle me-1"></small>Pasien
+                                                        BPJS : <b>{{ $pasienbpjs }}</b></p>
+                                                    <p class="text-start"><small
+                                                            class="mdi mdi-checkbox-blank-circle text-warning align-middle me-1"></small>Pasien
+                                                        Tertangani : <b>{{ $pasientertangani }}</b></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <a href="{{ route('daftar.pasieninap') }}">
+                                                        <p class="text-muted mb-0 mt-3">Pasien Rawat Inap</p>
+                                                        <h2 class="fw-normal mb-3">
+                                                            <small
+                                                                class="mdi mdi-checkbox-blank-circle text-success align-middle me-1"></small>
+                                                            <span>{{ $pasieninap }}</span>
+                                                        </h2>
+                                                    </a>
+                                                </div>
+                                                <div class="col-sm-6 mt-3">
+                                                    <p class="text-start"><small
+                                                            class="mdi mdi-checkbox-blank-circle text-info align-middle me-1"></small>Pasien
+                                                        Umum : <b>{{ $pasieninapumum }}</b></p>
+                                                    <p class="text-start"><small
+                                                            class="mdi mdi-checkbox-blank-circle text-danger align-middle me-1"></small>Pasien
+                                                        BPJS : <b>{{ $pasieninapbpjs }}</b></p>
+                                                    <p class="text-start"><small
+                                                            class="mdi mdi-checkbox-blank-circle text-warning align-middle me-1"></small>Pasien
+                                                        Tertangani : <b>{{ $pasieninaptertangani }}</b></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div dir="ltr">
+                                <div id="chart" class="apex-charts mt-3" data-colors="#727cf5,#0acf97"></div>
+                            </div>
+                        </div> <!-- end card-body-->
+                    </div> <!-- end card-->
+                </div> <!-- end col-->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end row -->
+        </div>
+        <!-- container -->
+        </div>
+    @endif
+@endsection
+@section('script')
+    <script type="text/javascript">
+        var pasienjalan = @json($totalspasienjalan);
+        var pasieninap = @json($totalspasieninap);
+
+        var options = {
+            series: [{
+                name: "Pendaftaran Pasien Rawat Jalan",
+                data: pasienjalan
+            }, {
+                name: "Pendaftaran Pasien Rawat Inap",
+                data: pasieninap
+            }],
+            chart: {
+                height: 350,
+                type: 'area'
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            xaxis: {
+                categories: @json($labels)
+            },
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    </script>
+@endsection

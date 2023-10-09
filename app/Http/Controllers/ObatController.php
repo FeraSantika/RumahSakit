@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMenu;
 use App\Models\DataObat;
 use App\Models\kategori;
+use App\Models\DataRoleMenu;
 use Illuminate\Http\Request;
 
 class ObatController extends Controller
@@ -11,13 +13,19 @@ class ObatController extends Controller
     public function index()
     {
         $dtobat = DataObat::with('kategori')->paginate(10);
-        return view('obat.obat', compact('dtobat'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('obat.obat', compact('dtobat', 'menu', 'roleuser'));
     }
 
     public function create()
     {
         $dtkategori = kategori::get();
-        return view('obat.create', compact('dtkategori'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('obat.create', compact('dtkategori', 'menu', 'roleuser'));
     }
 
     public function store(Request $request)
@@ -36,7 +44,10 @@ class ObatController extends Controller
     {
         $dtkategori = kategori::get();
         $dtobat = Dataobat::where('kode_obat', $kode_obat)->get();
-        return view('obat.edit', compact('dtobat', 'dtkategori'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('obat.edit', compact('dtobat', 'dtkategori', 'menu', 'roleuser'));
     }
 
     public function update(Request $request, $kode_obat)

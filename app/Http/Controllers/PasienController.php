@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMenu;
 use App\Models\DataObat;
 use App\Models\kategori;
 use App\Models\DataPasien;
+use App\Models\DataRoleMenu;
 use App\Models\DataTindakan;
 use Illuminate\Http\Request;
 use App\Models\ListDaftarObat;
-use App\Models\ListDaftarTindakan;
 use App\Models\PendaftaranPasien;
+use App\Models\ListDaftarTindakan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -18,7 +20,10 @@ class PasienController extends Controller
     public function index()
     {
         $dtpasien =  DataPasien::paginate(10);
-        return view('pasien.pasien', compact('dtpasien'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('pasien.pasien', compact('dtpasien', 'menu', 'roleuser'));
     }
 
     public function create()
@@ -35,7 +40,10 @@ class PasienController extends Controller
         $nextId = $lastId + 1;
         $paddedId = str_pad($nextId, $length, '0', STR_PAD_LEFT);
         $pasienCode = $prefix . $paddedId;
-        return view('pasien.create', compact('dtpasien', 'lastpasien', 'pasienCode'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('pasien.create', compact('dtpasien', 'lastpasien', 'pasienCode', 'menu', 'roleuser'));
     }
 
 
@@ -85,7 +93,10 @@ class PasienController extends Controller
     public function edit($id)
     {
         $dtpasien =  DataPasien::where('pasien_id', $id)->first();
-        return view('pasien.edit', compact('dtpasien'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('pasien.edit', compact('dtpasien', 'menu', 'roleuser'));
     }
 
     public function update(Request $request, $id)
@@ -114,6 +125,23 @@ class PasienController extends Controller
         $dt->delete();
         return redirect()->route('pasien');
     }
+
+    public function destroysearch($id)
+    {
+        try {
+            $dt = DataPasien::where('pasien_id', $id);
+
+            if ($dt) {
+                $dt->delete();
+                return response()->json(['message' => 'Pasien deleted successfully']);
+            } else {
+                return response()->json(['message' => 'Pasien not found'], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error deleting pasien: ' . $e->getMessage()], 500);
+        }
+    }
+
 
     public function autocomplete(Request $request)
     {
@@ -148,10 +176,10 @@ class PasienController extends Controller
     public function detail($id)
     {
         $dtpasien =  DataPasien::where('pasien_id', $id)->with('daftar')->first();
-        $dtlistobat =  ListDaftarObat::where('kode_pasien', $dtpasien->pasien_kode)->get();
-        $dtlisttindakan =  ListDaftarTindakan::where('kode_pasien', $dtpasien->pasien_kode)->get();
-
-        return view('pasien.detailpasien', compact('dtpasien', 'dtlistobat', 'dtlisttindakan'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('pasien.detailpasien', compact('dtpasien', 'menu', 'roleuser'));
     }
 
     // public function insertlist(Request $request)

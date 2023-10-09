@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataMenu;
-use Dflydev\DotAccessData\Data;
-use GuzzleHttp\Promise\Create;
+use App\Models\DataRoleMenu;
 use Illuminate\Http\Request;
+use GuzzleHttp\Promise\Create;
+use Dflydev\DotAccessData\Data;
 use Illuminate\Support\Facades\DB;
 
 class MenuController extends Controller
@@ -14,14 +15,20 @@ class MenuController extends Controller
     {
         $dtMenu = DataMenu::leftJoin('data_menu as subMenu', 'data_menu.Menu_sub', '=', 'subMenu.Menu_id')
             ->select('subMenu.Menu_name as submenu_name', 'data_menu.*')
-            ->get();
-        return view('menu.menu', compact('dtMenu'));
+            ->paginate(10);
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('menu.menu', compact('dtMenu', 'menu', 'roleuser'));
     }
 
     public function create()
     {
         $dtMenu = DataMenu::select('*')->where('Menu_category', 'Master Menu')->get();
-        return view('menu.create', compact('dtMenu'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('menu.create', compact('dtMenu', 'menu', 'roleuser'));
     }
 
     public function store(Request $request)
@@ -47,9 +54,11 @@ class MenuController extends Controller
     public function edit($Menu_id)
     {
         $dtMenu = DataMenu::where('Menu_id', $Menu_id)->first();
-        $menu = DataMenu::where('Menu_category', 'master menu')
+        $menu = DataMenu::where('Menu_category', 'Master Menu')
         ->get();
-        return view('menu.edit', compact('dtMenu', 'menu'));
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('menu.edit', compact('dtMenu', 'menu', 'roleuser'));
     }
 
     public function update(Request $request, $Menu_id)

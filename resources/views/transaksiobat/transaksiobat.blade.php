@@ -79,7 +79,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if ($item->status_obat === 'Belum Tertangani')
+                                                    @if ($item->status_obat === 'Belum tertangani')
                                                         <a href="{{ route('transaksi-obat.detail', $item->kode_pendaftaran) }}"
                                                             type="button" class="btn btn-primary" data-transaksi-id=""
                                                             onclick="">Lihat Detail</a>
@@ -99,9 +99,6 @@
                         <div class="pagination">
                             {{ $dtpendaftar->links('pagination::bootstrap-4') }}
                         </div>
-                        <p class="mt-2">
-                            Menampilkan {{ $dtpendaftar->count() }} data dari {{ $dtpendaftar->total() }} total data.
-                        </p>
                     </div>
                 </div> <!-- end col -->
             </div>
@@ -140,16 +137,35 @@
 
                 if (data.length > 0) {
                     data.forEach(function(item) {
+                        var badgestatuspasien = item.status_pasien === 'Umum' ? 'badge bg-success' :
+                            'badge bg-danger';
+                        var badgestatusobat = item.status_obat === 'Tertangani' ? 'badge bg-success' :
+                            'badge bg-danger';
+
                         resultList += "<tr>" +
                             "<td>" + rowNumber + "</td>" +
                             "<td>" + item.kode_pendaftaran + "</td>" +
                             "<td>" + item.pasien.pasien_nama + "</td>" +
-                            "<td>" + item.pasien.status_pasien + "</td>" +
-                            "<td>" + item.pasien.status_obat + "</td>" +
-                            "<td><a href='transaksi-obat/detail" + item.id_tindakan +
-                            "' class='btn btn-primary'>" +
-                            "</a></td>" +
-                            "</tr>";
+                            "<td><span class='" + badgestatuspasien + "'>" + item.status_pasien +
+                            "</span></td>";
+                        // "<td><span class='" + badgestatusobat + "'>" + item.status_obat +
+                        // "</span></td>" +
+                        // "<td><a href='transaksi-obat/detail/" + item.id_tindakan +
+                        // "' class='btn btn-primary'>" +
+                        // "Lihat Detail</a></td>" +
+                        // "</tr>";
+                        if (item.status_obat === 'Tertangani') {
+                            resultList += "<td><span class='" + badgestatusobat + "'>" + item.status_obat +
+                                "</span></td>";
+                        } else {
+                            resultList += "<td><span class='" + badgestatusobat + "'>" + item.status_obat +
+                                "</span></td>" +
+                                "<td><a href='transaksi-obat/detail/" + item.kode_pendaftaran +
+                                "' class='btn btn-primary'>" +
+                                "Lihat Detail</a></td>";
+                        }
+
+                        resultList += "</tr>";
 
                         rowNumber++;
                     });

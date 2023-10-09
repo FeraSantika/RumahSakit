@@ -4,13 +4,26 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>@yield('title')</title>
+    <title>simRS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-    <meta content="Coderthemes" name="author"/>
+    <meta content="Coderthemes" name="author" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('style')
     @include('layouts.header')
+    <style>
+        .side-nav .menuitem-active>a {
+            color: #F4E869;
+            font-weight: 500;
+        }
+
+        .side-nav .menuitem-active .menuitem-active .active {
+            /* color: var(--ct-menu-item-active-color); */
+            color: #F4E869;
+            font-weight: 500;
+        }
+
+    </style>
 </head>
 
 <body>

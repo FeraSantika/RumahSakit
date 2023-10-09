@@ -15,7 +15,7 @@ class PendaftaranPasienInap extends Model
         'pasien_id',
         'keluhan',
         'status_pasien',
-        'status_obat',
+        'status_pemeriksaan',
         'petugas',
         'grandtotal',
         'dibayar',
@@ -30,5 +30,20 @@ class PendaftaranPasienInap extends Model
     public function user()
     {
         return $this->belongsTo(DataUser::class, 'petugas', 'User_id');
+    }
+
+    public function listobat()
+    {
+        return $this->belongsTo(ListDaftarObatPasienInap::class, 'kode_pendaftaran', 'kode_pendaftaran');
+    }
+
+    public function listtindakan()
+    {
+        return $this->belongsTo(ListDaftarTindakanPasienInap::class, 'kode_pendaftaran', 'kode_pendaftaran');
+    }
+
+    public function listrujukan()
+    {
+        return $this->belongsTo(ListDaftarRujukanPasienInap::class, 'kode_pendaftaran', 'kode_pendaftaran');
     }
 }

@@ -61,7 +61,7 @@
                                                 $rowNumber = 1;
                                             @endphp
                                             @foreach ($dtpasien as $item)
-                                                <tr>
+                                                <tr id="{{ $item->pasien_id }}">
                                                     <td>{{ $rowNumber }}</td>
                                                     <td>{{ $item->pasien_kode }}</td>
                                                     <td>{{ $item->pasien_NIK }}</td>
@@ -153,7 +153,7 @@
 
                 if (data.length > 0) {
                     data.forEach(function(item) {
-                        resultList += "<tr>" +
+                        resultList += "<tr id='item.pasien_id'>" +
                             "<td>" + rowNumber + "</td>" +
                             "<td>" + item.pasien_kode + "</td>" +
                             "<td>" + item.pasien_NIK + "</td>" +
@@ -162,13 +162,13 @@
                             "<td>" + item.pasien_tgl_lahir + "</td>" +
                             "<td><a href='pasien/edit/" + item.pasien_id + "' class='action-icon'>" +
                             "<i class='mdi mdi-square-edit-outline'></i></a>" +
-                            "<a href='pasien/destroy/" + item.pasien_id + "' class='action-icon'>" +
+                            "<a href='javascript:void(0);' class='action-icon delete-pasien' data-pasien-id='" +
+                            item.pasien_id + "'>" +
                             "<i class='mdi mdi-delete'></i></a>" +
-                            "<a href='pasien/detail/" + item.pasien_id +
+                            "<a href='/admin/pasien/detail/" + item.pasien_id +
                             "' class='action-icon'>" +
                             "<i class='uil-file-search-alt'></i></a></td>" +
                             "</tr>";
-
                         rowNumber++;
                     });
                 } else {
@@ -176,6 +176,42 @@
                 }
 
                 $("#data-pasien").html(resultList);
+
+                $('.delete-pasien').on('click', function(event) {
+                    event.preventDefault();
+
+                    var pasienId = $(this).data('pasien-id');
+                    console.log('Mengklik tombol hapus dengan pasienId: ' + pasienId);
+                    if (confirm(
+                            'Anda yakin ingin menghapus pasien ini?')) {
+                        deletePasien(pasienId);
+                    }
+                });
+
+                function deletePasien(pasienId, deleteButton) {
+                    console.log('Mengirim permintaan DELETE untuk pasienId: ' + pasienId);
+                    $.ajax({
+                        url: '/admin/pasien/destroysearch/' + pasienId,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            console.log('Pasien deleted successfully');
+                            var tr = $("#" + pasienId); 
+                            if (tr.length > 0) {
+                                tr.remove();
+                            } else {
+                                console.log('Element <tr> not found.');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error deleting pasien:', error);
+                        }
+                    });
+                }
+
+
             }
 
             function resetSearchResults() {

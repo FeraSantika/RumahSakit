@@ -11,14 +11,20 @@ class RoleController extends Controller
 {
     public function index()
     {
+        $menus = DataMenu::all();
         $dtRole = DataRole::with('rolemenu')->get();
-        return view('role.role', compact('dtRole'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('role.role', compact('dtRole', 'menus', 'menu', 'roleuser'));
     }
 
     public function create()
     {
-        $menu = DataMenu::all();
-        return view('role.create', compact('menu'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('role.create', compact('menu', 'roleuser'));
     }
 
     public function store(Request $request)
@@ -42,9 +48,11 @@ class RoleController extends Controller
     public function edit($Role_id)
     {
         $selectedMenuIds = DataRoleMenu::where('Role_id', $Role_id)->pluck('Menu_id')->toArray();
-        $menu = DataMenu::all();
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->get();
         $role = DataRole::where('Role_id', $Role_id)->first();
-        return view('role.edit', compact('menu','role', 'selectedMenuIds'));
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('role.edit', compact('menu','role', 'selectedMenuIds', 'roleuser'));
     }
 
     public function update(Request $request, $Role_id)

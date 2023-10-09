@@ -16,12 +16,9 @@ return new class extends Migration
             $table->char('kode_pendaftaran');
             $table->integer('pasien_id');
             $table->text('keluhan');
-            $table->date('tgl_daftar')->nullable();
             $table->enum('status_pasien', ['Umum', 'BPJS']);
-            $table->text('diagnosa')->nullable();
             $table->text('petugas');
             $table->enum('status_pemeriksaan', ['Belum tertangani', 'Tertangani']);
-            $table->enum('status_obat', ['Belum tertangani', 'Tertangani']);
             $table->integer('grandtotal');
             $table->integer('dibayar');
             $table->integer('kembalian');

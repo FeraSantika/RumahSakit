@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use file;
+use App\Models\DataLab;
+use App\Models\DataMenu;
 use App\Models\DataObat;
 use App\Models\DataPasien;
 use PharIo\Manifest\Author;
+use App\Models\DataRoleMenu;
 use App\Models\DataTindakan;
 use Illuminate\Http\Request;
 use App\Models\DataAksesPoli;
 use App\Models\ListDaftarObat;
+use App\Models\ListDaftarRujukan;
 use App\Models\PendaftaranPasien;
 use App\Models\ListDaftarTindakan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Models\DataTindakanLab;
 
 class ListdaftarpasienController extends Controller
 {
@@ -20,13 +27,21 @@ class ListdaftarpasienController extends Controller
     {
         $user = Auth::user();
         $akses = $user->poliakses;
-        $dtpendaftar = PendaftaranPasien::with(['aksespoli.user'])
-            ->whereHas('aksespoli.user', function ($query) use ($user) {
-                $query->where('User_id', $user->User_id);
-            })
-            ->paginate(10);
 
-        return view('listpasienrawatjalan.listdaftarpasien', compact('dtpendaftar'));
+        if ($user->Role_id == 1) {
+            $dtpendaftar = PendaftaranPasien::with(['aksespoli.user'])
+                ->paginate(10);
+        } else {
+            $dtpendaftar = PendaftaranPasien::with(['aksespoli.user'])
+                ->whereHas('aksespoli.user', function ($query) use ($user) {
+                    $query->where('User_id', $user->User_id);
+                })->paginate(10);
+        }
+
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('listpasienrawatjalan.listdaftarpasien', compact('dtpendaftar', 'menu', 'roleuser'));
     }
 
     public function autocomplete(Request $request)
@@ -44,42 +59,50 @@ class ListdaftarpasienController extends Controller
 
     public function search(Request $request)
     {
+        $user = Auth::user();
         $searchTerm = $request->get('cari');
 
-        $data = DataPasien::where('pasien_nama', 'LIKE', '%' . $searchTerm . '%')
-            ->orWhere('pasien_kode', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_nama', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_NIK', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_tempat_lahir', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_tgl_lahir', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_jenis_kelamin', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_alamat', 'LIKE', '%' . $request->get('cari') . '%')
+        $data = PendaftaranPasien::with(['aksespoli.user', 'pasien', 'poli'])
+            ->whereHas('aksespoli.user', function ($query) use ($user) {
+                $query->where('User_id', $user->User_id);
+            })
+            ->whereHas('pasien', function ($query) use ($searchTerm) {
+                $query->where('pasien_nama', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('kode_pendaftaran', 'LIKE', '%' . $searchTerm . '%');
+            })
+
             ->get();
 
         return response()->json($data);
     }
+
 
     public function detail($id)
     {
         $dtpendaftar = PendaftaranPasien::where('kode_pendaftaran', $id)->with('pasien')->get();
         $dtlistobat =  ListDaftarObat::where('kode_pendaftaran', $id)->get();
         $dtlisttindakan =  ListDaftarTindakan::where('kode_pendaftaran', $id)->get();
+        $dtlistrujukan = ListDaftarRujukan::where('kode_pendaftaran', $id)->get();
+        $rujukan = ListDaftarRujukan::where('kode_pendaftaran', $id)->first();
 
         foreach ($dtpendaftar as $pendaftaran) {
             $pasien_id = $pendaftaran->pasien_id;
-            $dtriwayat = PendaftaranPasien::where('pasien_id', $pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('poli', 'user', 'listobat', 'listtindakan')->get();
+            $dtriwayat = PendaftaranPasien::where('pasien_id', $pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('poli', 'user', 'listobat', 'listtindakan', 'listrujukan.lab')->get();
         }
-        return view('listpasienrawatjalan.detailpasien', compact('dtpendaftar', 'dtriwayat', 'dtlistobat', 'dtlisttindakan'));
-
-        // $dtpasien =  DataPasien::where('pasien_id', $id)->first();
-        // $dtlistobat =  ListDaftarObat::where('kode_pasien', $dtpasien->pasien_kode)->get();
-        // $dtlisttindakan =  ListDaftarTindakan::where('kode_pasien', $dtpasien->pasien_kode)->get();
-        // $dtdiagnosa = PendaftaranPasien::where('pasien_id', $dtpasien->pasien_id)->orderBy('kode_pendaftaran', 'desc')->first();
-        // $dtriwayat = PendaftaranPasien::where('pasien_id', $dtpasien->pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('poli', 'user', 'pasien.daftarobat', 'pasien.daftartindakan')->get();
-        // $diagnosa = PendaftaranPasien::where('kode_pendaftaran', $dtdiagnosa->kode_pendaftaran)->get();
-        // return view('listdaftarpasien.detailpasien', compact('dtpendaftar','dtpasien', 'dtlistobat', 'dtlisttindakan', 'dtdiagnosa', 'dtriwayat', 'diagnosa'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('listpasienrawatjalan.detailpasien', compact(
+            'dtpendaftar',
+            'dtriwayat',
+            'dtlistobat',
+            'dtlisttindakan',
+            'menu',
+            'roleuser',
+            'dtlistrujukan',
+            'rujukan'
+        ));
     }
-
 
     public function insertlist(Request $request)
     {
@@ -211,4 +234,131 @@ class ListdaftarpasienController extends Controller
         PendaftaranPasien::where('kode_pendaftaran', $id)->update($updatedData);
         return response()->json(['success' => true]);
     }
+
+    public function autocomplete_rujukan(Request $request)
+    {
+        $data = DataLab::select("nama_lab as label", "id_lab as value")
+            ->where('nama_lab', 'LIKE', '%' . $request->get('cari') . '%')
+            ->get();
+
+        return response()->json($data);
+    }
+
+    public function insertrujukan(Request $request)
+    {
+        $datarujukan = DataLab::where('id_lab', $request->search)->first();
+        $dtpasien =  PendaftaranPasien::where('kode_pendaftaran', $request->kode)->first();
+        $rujukanpasien = ListDaftarRujukan::where('kode_pendaftaran', $request->kode)->first();
+
+        if ($datarujukan && $dtpasien) {
+            $listdaftarrujukan = ListDaftarRujukan::create([
+                'id_lab' => $datarujukan->id_lab,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
+            ]);
+
+            $description_data = [
+                'id_lab' => $datarujukan->id_lab,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
+                'list_id' => $listdaftarrujukan->id,
+                'nama_lab' => $datarujukan->nama_lab,
+                'keterangan' => $rujukanpasien->keterangan,
+                'file' => $rujukanpasien->filerujukan,
+                'status' => $rujukanpasien->status
+            ];
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berhasil Disimpan!',
+                'data' => $description_data
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Obat atau Pasien tidak ditemukan.',
+                'data' => null
+            ]);
+        }
+    }
+
+    public function destroyrujukan($list_id)
+    {
+        $listrujukan = ListDaftarRujukan::where('list_id', $list_id);
+        $listrujukan->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!.',
+            'data' => $listrujukan,
+        ]);
+    }
+
+    // public function pasienrujukan()
+    // {
+    //     $user = Auth::user();
+    //     $akses = $user->poliakses;
+    //     $dtpendaftar = ListDaftarRujukan::with(['daftar.user', 'lab'])->paginate(10);
+
+    //     $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+    //     $user = auth()->user()->role;
+    //     $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+    //     return view('listrujukanrawatjalan.listrujukanpasien', compact('dtpendaftar', 'menu', 'roleuser'));
+    // }
+
+    // public function detailpasienrujukan($id)
+    // {
+    //     $pendaftar = ListDaftarRujukan::where('list_id', $id)->first();
+    //     $pasien_id = $pendaftar->daftar->pasien->pasien_id;
+    //     $dtriwayat = PendaftaranPasien::where('pasien_id', $pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('user', 'listobat', 'listtindakan')->get();
+    //     $dtlistrujukan = ListDaftarRujukan::where('list_id', $id)->with('lab')->get();
+
+    //     $tindakanlab = [];
+    //     foreach ($dtlistrujukan as $rujukan) {
+    //         $id_lab = $rujukan->lab->id_lab;
+    //         $tindakanlab[] = DataTindakanLab::where('id_lab', $id_lab)->get();
+    //     }
+
+    //     $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+    //     $user = auth()->user()->role;
+    //     $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+    //     return view('listrujukanrawatjalan.detailrujukanpasien', compact(
+    //         'pendaftar',
+    //         'dtriwayat',
+    //         'menu',
+    //         'roleuser',
+    //         'tindakanlab'
+    //     ));
+    // }
+
+    // public function uploadfilerujukan(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'keterangan' => 'required|string',
+    //         'file' => 'file|max:5120',
+    //         'tindakan' => 'required'
+    //     ]);
+
+    //     if ($request->hasFile('file')) {
+    //         $file = $request->file('file');
+    //         $extension = $file->getClientOriginalExtension();
+
+    //         if (in_array(strtolower($extension), ['php', 'html'])) {
+    //             return redirect()->back()->with('error', 'File dengan ekstensi .php atau .html tidak diizinkan.');
+    //         }
+
+    //         $destinationPath = 'uploads/';
+    //         $filename = 'rujukan' . date('YmdHis') . "." . $extension;
+
+    //         $file->move($destinationPath, $filename);
+    //     }
+
+    //     $userData = [
+    //         'tindakan' => $request->tindakan,
+    //         'keterangan' => $request->keterangan,
+    //         'filerujukan' => $filename,
+    //         'status' => 'Tertangani'
+    //     ];
+
+    //     ListDaftarRujukan::where('list_id', $id)->update($userData);
+    //     return redirect()->route('list-rujukan-pasienJalan');
+    // }
 }

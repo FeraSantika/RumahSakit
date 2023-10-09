@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMenu;
 use App\Models\DataPasien;
+use App\Models\DataRoleMenu;
 use Illuminate\Http\Request;
 use App\Models\PendaftaranPasienInap;
 
@@ -10,8 +12,11 @@ class PendaftaranPasienInapController extends Controller
 {
     public function index()
     {
-        $dtpendaftaran = PendaftaranPasienInap::with('pasien')->paginate(10);
-        return view('daftar-rawatinap.daftar', compact('dtpendaftaran'));
+        $dtpendaftaran = PendaftaranPasienInap::with('pasien')->orderBy('id_pendaftaran', 'desc')->paginate(10);
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('daftar-rawatinap.daftar', compact('dtpendaftaran', 'menu', 'roleuser'));
     }
 
     public function create(Request $request)
@@ -31,8 +36,10 @@ class PendaftaranPasienInapController extends Controller
         $pendaftaranCode = $prefix . $paddedId;
 
         $dtpasien = DataPasien::get();
-
-        return view('daftar-rawatinap.create', compact('dtpasien', 'lastpendaftaran', 'pendaftaranCode'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('daftar-rawatinap.create', compact('dtpasien', 'lastpendaftaran', 'pendaftaranCode', 'menu', 'roleuser'));
     }
 
     public function autocomplete(Request $request)
@@ -82,7 +89,10 @@ class PendaftaranPasienInapController extends Controller
     {
         $dtpasien = DataPasien::get();
         $dtpendaftaran =  PendaftaranPasienInap::where('id_pendaftaran', $id)->with('pasien')->first();
-        return view('daftar-rawatinap.edit', compact('dtpendaftaran', 'dtpasien'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('daftar-rawatinap.edit', compact('dtpendaftaran', 'dtpasien', 'menu', 'roleuser'));
     }
 
     public function update(Request $request, $id)

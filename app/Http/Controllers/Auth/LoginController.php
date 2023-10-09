@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
+use App\Models\DataUser;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -55,7 +56,21 @@ class LoginController extends Controller
         $credentials['User_name'] = $credentials['User_name'];
         $credentials['password'] = $credentials['User_password'];
         if (Auth::attempt($credentials)) {
-            return redirect()->route('admin.home');
+            // return redirect()->route('admin.home');
+            $user = Auth::user();
+            if ($user->role->Role_name === 'Admin') {
+                return redirect()->route('admin.home');
+            } elseif ($user->role->Role_name === 'Dokter') {
+                return redirect()->route('dokter.home');
+            } elseif ($user->role->Role_name === 'Apoteker') {
+                return redirect()->route('apoteker.home');
+            } elseif ($user->role->Role_name === 'Kasir') {
+                return redirect()->route('kasir.home');
+            } elseif ($user->role->Role_name === 'Resepsionis') {
+                return redirect()->route('resepsionis.home');
+            } elseif ($user->role->Role_name === 'Analis Lab') {
+                return redirect()->route('analis-lab.home');
+            }
         }
 
         return back()->withErrors([

@@ -11,7 +11,12 @@
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Detail Pasien</a></li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Detail Pasien</h4>
+                    <div class="d-flex align-items-center">
+                        <a href="javascript:void(0);" onclick="history.back();">
+                            <i class="uil-left-arrow-from-left h1"></i>
+                        </a>
+                        <h4 class="page-title">Detail Pasien</h4>
+                    </div>
                 </div>
             </div>
         </div>

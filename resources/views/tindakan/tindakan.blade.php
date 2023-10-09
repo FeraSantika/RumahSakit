@@ -12,6 +12,7 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Master Tindakan</a></li>
                                 <li class="breadcrumb-item active">Tindakan</li>
                             </ol>
                         </div>
@@ -96,9 +97,6 @@
                         <div class="pagination">
                             {{ $dttindakan->links('pagination::bootstrap-4') }}
                         </div>
-                        <p class="mt-2">
-                            Menampilkan {{ $dttindakan->count() }} data dari {{ $dttindakan->total() }} total data.
-                        </p>
                     </div>
                 </div> <!-- end col -->
             </div>

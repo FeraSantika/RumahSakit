@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMenu;
 use App\Models\kategori;
+use App\Models\DataRoleMenu;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
@@ -10,12 +12,18 @@ class KategoriController extends Controller
     public function index()
     {
         $dtkategori = kategori::paginate(10);
-        return view('kategori.kategori', compact('dtkategori'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('kategori.kategori', compact('dtkategori', 'menu', 'roleuser'));
     }
 
     public function create()
     {
-        return view('kategori.create');
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('kategori.create', compact('menu', 'roleuser'));
     }
 
     public function store(Request $request)
@@ -29,7 +37,10 @@ class KategoriController extends Controller
     public function edit($kode_kategori)
     {
         $dtkategori = kategori::where('kode_kategori', $kode_kategori)->first();
-        return view('kategori.edit', compact('dtkategori'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('kategori.edit', compact('dtkategori', 'menu', 'roleuser'));
     }
 
     public function update(Request $request, $kode_kategori)

@@ -21,5 +21,9 @@ class DataMenu extends Model
     public function rolemenu(){
         return $this->hasMany(DataRoleMenu::class, 'Menu_id', 'Menu_id');
     }
+
+    public function menu(){
+        return $this->hasMany(DataMenu::class, 'Menu_sub', 'Menu_id');
+    }
 }
 

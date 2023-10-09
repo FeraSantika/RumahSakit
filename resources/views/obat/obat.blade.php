@@ -106,9 +106,6 @@
                         <div class="pagination">
                             {{ $dtobat->links('pagination::bootstrap-4') }}
                         </div>
-                        <p class="mt-2">
-                            Menampilkan {{ $dtobat->count() }} data dari {{ $dtobat->total() }} total data.
-                        </p>
                     </div>
                 </div> <!-- end col -->
             </div>

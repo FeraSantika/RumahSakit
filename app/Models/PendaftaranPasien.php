@@ -20,11 +20,13 @@ class PendaftaranPasien extends Model
         'id_poli',
         'keluhan',
         'status_pasien',
-        'status_obat',
+        'diagnosa',
         'petugas',
+        'status_pemeriksaan',
+        'status_obat',
         'grandtotal',
         'dibayar',
-        'kembalian'
+        'kembalian',
     ];
 
     public function pasien()
@@ -60,5 +62,10 @@ class PendaftaranPasien extends Model
     public function listtindakan()
     {
         return $this->belongsTo(ListDaftarTindakan::class, 'kode_pendaftaran', 'kode_pendaftaran');
+    }
+
+    public function listrujukan()
+    {
+        return $this->belongsTo(ListDaftarRujukan::class, 'kode_pendaftaran', 'kode_pendaftaran');
     }
 }

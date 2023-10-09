@@ -65,11 +65,14 @@
                                                 </td>
                                                 <td>
                                                     @foreach ($item->rolemenu as $role)
-                                                        {{ $role->menu->Menu_name }}
-                                                        @if (!$loop->last)
-                                                            ,
+                                                        @if (isset($role->menu) && isset($role->menu->Menu_name))
+                                                            {{ $role->menu->Menu_name }}
+                                                            @if (!$loop->last)
+                                                                ,
+                                                            @endif
                                                         @endif
                                                     @endforeach
+
                                                 </td>
                                                 <td class="table-action">
                                                     <a href="{{ route('role.edit', $item->Role_id) }}" class="action-icon">

@@ -43,6 +43,11 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+
+        'Apoteker' => [
+            \App\Http\Middleware\CheckApoteker::class,
+        ],
+
     ];
 
     /**

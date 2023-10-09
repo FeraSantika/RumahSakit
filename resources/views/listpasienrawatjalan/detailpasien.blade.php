@@ -8,10 +8,21 @@
                 <div class="page-title-box">
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Detail Pasien</a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('list-daftar-pasienJalan') }}">List Daftar
+                                    Pasien</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('list-daftar-pasienJalan') }}">List Daftar Pasien
+                                    Rawat Jalan</a>
+                            </li>
+                            <li class="breadcrumb-item active"><a href="javascript: void(0);">Detail Pasien</a></li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Detail Pasien Rawat Jalan</h4>
+                    <div class="d-flex align-items-center">
+                        <a href="javascript:void(0);" onclick="history.back();">
+                            <i class="uil-left-arrow-from-left h1"></i>
+                        </a>
+                        <h4 class="page-title">Detail Pasien Rawat Jalan</h4>
+                    </div>
                 </div>
             </div>
         </div>
@@ -98,25 +109,25 @@
 
                     <div class="inbox-widget">
                         <div class="inbox-item">
-                            @foreach ($dtriwayat as $item)
+                            @foreach ($dtriwayat as $riwayat)
                                 <div class="inbox-item">
                                     <div class="inbox-item-img">
                                         <img src="{{ asset('assets/images/riwayat.png') }}" class="rounded-circle"
                                             alt="">
                                     </div>
-                                    <p class="inbox-item-author">{{ $item->kode_pendaftaran }}</p>
-                                    <p class="inbox-item-text"> {{ $item->created_at }}</p>
+                                    <p class="inbox-item-author">{{ $riwayat->kode_pendaftaran }}</p>
+                                    <p class="inbox-item-text"> {{ $riwayat->created_at }}</p>
                                     <p class="inbox-item-date">
                                         <a href="#" class="btn btn-sm btn-link text-info font-13"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#primary-header-modal-{{ $item->kode_pendaftaran }}">
+                                            data-bs-target="#primary-header-modal-{{ $riwayat->kode_pendaftaran }}">
                                             Detail
                                         </a>
                                     </p>
                                 </div>
 
                                 {{-- Modal --}}
-                                <div id="primary-header-modal-{{ $item->kode_pendaftaran }}" class="modal fade"
+                                <div id="primary-header-modal-{{ $riwayat->kode_pendaftaran }}" class="modal fade"
                                     tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel"
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
@@ -129,21 +140,22 @@
                                             </div>
                                             <div class="modal-body">
                                                 <label><b>Kode Pendaftaran:</b></label>
-                                                <p>{{ $item->kode_pendaftaran }}</p>
+                                                <p>{{ $riwayat->kode_pendaftaran }}</p>
                                                 <hr>
                                                 <label><b>Tanggal:</b></label>
-                                                <p>{{ $item->created_at }}</p>
+                                                <p>{{ $riwayat->created_at }}</p>
                                                 <hr>
                                                 <label><b>Poli:</b></label>
-                                                <p>{{ $item->poli->nama_poli }}</p>
+                                                <p>{{ $riwayat->poli->nama_poli }}</p>
                                                 <hr>
                                                 <label><b>Dokter:</b></label>
                                                 <p>
-                                                    {{ $item->user->User_name }}
+                                                    {{ $riwayat->user->User_name }}
                                                 </p>
                                                 <hr>
                                                 <label><b>Diagnosa:</b></label>
-                                                <p>{{ $item->diagnosa }}</p>
+                                                <p>{{ $riwayat->diagnosa }}</p>
+
                                                 <h5>List Daftar Obat</h5>
                                                 <div class="row mb-2">
                                                     <div class="table-responsive">
@@ -157,16 +169,17 @@
                                                             </thead>
                                                             <tbody id="obatList">
                                                                 <tr id="row">
-                                                                    <td>{{ $item->listobat->nama_obat }}
+                                                                    <td>{{ $riwayat->listobat->nama_obat }}
                                                                     </td>
-                                                                    <td>{{ $item->listobat->kategori_obat }}
+                                                                    <td>{{ $riwayat->listobat->kategori_obat }}
                                                                     </td>
-                                                                    <td>{{ $item->listobat->qty }}</td>
+                                                                    <td>{{ $riwayat->listobat->qty }}</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                </div>
+                                                </div>{{-- end Tabel Obat --}}
+
                                                 <h5>List Daftar Tindakan</h5>
                                                 <div class="row">
                                                     <div class="table-responsive">
@@ -178,18 +191,46 @@
                                                             </thead>
                                                             <tbody id="tindakanList">
                                                                 <tr id="row">
-                                                                    <td>{{ $item->listtindakan->nama_tindakan }}
+                                                                    <td>{{ $riwayat->listtindakan->nama_tindakan }}
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                </div>
-                                            </div>
+                                                </div>{{-- end Tabel Tindakan --}}
+
+                                                <h5>List Daftar Rujukan</h5>
+                                                <div class="row mb-2">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-centered dt-responsive">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th style="width: 50px">Rujukan</th>
+                                                                    <th style="width: 50px">Keterangan</th>
+                                                                    <th style="width: 50px">File</th>
+                                                                    <th style="width: 50px">Status Rujukan</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="rujukanList">
+                                                                <tr id="row">
+                                                                    <td>{{ $riwayat->listrujukan->lab->nama_lab ?? '' }}</td>
+                                                                    <td>{{ $riwayat->listrujukan->keterangan ?? '' }}</td>
+                                                                    <td><a href="{{ asset('uploads/' . ($rujukan->filerujukan ?? '')) }}"
+                                                                            download><i
+                                                                                class="uil-download-alt h3"></i></a></td>
+                                                                    <td>{{ $riwayat->listrujukan->status ?? '' }}</td>
+
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>{{-- end Tabel Rujukan --}}
+                                            </div>{{-- end Modal Body --}}
+
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary"
                                                     data-bs-dismiss="modal">Close</button>
-                                            </div>
+                                            </div>{{-- end Modal Footer --}}
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->
                                 </div><!-- /.modal -->
@@ -199,8 +240,6 @@
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
         </div> <!-- end col-->
-
-
 
         <div class="col-xl-8 col-lg-7">
             <div class="card">
@@ -222,6 +261,11 @@
                                 Tindakan
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="#rujukan" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                Rujukan
+                            </a>
+                        </li>
                     </ul>
                     <div class="tab-content mb-3">
                         {{-- tab-pane diagnosa --}}
@@ -233,16 +277,16 @@
                                     <div id="notification"></div>
                                     <textarea rows="3" name="diagnosa" class="form-control border-0 resize-none"
                                         placeholder="Write something...."></textarea>
-                                    <div class="p-2 bg-light d-flex justify-content-between align-items-center">
-                                        <div>
-                                        </div>
+                                    <div class="p-2 bg-light d-flex justify-content-between align-items-center"></div>
+                                    <div class="mt-3 d-flex justify-content-center">
                                         <button type="submit" id="submit"
-                                            class="btn btn-sm btn-dark waves-effect">Simpan</button>
+                                            class="btn btn-sm btn-dark waves-effect">Pemeriksaan Selesai</button>
                                     </div>
                                 </form>
                             @endforeach
                             <!-- end obat -->
                         </div> <!-- end tab-pane -->
+
                         {{-- tab-pane obat --}}
                         <div class="tab-pane show active" id="obat">
                             <!-- comment box -->
@@ -295,8 +339,8 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
-                        {{-- end tab-pane obat --}}
+                        </div>{{-- end tab-pane obat --}}
+
                         {{-- tab-pane tindakan --}}
                         <div class="tab-pane" id="tindakan">
                             <!-- comment box -->
@@ -337,28 +381,98 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
-                        {{-- end tab-pane tindakan --}}
-                    </div>
-                    <!-- end .border-->
-                    <!-- end comment box -->
-                </div>
-                <!-- end obat content-->
-                <!-- end tindakan content-->
+                        </div>{{-- end tab-pane tindakan --}}
 
-            </div> <!-- end tab-content -->
-        </div> <!-- end card body -->
+                        {{-- tab-pane rujukan --}}
+                        <div class="tab-pane" id="rujukan">
+                            <!-- comment box -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="text-end mb-3">
+                                        <div class="input-group">
+                                            <input type="text" class="typeahead form-control" name="search"
+                                                id="search-rujukan" placeholder="Cari Rujukan" data-selected-id="">
+                                            <button class="input-group-text btn btn-primary btn-sm" type="button"
+                                                id="add-rujukan"><i class="ri-add-box-line"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="table-responsive">
+                                    <table class="table table-centered w-100 dt-responsive nowrap m-3 mb-5">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Rujukan</th>
+                                                <th>Keterangan</th>
+                                                <th>File</th>
+                                                <th>Status Rujukan</th>
+                                                @if (!empty($rujukan) && $rujukan->status == 'Belum tertangani')
+                                                    <th>Action</th>
+                                                @endif
+                                            </tr>
+                                        </thead>
+                                        <tbody id="rujukanList">
+                                            @foreach ($dtlistrujukan as $rujukan)
+                                                <tr id="row-{{ $rujukan->list_id }}">
+                                                    <td>
+                                                        @if ($rujukan->lab)
+                                                            {{ $rujukan->lab->nama_lab }}
+                                                        @else
+                                                            Data Lab Tidak Tersedia
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rujukan->keterangan == null)
+                                                            Belum ada keterangan
+                                                        @else
+                                                            {{ $rujukan->keterangan }}
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rujukan->filerujukan == null)
+                                                            Belum ada file
+                                                        @else
+                                                            <a href="{{ asset('uploads/' . $rujukan->filerujukan) }}"
+                                                                download><i class="uil-download-alt h3"></i></a>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $rujukan->status }}</td>
+                                                    @if (!empty($rujukan) && $rujukan->status == 'Belum tertangani')
+                                                        <td>
+                                                            <a href="javascript:void(0);" class="action-icon"
+                                                                onclick="hapusrujukan('{{ $rujukan->list_id }}')">
+                                                                <i class="mdi mdi-delete"></i>
+                                                            </a>
+                                                        </td>
+                                                    @endif
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>{{-- end tab-pane rujukan --}}
+
+                        {{-- <div class="mt-3 d-flex justify-content-center">
+                            <button type="submit" id="submit" class="btn btn-sm btn-dark waves-effect">Pemeriksaan
+                                Selesai</button>
+                        </div>
+                        </form> --}}
+
+                    </div><!-- end tab-content -->
+                </div><!-- end card body -->
+            </div> <!-- end card -->
+        </div><!-- col-xl-8 col-lg-7 -->
     </div> <!-- end card -->
     </div> <!-- end col -->
-    </div>
-    <!-- end row-->
-
+    </div><!-- end row-->
     </div>
 @endsection
 @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
-            var path = "{{ route('autocomplete_obat') }}";
+            var path = "{{ route('autocomplete_obat_pasienJalan') }}";
             $("#search").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -506,7 +620,6 @@
             });
         });
 
-
         $("#add-tindakan").click(function() {
             var listtindakan = "{{ route('listdaftartindakan.insert') }}";
             var search = $("#search-tindakan").val();
@@ -591,7 +704,7 @@
                             );
                             setTimeout(function() {
                                 window.location.href =
-                                    "{{ route('list-daftar-pasien') }}";
+                                    "{{ route('list-daftar-pasienJalan') }}";
                             }, 250);
                         } else {
                             $('#notification').html('<div class="alert alert-danger">' +
@@ -601,5 +714,100 @@
                 });
             });
         });
+
+        $(document).ready(function() {
+            var path = "{{ route('autocomplete_rujukan') }}";
+            $("#search-rujukan").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: path,
+                        type: 'GET',
+                        dataType: "json",
+                        data: {
+                            cari: request.term
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $('#search-rujukan').val(ui.item.label);
+                    $("#search-rujukan").data("selected-id", ui.item.value);
+                    console.log(ui.item);
+                    return false;
+                }
+            });
+        });
+
+        $("#add-rujukan").click(function() {
+            var listrujukan = "{{ route('listdaftarrujukan.insert') }}";
+            var search = $("#search-rujukan").data("selected-id");
+            var kode = $("#kode").val();
+            let token = $("meta[name='csrf-token']").attr("content");
+            $.ajax({
+                url: listrujukan,
+                type: "POST",
+                cache: false,
+                data: {
+                    "search": search,
+                    "kode": kode,
+                    "_token": token
+                },
+                success: function(response) {
+                    var newRow = `
+                        <tr id="row-${response.data.list_id}">
+                            <td>${response.data.nama_lab}</td>
+                            <td>${response.data.keterangan || 'Belum ada keterangan'}</td>
+        <td>
+            ${response.data.file ? `<a href="${response.data.file}" download><i class="uil-download-alt h3"></i></a>` : 'Belum ada file'}
+        </td>
+                            <td>${response.data.status}</td>
+                            <td>
+                                <a href="javascript:void(0)" onclick="hapusrujukan('${response.data.list_id}')" class="action-icon"><i class="mdi mdi-delete"></i></a>
+                            </td>
+                        </tr>
+                    `;
+                    $("#rujukanList").append(newRow);
+                    console.log(response.data);
+                }
+            });
+        });
+
+        function hapusrujukan(list_id) {
+            var url = "{{ route('listdaftarrujukan.destroy', ':list_id') }}";
+            url = url.replace(':list_id', list_id);
+            Swal.fire({
+                title: "Yakin ingin menghapus data ini?",
+                text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersbut!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Hapus!"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: url,
+                        type: "get",
+                        dataType: "JSON",
+                        success: function(data) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Data berhasil dihapus',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            console.log("berhasil hapus data");
+                            $("#row-" + list_id).remove();
+                            $("#row-" + $rujukan.list_id).remove();
+                        }
+                    })
+                }
+            })
+        }
     </script>
 @endsection

@@ -13,7 +13,8 @@
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Pendaftaran Pasien</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pendaftaran Pasien Rawat Inap</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pendaftaran Pasien Rawat Inap</a>
+                                </li>
                             </ol>
                         </div>
                         <h4 class="page-title">Pendaftaran Pasien Rawat Inap</h4>
@@ -48,6 +49,7 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">No.</th>
+                                                <th scope="col">Tanggal</th>
                                                 <th scope="col">Kode Pendaftaran</th>
                                                 <th scope="col">Nama Pasien</th>
                                                 <th scope="col">Keluhan</th>
@@ -62,6 +64,7 @@
                                             @foreach ($dtpendaftaran as $item)
                                                 <tr>
                                                     <td>{{ $rowNumber }}</td>
+                                                    <td>{{ date('d/m/Y', strtotime($item->created_at))}}</td>
                                                     <td>{{ $item->kode_pendaftaran }}</td>
                                                     <td>
                                                         @if (isset($item->pasien))
@@ -78,23 +81,28 @@
                                                                 class="badge bg-danger">{{ $item->status_pemeriksaan }}</span>
                                                         @endif
                                                     </td>
-                                                    <td class="text-end">
-                                                        <a href="{{ route('daftar.pasieninap.edit', $item->id_pendaftaran) }}"
-                                                            class="action-icon">
-                                                            <i class="mdi mdi-square-edit-outline"></i>
-                                                        </a>
-                                                        <a href="{{ route('daftar-pasieninap.destroy', $item->id_pendaftaran) }}"
-                                                            class="action-icon"
-                                                            onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->id_pendaftaran }}').submit();">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </a>
-                                                        <form id="delete-form-{{ $item->id_pendaftaran }}"
-                                                            action="{{ route('daftar-pasieninap.destroy', $item->id_pendaftaran) }}"
-                                                            method="POST" style="display: none;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                    </td>
+                                                    @if ($item->status_pemeriksaan === 'Belum tertangani')
+                                                        <td class="text-end">
+                                                            <a href="{{ route('daftar.pasieninap.edit', $item->id_pendaftaran) }}"
+                                                                class="action-icon">
+                                                                <i class="mdi mdi-square-edit-outline"></i>
+                                                            </a>
+                                                            <a href="{{ route('daftar-pasieninap.destroy', $item->id_pendaftaran) }}"
+                                                                class="action-icon"
+                                                                onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin menghapus?')) document.getElementById('delete-form-{{ $item->id_pendaftaran }}').submit();">
+                                                                <i class="mdi mdi-delete"></i>
+                                                            </a>
+                                                            <form id="delete-form-{{ $item->id_pendaftaran }}"
+                                                                action="{{ route('daftar-pasieninap.destroy', $item->id_pendaftaran) }}"
+                                                                method="POST" style="display: none;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                            </form>
+                                                        </td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
+
                                                 </tr>
                                                 @php
                                                     $rowNumber++;
@@ -110,9 +118,6 @@
                         <div class="pagination">
                             {{ $dtpendaftaran->links('pagination::bootstrap-4') }}
                         </div>
-                        <p class="mt-2">
-                            Menampilkan {{ $dtpendaftaran->count() }} data dari {{ $dtpendaftaran->total() }} total data.
-                        </p>
                     </div>
                 </div> <!-- end col -->
             </div>
@@ -158,6 +163,7 @@
 
                         resultList += "<tr>" +
                             "<td>" + rowNumber + "</td>" +
+                            "<td>" + new Date(item.created_at).toLocaleDateString('en-GB') + "</td>" +
                             "<td>" + item.kode_pendaftaran + "</td>" +
                             "<td>" + item.pasien.pasien_nama + "</td>" +
                             "<td>" + item.keluhan + "</td>" +

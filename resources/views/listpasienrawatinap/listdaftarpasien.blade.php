@@ -13,7 +13,8 @@
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">List Daftar Pasien</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">List Daftar Pasien Rawat Inap</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">List Daftar Pasien Rawat Inap</a>
+                                </li>
                             </ol>
                         </div>
                         <h4 class="page-title">List Daftar Pasien Rawat Inap</h4>
@@ -27,19 +28,15 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-2">
-                                {{-- <div class="col-sm-2">
-                                    <a href="{{ route('daftar.online.create') }}" class="btn btn-danger mb-2"><i
-                                            class="mdi mdi-plus-circle me-2"></i> Add Pendaftaran</a>
-                                </div> --}}
-                                <div class="col-sm-5"></div>
-                                {{-- <div class="col-sm-5">
+                                <div class="col-sm-7"></div>
+                                <div class="col-sm-5">
                                     <div class="input-group">
                                         <input type="text" class="typeahead form-control" name="search" id="search"
                                             placeholder="Cari Pasien">
                                         <button class="input-group-text btn btn-primary btn-sm" type="button"
                                             id="search-btn"><i class="uil-search-alt"></i></button>
                                     </div>
-                                </div><!-- end col--> --}}
+                                </div><!-- end col-->
                             </div>
 
                             <div class="card-body pt-0">
@@ -65,7 +62,7 @@
                                                 <tr>
                                                     <td>{{ $rowNumber }}</td>
                                                     <td>
-                                                        {{$dokter}}
+                                                        {{ $dokter }}
                                                     </td>
 
                                                     <td>{{ $item->kode_pendaftaran }}</td>
@@ -118,9 +115,6 @@
                         <div class="pagination">
                             {{ $dtpendaftar->links('pagination::bootstrap-4') }}
                         </div>
-                        <p class="mt-2">
-                            Menampilkan {{ $dtpendaftar->count() }} data dari {{ $dtpendaftar->total() }} total data.
-                        </p>
                     </div>
                 </div> <!-- end col -->
             </div>
@@ -130,7 +124,7 @@
 
     </div>
 @endsection
-{{-- @section('script')
+@section('script')
     <script type="text/javascript">
         $(document).ready(function() {
             $("#search-btn").click(function() {
@@ -140,7 +134,7 @@
 
             function performSearch(searchTerm) {
                 $.ajax({
-                    url: "{{ route('search.pasien') }}",
+                    url: "{{ route('search.list-daftar-pasienInap') }}",
                     type: 'GET',
                     dataType: "json",
                     data: {
@@ -159,25 +153,28 @@
                 var resultList = "";
                 var rowNumber = 1;
 
-                if (data.length > 0) {
-                    data.forEach(function(item) {
+                if (data.data.length > 0) {
+                    data.data.forEach(function(item) {
+                        console.log(item)
                         resultList += "<tr>" +
                             "<td>" + rowNumber + "</td>" +
-                            "<td>" + item.pasien_kode + "</td>" +
-                            "<td>" + item.pasien_NIK + "</td>" +
-                            "<td>" + item.pasien_nama + "</td>" +
-                            "<td>" + item.pasien_tempat_lahir + "</td>" +
-                            "<td>" + item.pasien_tgl_lahir + "</td>" +
-                            "<td><a href='javascript:void(0);' class='action-icon' onclick='edit(" + item
-                            .pasien_kode + ")'>" +
-                            "<i class='mdi mdi-square-edit-outline'></i></a>" +
-                            "<a href='javascript:void(0)' onclick='hapus(" + item.pasien_kode +
-                            ")' class='action-icon'>" +
-                            "<i class='mdi mdi-delete'></i></a>" +
-                            "<a href='javascript:void(0);' class='action-icon' onclick='detail(" + item
-                            .pasien_kode + ")'>" +
-                            "<i class='uil-file-search-alt'></i></a></td>" +
-                            "</tr>";
+                            "<td>" + data.dokter + "</td>" +
+                            "<td>" + item.kode_pendaftaran + "</td>" +
+                            "<td>" + item.pasien.pasien_nama + "</td>" +
+                            "<td>" + (item.status_pasien === 'Umum' ?
+                                '<span class="badge bg-success">Umum</span>' :
+                                '<span class="badge bg-danger">BPJS</span>') + "</td>" +
+                            "<td>" + item.keluhan + "</td>" +
+                            "<td>" + (item.status_pemeriksaan === 'Tertangani' ?
+                                '<span class="badge bg-success">Tertangani</span>' :
+                                '<span class="badge bg-danger">Belum tertangani</span>') + "</td>" +
+                            "<td class='text-end'>";
+                        if (item.status_pemeriksaan === 'Belum tertangani') {
+                            resultList +=
+                                '<a href="/admin/list-daftar-pasienInap/detail/' + item.kode_pendaftaran +
+                                '"type="button" class="btn btn-primary" data-transaksi-id="" onclick="">Lihat Detail</a>';
+                        }
+                        "</tr>";
 
                         rowNumber++;
                     });
@@ -189,4 +186,4 @@
             }
         });
     </script>
-@endsection --}}
+@endsection

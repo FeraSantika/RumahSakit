@@ -20,10 +20,21 @@
                 <div class="page-title-box">
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('list-daftar-pasienInap') }}">List Daftar
+                                    Pasien</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('list-daftar-pasienInap') }}">List Daftar Pasien
+                                    Rawat Inap</a>
+                            </li>
                             <li class="breadcrumb-item"><a href="javascript: void(0);">Detail Pasien</a></li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Detail Pasien Rawat Inap</h4>
+                    <div class="d-flex align-items-center">
+                        <a href="javascript:void(0);" onclick="history.back();">
+                            <i class="uil-left-arrow-from-left h1"></i>
+                        </a>
+                        <h4 class="page-title">Detail Pasien Rawat Inap</h4>
+                    </div>
                 </div>
             </div>
         </div>
@@ -146,9 +157,9 @@
                                                 <label><b>Tanggal:</b></label>
                                                 <p>{{ $item->created_at }}</p>
                                                 <hr>
-                                                <label><b>Poli:</b></label>
+                                                {{-- <label><b>Poli:</b></label>
                                                 <p>{{ $item->poli->nama_poli }}</p>
-                                                <hr>
+                                                <hr> --}}
                                                 <label><b>Dokter:</b></label>
                                                 <p>
                                                     {{ $item->user->User_name }}
@@ -236,6 +247,11 @@
                         <li class="nav-item">
                             <a href="#tindakan" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
                                 Tindakan
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#rujukan" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                Rujukan
                             </a>
                         </li>
                     </ul>
@@ -341,7 +357,6 @@
                                         <table class="table table-centered w-100 dt-responsive nowrap m-3 mb-5">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>No.</th>
                                                     <th>Tanggal Masuk</th>
                                                     <th>Nama Kamar</th>
                                                     <th>Nomor Kamar</th>
@@ -350,13 +365,10 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="kamarList">
-                                                @php
-                                                    $rowNumber = 1;
-                                                @endphp
                                                 @foreach ($dtkamarpasien as $kamar)
                                                     <tr id="kamar-{{ $kamar->id_kamar_pasieninap }}">
-                                                        <td>{{ $rowNumber }}</td>
-                                                        <td>{{ \Carbon\Carbon::parse($kamar->tanggal_masuk)->format('d/m/Y') }}
+                                                        <td>
+                                                            {{ \Carbon\Carbon::parse($kamar->tanggal_masuk)->format('d/m/Y') }}
                                                         </td>
                                                         <td>{{ $kamar->kamar->nama_kamar_inap }}</td>
                                                         <td class="text-center">{{ $kamar->kamar->nomor_kamar_inap }}</td>
@@ -377,9 +389,9 @@
                                                             </a>
                                                         </td>
                                                     </tr>
-                                                    @php
+                                                    {{-- @php
                                                         $rowNumber++;
-                                                    @endphp
+                                                    @endphp --}}
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -408,7 +420,7 @@
                                                                 id="kodedaftar" hidden>
                                                             <input type="text" name="id_kamar_pasieninap"
                                                                 id="edit-id_kamar_pasieninap"
-                                                                value="{{ $kamar->id_kamar_pasieninap }}"
+                                                                value="{{ isset($kamar->id_kamar_pasieninap) ? $kamar->id_kamar_pasieninap : '' }}"
                                                                 class="form-control white-input">
                                                             <div class="col-md-6 mb-3">
                                                                 <label for="tglmasuk" class="form-label">Tanggal
@@ -445,7 +457,7 @@
 
                                                         <div class="row">
                                                             <input type="text" name="id" id="editidkamar"
-                                                                class="form-control" hidden>
+                                                                class="form-control white-input">
                                                             <div class="col-md-6 mb-3">
                                                                 <label for="nama" class="form-label-md-6">Nama
                                                                     Kamar</label>
@@ -501,7 +513,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="col-md-12 align-center">
-                                                    <form action="{{ route('detail.insertdiagnosapasien') }}"
+                                                    <form action="{{ route('listdaftardiagnosa_pasienInap.insert') }}"
                                                         method="POST" class="mb-3">
                                                         @csrf
                                                         <div class="row">
@@ -536,20 +548,14 @@
                                         <table class="table table-centered w-100 dt-responsive nowrap m-3 mb-5">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>No.</th>
                                                     <th>Tanggal Diagnosa</th>
                                                     <th>Diagnosa</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="diagnosaList">
-                                                @php
-                                                    $rowNumber = 1;
-                                                @endphp
                                                 @foreach ($dtdiagnosa as $diagnosa)
-                                                    <tr id="diagnosarow-{{ $diagnosa->id_diagnosa_pasieninap }}">
-                                                        <td>{{ $rowNumber }} || {{ $diagnosa->id_diagnosa_pasieninap }}
-                                                        </td>
+                                                    <tr id="diagnosa-{{ $diagnosa->id_diagnosa_pasieninap }}">
                                                         <td>{{ \Carbon\Carbon::parse($diagnosa->tanggal)->format('d/m/Y') }}
                                                         </td>
                                                         <td>{{ $diagnosa->diagnosa }}</td>
@@ -567,9 +573,6 @@
                                                             </a>
                                                         </td>
                                                     </tr>
-                                                    @php
-                                                        $rowNumber++;
-                                                    @endphp
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -588,8 +591,8 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-hidden="true"></button>
                                             </div>
-                                            <form action="{{ route('detail.updatediagnosapasien') }}" method="POST"
-                                                class="mb-3">
+                                            <form action="{{ route('listdaftardiagnosa_pasienInap.update') }}"
+                                                method="POST" class="mb-3">
                                                 @csrf
                                                 <div class="modal-body">
                                                     <div class="col-md-12 align-center">
@@ -607,13 +610,13 @@
                                                             </div>
                                                         </div>
                                                         <textarea rows="3" name="diagnosa" id="editdiagnosapasien" class="form-control border-1 resize-none"
-                                                            placeholder="Diagnosa ....">{{ $editdiagnosa->diagnosa }}</textarea>
+                                                            placeholder="Diagnosa ....">{{ isset($editdiagnosa) ? $editdiagnosa->diagnosa : '' }}</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-danger"
                                                         data-bs-dismiss="modal">Close</button>
-                                                    <button class="btn btn-primary" id="submit-diagnosa"
+                                                    <button class="btn btn-primary" id="submit-editdiagnosa"
                                                         type="submit">Simpan Perubahan</button>
                                                 </div>
                                             </form>
@@ -637,7 +640,8 @@
                                     aria-labelledby="primary-header-modalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form id="obatForm" action="" method="POST" class="mb-3">
+                                            <form id="obatForm" action="{{ route('detail.insertobatpasien') }}"
+                                                method="POST" class="mb-3">
                                                 @csrf
                                                 <div class="modal-header bg-primary">
                                                     <h4 class="modal-title text-white" id="standard-modalLabel">
@@ -654,6 +658,7 @@
                                                                 id="kodedaftar" hidden>
                                                             <div class="col mb-3">
                                                                 <label for="tglobat" class="form-label">Tanggal</label>
+                                                                {{ csrf_field() }}
                                                                 <input type="date" name="tglobat" id="tglobat"
                                                                     class="form-control">
                                                             </div>
@@ -666,6 +671,7 @@
                                                             </div>
                                                             <div class="col-md-9">
                                                                 <div class="input-group">
+                                                                    {{ csrf_field() }}
                                                                     <input type="text" class="typeahead form-control"
                                                                         name="search" id="search-obat"
                                                                         placeholder="Cari Obat">
@@ -746,14 +752,6 @@
                         {{-- end tab-pane obat --}}
                         {{-- tab-pane tindakan --}}
                         <div class="tab-pane" id="tindakan">
-                            <!-- comment box -->
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="text-end mb-3">
-                                    </div>
-                                </div>
-                            </div>
-
                             @foreach ($dtpendaftar as $pendaftar)
                                 <div class="col-sm-4">
                                     <a href="#" class="btn btn-danger mb-2" data-bs-toggle="modal"
@@ -767,7 +765,8 @@
                                     aria-labelledby="primary-header-modalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form action="" method="POST" class="mb-3">
+                                            <form action="{{ route('listdaftartindakan_pasienInap.insert') }}"
+                                                method="POST" class="mb-3">
                                                 @csrf
                                                 <div class="modal-header bg-primary">
                                                     <h4 class="modal-title text-white" id="standard-modalLabel">
@@ -786,6 +785,7 @@
                                                             <div class="col mb-3">
                                                                 <label for="tgltindakan"
                                                                     class="form-label">Tanggal</label>
+                                                                {{ csrf_field() }}
                                                                 <input type="date" name="tgltindakan" id="tgltindakan"
                                                                     class="form-control">
                                                             </div>
@@ -813,7 +813,7 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-danger"
                                                         data-bs-dismiss="modal">Close</button>
-                                                    <button class="btn btn-primary" id="submit-obat"
+                                                    <button class="btn btn-primary" id="submit-tindakan"
                                                         type="submit">Tambah</button>
                                                 </div>
                                             </form>
@@ -828,6 +828,7 @@
                                         <table class="table table-centered w-100 dt-responsive nowrap m-3 mb-5">
                                             <thead class="table-light">
                                                 <tr>
+                                                    <th>Tanggal</th>
                                                     <th>Tindakan</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -835,10 +836,19 @@
                                             <tbody id="tindakanList">
                                                 @foreach ($dtlisttindakan as $tindakan)
                                                     <tr id="row-{{ $tindakan->list_id }}">
+                                                        <td>{{ \Carbon\Carbon::parse($tindakan->tanggal)->format('d/m/Y') }}
+                                                        </td>
                                                         <td>{{ $tindakan->nama_tindakan }}</td>
                                                         <td>
+                                                            <a href="#" class="tindakan" data-bs-toggle="modal"
+                                                                data-bs-target="#edittindakan-modal"
+                                                                data-id="{{ $tindakan->list_id }}"
+                                                                data-tgltindakan="{{ $tindakan->tanggal }}"
+                                                                data-tindakan="{{ $tindakan->nama_tindakan }}"
+                                                                id="open-edittindakan-modal">
+                                                                <i class="mdi mdi-square-edit-outline"></i></a>
                                                             <a href="javascript:void(0);" class="action-icon"
-                                                                onclick="hapus('{{ $tindakan->list_id }}')">
+                                                                onclick="hapustindakan('{{ $tindakan->list_id }}')">
                                                                 <i class="mdi mdi-delete"></i>
                                                             </a>
                                                         </td>
@@ -848,11 +858,146 @@
                                         </table>
                                     </div>
                                 </div>
+
+                                {{-- Modal Edit Tindakan Pasien --}}
+                                <div id="edittindakan-modal" class="modal fade" tabindex="-1" role="dialog"
+                                    aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-primary">
+                                                <h4 class="modal-title text-white" id="standard-modalLabel">
+                                                    Edit Tindakan Pasien
+                                                </h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-hidden="true"></button>
+                                            </div>
+                                            <form action="{{ route('listdaftartindakan_pasienInap.update') }}"
+                                                method="POST" class="mb-3">
+                                                @csrf
+                                                <div class="modal-body">
+                                                    <div class="col-md-12 align-center">
+                                                        <div class="row">
+                                                            <input type="text"
+                                                                value="{{ $pendaftar->kode_pendaftaran }}" name="kode"
+                                                                id="kodedaftar" hidden>
+                                                            <input type="text" id="edit-tindakan-id"
+                                                                name="edit-tindakan-id" class="form-control white-input">
+                                                            <div class="col mb-3">
+                                                                <label for="editgltindakan" class="form-label">Tanggal
+                                                                    Tindakan</label>
+                                                                <input type="date" name="edittgltindakan"
+                                                                    id="edittgltindakan" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-3">
+                                                                <label for="search" class="form-label-md-6">Pilih
+                                                                    Tindakan</label>
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="typeahead form-control"
+                                                                        name="search" id="search-edittindakan"
+                                                                        placeholder="Cari Tindakan">
+                                                                    <button class="input-group-text btn btn-primary btn-sm"
+                                                                        type="button" id="add-edittindakan"><i
+                                                                            class="ri-add-box-line"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button class="btn btn-primary" id="submit-edittindakan"
+                                                        type="submit">Simpan Perubahan</button>
+                                                </div>
+                                            </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div>
+                                <!-- /Modal Edit Tindakan Pasien -->
                             @endforeach
                         </div>
                         {{-- end tab-pane tindakan --}}
+                        {{-- tab-pane rujukan --}}
+                        <div class="tab-pane" id="rujukan">
+                            <!-- comment box -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="text-end mb-3">
+                                        <div class="input-group">
+                                            <input type="text" class="typeahead form-control" name="search"
+                                                id="search-rujukan" placeholder="Cari Rujukan" data-selected-id="">
+                                            <button class="input-group-text btn btn-primary btn-sm" type="button"
+                                                id="add-rujukan"><i class="ri-add-box-line"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="table-responsive">
+                                    <table class="table table-centered w-100 dt-responsive nowrap m-3 mb-5">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Rujukan</th>
+                                                <th>Keterangan</th>
+                                                <th>File</th>
+                                                <th>Status Rujukan</th>
+                                                @if (!empty($rujukan) && $rujukan->status == 'Belum tertangani')
+                                                    <th>Action</th>
+                                                @endif
+                                            </tr>
+                                        </thead>
+                                        <tbody id="rujukanList">
+                                            @foreach ($dtlistrujukan as $rujukan)
+                                                <tr id="row-{{ $rujukan->list_id }}">
+                                                    <td>
+                                                        @if ($rujukan->lab)
+                                                            {{ $rujukan->lab->nama_lab }}
+                                                        @else
+                                                            Data Lab Tidak Tersedia
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rujukan->keterangan == null)
+                                                            Belum ada keterangan
+                                                        @else
+                                                            {{ $rujukan->keterangan }}
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rujukan->filerujukan == null)
+                                                            Belum ada file
+                                                        @else
+                                                            <a href="{{ asset('uploads/' . $rujukan->filerujukan) }}"
+                                                                download><i class="uil-download-alt h3"></i></a>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $rujukan->status }}</td>
+                                                    @if (!empty($rujukan) && $rujukan->status == 'Belum tertangani')
+                                                        <td>
+                                                            <a href="javascript:void(0);" class="action-icon"
+                                                                onclick="hapusrujukan('{{ $rujukan->list_id }}')">
+                                                                <i class="mdi mdi-delete"></i>
+                                                            </a>
+                                                        </td>
+                                                    @endif
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>{{-- end tab-pane rujukan --}}
+
                     </div>
                     <!-- end .border-->
+                    <div class="align-center" style="display: flex; justify-content: center;">
+                        <button type="button" id="pemeriksaan-selesai" class="btn btn-primary">Pemeriksaan
+                            Selesai</button>
+                    </div>
                     <!-- end comment box -->
                 </div>
                 <!-- end obat content-->
@@ -863,11 +1008,19 @@
     </div> <!-- end col -->
     </div>
     <!-- end row-->
-
     </div>
 @endsection
 @section('script')
     <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            // Temukan elemen tab Diagnosa berdasarkan ID
+            var diagnosaTabEl = document.querySelector('a[href="#diagnosa"]');
+
+            // Aktifkan tab Diagnosa
+            var diagnosaTab = new bootstrap.Tab(diagnosaTabEl);
+            diagnosaTab.show();
+        });
+
         // Mencari data DataKamarInap pada modal Add Kamar
         $(document).ready(function() {
             var path = "{{ route('autocomplete_kamar_pasienInap') }}";
@@ -901,7 +1054,6 @@
 
                     var idKamarInap = ui.item.value;
                     console.log('id kamar' + idKamarInap);
-
                     return false;
                 }
             });
@@ -940,14 +1092,12 @@
 
                     var idKamarInap = ui.item.value;
                     console.log('id kamar' + idKamarInap);
-
                     return false;
                 }
             });
         });
 
         // MENAMBAHKAN Data KamarPasienInap
-        var simpan = "{{ route('detail.insertkamarpasien') }}";
         $('#submit-kamar').click(function(e) {
             e.preventDefault();
             let kode = $('#kodedaftar').val();
@@ -955,6 +1105,7 @@
             let tglmasuk = $('#tglmasuk').val();
             let perkiraankeluar = $('#perkiraankeluar').val();
             let token = $("meta[name='csrf-token']").attr("content");
+            var simpan = "{{ route('detail.insertkamarpasien') }}";
 
             $.ajax({
                 url: simpan,
@@ -976,6 +1127,45 @@
                             showConfirmButton: true,
                         });
                     } else {
+                        var formattedDate = new Date(response.data.tanggal_masuk);
+                        var day = formattedDate.getDate();
+                        var month = formattedDate.getMonth() + 1;
+                        var year = formattedDate.getFullYear();
+                        var formattedTglMasuk =
+                            `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+
+                        var formattedDate = new Date(response.data.tanggal_keluar);
+                        var day = formattedDate.getDate();
+                        var month = formattedDate.getMonth() + 1;
+                        var year = formattedDate.getFullYear();
+                        var formattedTglKeluar =
+                            `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+
+                        var newRow = `
+                    <tr id="kamar-${response.data.id_kamar_pasieninap}">
+                        <td>${formattedTglMasuk}</td>
+                        <td>${response.data.kamar.nama_kamar_inap}</td>
+                        <td class="text-center">${response.data.kamar.nomor_kamar_inap}</td>
+                        <td>${formattedTglKeluar}</td>
+                        <td>
+                            <a href="#" class="kamar"
+                                data-id="${response.data.id_kamar_pasieninap}"
+                                data-tglmasuk="${response.data.tanggal_masuk}"
+                                data-tglkeluar="${response.data.tanggal_keluar}"
+                                data-idkamar="${response.data.id_kamar_inap}"
+                                data-namakamar="${response.data.kamar.nama_kamar_inap}"
+                                data-nomorkamar="${response.data.kamar.nomor_kamar_inap}">
+                                <i class="mdi mdi-square-edit-outline"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="action-icon"
+                                onclick="hapuskamar('${response.data.id_kamar_pasieninap}')">
+                                <i class="mdi mdi-delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+
+                        $('#kamarList').append(newRow);
                         swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
@@ -983,16 +1173,10 @@
                             timer: 1500,
                             showConfirmButton: false,
                         }).then(function() {
+                            console.log('Nama Kamar Inap yang baru tersimpan:', response.data
+                                .kamar.nama_kamar_inap);
                             $('#kamarinap-modal').modal('hide');
-                            window.location.href =
-                                "{{ route('detail.list-daftar-pasienInap', $pendaftar->kode_pendaftaran) }}?tab=kamar";
-                        });
-
-                        $(window).on('load', function() {
-                            var tab = new URLSearchParams(window.location.search).get('tab');
-                            if (tab === 'kamar') {
-                                $('a[href="#kamar"]').tab('show');
-                            }
+                            // window.location.reload();
                         });
                     }
                     console.log(response.data);
@@ -1003,18 +1187,20 @@
             });
         });
 
-        // Mengirimkan id_kamar_pasieninap kedalam modal
+        // Mengirimkan data kedalam modal edit kamar
         $(document).ready(function() {
             function updateSearchInput(nama, nomor) {
                 $("#search-editkamar").val(nama + " - " + nomor);
             }
-            $(".kamar").click(function() {
-                var ids = $(this).attr('data-id');
-                var tglmasuk = $(this).attr('data-tglmasuk');
-                var tglkeluar = $(this).attr('data-tglkeluar');
-                var nama = $(this).attr('data-namakamar');
-                var nomor = $(this).attr('data-nomorkamar');
+            $(document).on('click', '.kamar', function() {
+                var ids = $(this).data('id');
+                var idkamar = $(this).data('idkamar');
+                var tglmasuk = $(this).data('tglmasuk');
+                var tglkeluar = $(this).data('tglkeluar');
+                var nama = $(this).data('namakamar');
+                var nomor = $(this).data('nomorkamar');
                 $("#edit-id_kamar_pasieninap").val(ids);
+                $("#editidkamar").val(idkamar);
                 $("#edittglmasuk").val(tglmasuk);
                 $("#editperkiraankeluar").val(tglkeluar);
                 $("#editnama").val(nama);
@@ -1029,55 +1215,90 @@
 
         // MENGUBAH Data KamarPasienInap
         var url = "{{ route('detail.updatekamarpasien') }}";
-        $('#submit-editkamar').click(function(e) {
-            e.preventDefault();
+        $(document).ready(function() {
+            $("#submit-editkamar").click(function(e) {
+                e.preventDefault();
 
-            let kode = $('#kodedaftar').val();
-            let idkamar = $('#editidkamar').val();
-            let id = $('#edit-id_kamar_pasieninap').val();
-            let tglmasuk = $('#edittglmasuk').val();
-            let perkiraankeluar = $('#editperkiraankeluar').val();
-            let token = $("meta[name='csrf-token']").attr("content");
+                var url = "{{ route('detail.updatekamarpasien') }}";
+                var kode = $('#kodedaftar').val();
+                var idkamar = $('#editidkamar').val();
+                var id = $('#edit-id_kamar_pasieninap').val();
+                var tglmasuk = $('#edittglmasuk').val();
+                var perkiraankeluar = $('#editperkiraankeluar').val();
+                var token = $("meta[name='csrf-token']").attr("content");
 
-            var newData = {
-                "kode": kode,
-                "idkamar": idkamar,
-                "id": id,
-                "tglmasuk": tglmasuk,
-                "perkiraankeluar": perkiraankeluar,
-                "_token": token
-            };
+                var newData = {
+                    "kode": kode,
+                    "idkamar": idkamar,
+                    "id": id,
+                    "tglmasuk": tglmasuk,
+                    "perkiraankeluar": perkiraankeluar,
+                    "_token": token
+                };
 
-            $.ajax({
-                url: url,
-                type: "POST",
-                dataType: "json",
-                data: newData,
-                success: function(response) {
-                    if (response.error) {
-                        swal.fire({
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: "json",
+                    data: newData,
+                    success: function(response) {
+                        console.log(response);
+                        if (response.success) {
+                            // Mengubah format tanggal masuk
+                            var formattedDateMasuk = new Date(response.data.tanggal_masuk);
+                            var dayMasuk = formattedDateMasuk.getDate();
+                            var monthMasuk = formattedDateMasuk.getMonth() + 1;
+                            var yearMasuk = formattedDateMasuk.getFullYear();
+                            var formattedTglMasuk =
+                                `${dayMasuk.toString().padStart(2, '0')}/${monthMasuk.toString().padStart(2, '0')}/${yearMasuk}`;
+
+                            // Mengubah format tanggal keluar
+                            var formattedDateKeluar = new Date(response.data.tanggal_keluar);
+                            var dayKeluar = formattedDateKeluar.getDate();
+                            var monthKeluar = formattedDateKeluar.getMonth() + 1;
+                            var yearKeluar = formattedDateKeluar.getFullYear();
+                            var formattedTglKeluar =
+                                `${dayKeluar.toString().padStart(2, '0')}/${monthKeluar.toString().padStart(2, '0')}/${yearKeluar}`;
+
+                            // Memperbarui data pada tabel secara otomatis
+                            var $tableRow = $(`#kamar-${response.data.id_kamar_pasieninap}`);
+                            if ($tableRow.length) {
+                                $tableRow.find('td:eq(0)').text(formattedTglMasuk);
+                                $tableRow.find('td:eq(1)').text(response.data.kamar
+                                    .nama_kamar);
+                                $tableRow.find('td:eq(2)').text(response.data.kamar
+                                    .nomor_kamar_inap);
+                                $tableRow.find('td:eq(3)').text(formattedTglKeluar);
+                            }
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Data berhasil disimpan',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                            $("#editkamarinap-modal").modal("hide");
+                            console.log("Respons dari server:", response.data);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi kesalahan saat menyimpan data',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
                             icon: 'error',
-                            title: 'Gagal!',
-                            text: 'data salah. Mohon gunakan data lain.',
-                            showConfirmButton: true,
-                        });
-                    } else {
-                        swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: 'Data berhasil diperbarui.',
-                            timer: 1500,
+                            title: 'Terjadi kesalahan saat menyimpan data',
                             showConfirmButton: false,
-                        }).then(function() {
-                            $('#editkamarinap-modal').modal('hide');
-                            window.location.reload();
+                            timer: 1500
                         });
                     }
-                    console.log(response.data);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Terjadi kesalahan dalam melakukan permintaan: " + error);
-                }
+                });
+                return false;
             });
         });
 
@@ -1116,15 +1337,162 @@
             })
         }
 
-        // Mengirimkan data kedalam modal
-        $('.diagnosa').click(function() {
+        var simpan = "{{ route('listdaftardiagnosa_pasienInap.insert') }}";
+        $('#submit-diagnosa').click(function(e) {
+            e.preventDefault();
+            let kode = $('#kodedaftar').val();
+            let tgldiagnosa = $('#tgldiagnosa').val();
+            let diagnosa = $('#diagnosapasien').val();
+            let token = $("meta[name='csrf-token']").attr("content");
+
+            $.ajax({
+                url: simpan,
+                type: "POST",
+                cache: false,
+                data: {
+                    "kode": kode,
+                    "tgldiagnosa": tgldiagnosa,
+                    "diagnosa": diagnosa,
+                    "_token": token
+                },
+                success: function(response) {
+                    if (response.error) {
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: 'data sudah terdaftar. Mohon gunakan data lain.',
+                            showConfirmButton: true,
+                        });
+                    } else {
+                        var formattedDate = new Date(response.data.tanggal);
+                        var day = formattedDate.getDate();
+                        var month = formattedDate.getMonth() + 1;
+                        var year = formattedDate.getFullYear();
+                        var formattedTgl =
+                            `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+
+                        var newRow = `
+                    <tr id="diagnosa-${response.data.id_diagnosa_pasieninap}">
+                        <td>${formattedTgl}</td>
+                        <td>${response.data.diagnosa}</td>
+                        <td>
+                            <a href="#" class="diagnosa"
+                                data-id="${response.data.id_diagnosa_pasieninap}"
+                                data-tgldiagnosa="${response.data.tanggal}"
+                                data-diagnosa="${response.data.diagnosa}">
+                                <i class="mdi mdi-square-edit-outline"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="action-icon"
+                                onclick="hapusdiagnosa('${response.data.id_diagnosa_pasieninap}')">
+                                <i class="mdi mdi-delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+
+                        $('#diagnosaList').append(newRow);
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Data berhasil disimpan.',
+                            timer: 1500,
+                            showConfirmButton: false,
+                        }).then(function() {
+                            console.log('Diagnosa yang baru tersimpan:', response.data
+                                .diagnosa);
+                            $('#diagnosa-modal').modal('hide');
+                            // window.location.reload();
+                        });
+                    }
+                    console.log(response.data);
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+
+        // Mengirimkan data kedalam modal edit diagnosa
+        $(document).on('click', '.diagnosa', function() {
             var diagnosaId = $(this).data('id');
             var tgldiagnosa = $(this).data('tgldiagnosa');
             var diagnosa = $(this).data('diagnosa');
             $('#edit-diagnosa-id').val(diagnosaId);
             $('#edittgldiagnosa').val(tgldiagnosa);
             $('#editdiagnosapasien').val(diagnosa);
+            $('#editdiagnosa-modal').modal('show');
         });
+
+
+        $(document).ready(function() {
+            $("#submit-editdiagnosa").click(function(e) {
+                e.preventDefault();
+
+                var url = "{{ route('listdaftardiagnosa_pasienInap.update') }}";
+                var kode = $('#kodedaftar').val();
+                var id = $('#edit-diagnosa-id').val();
+                var tgldiagnosa = $('#edittgldiagnosa').val();
+                var diagnosa = $('#editdiagnosapasien').val();
+                var token = $("meta[name='csrf-token']").attr("content");
+
+                var newData = {
+                    "kode": kode,
+                    "id": id,
+                    "tgldiagnosa": tgldiagnosa,
+                    "diagnosa": diagnosa,
+                    "_token": token
+                };
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: "json",
+                    data: newData,
+                    success: handleSuccess,
+                    error: handleError
+                });
+
+                return false;
+            });
+        });
+
+        function handleSuccess(response) {
+            if (response.success) {
+                var formattedDateMasuk = new Date(response.data.tanggal);
+                var dayMasuk = formattedDateMasuk.getDate();
+                var monthMasuk = formattedDateMasuk.getMonth() + 1;
+                var yearMasuk = formattedDateMasuk.getFullYear();
+                var formattedTgl =
+                    `${dayMasuk.toString().padStart(2, '0')}/${monthMasuk.toString().padStart(2, '0')}/${yearMasuk}`;
+
+                var $tableRow = $(`#diagnosa-${response.data.id_diagnosa_pasieninap}`);
+                if ($tableRow.length) {
+                    $tableRow.find('td:eq(0)').text(formattedTgl);
+                    $tableRow.find('td:eq(1)').text(response.data.diagnosa);
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data berhasil diperbarui',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                $("#editdiagnosa-modal").modal("hide");
+            } else {
+                handleError(); // Menampilkan pesan kesalahan dari server
+            }
+        }
+
+        function handleError() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi kesalahan saat memproses permintaan',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+
 
         // Menghapus Data DiagnosaPasienInap
         function hapusdiagnosa(id) {
@@ -1154,38 +1522,12 @@
                                 timer: 1500
                             });
                             console.log("berhasil hapus data");
-                            $("#diagnosarow-" + id).remove();
+                            $("#diagnosa-" + id).remove();
                         }
                     })
                 }
             })
         }
-
-        // Mencari DataTindakan didalam modal Add Tindakan
-        $(document).ready(function() {
-            var path = "{{ route('autocomplete_tindakan_pasienInap') }}";
-            $("#search-tindakan").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: path,
-                        type: 'GET',
-                        dataType: "json",
-                        data: {
-                            cari: request.term
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $('#search-tindakan').val(ui.item.label);
-                    console.log(ui.item);
-                    return false;
-                }
-            });
-        });
 
         // Mencari data obat didalam modal Add Obat
         $(document).ready(function() {
@@ -1228,52 +1570,60 @@
                 data: {
                     "search": search,
                     "kode": kode,
-                    "tglobat" : tgl,
+                    "tglobat": tgl,
                     "_token": token
                 },
                 success: function(response) {
-                    var newRow = `
-                <tr id="row-${response.data.list_id}">
-                    <td class="tanggal-cell">${response.data.tanggal}</td>
-                    <td>${response.data.nama_obat}</td>
-                    <td>${response.data.kategori_obat}</td>
-                    <td>
-                        <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}" style="max-width: 100px;">
-                    </td>
-                    <td>
-                        <a href="javascript:void(0);" class="action-icon" onclick="edit('${response.data.list_id}')">
-                            <i class="mdi mdi-square-edit-outline"></i>
-                        </a>
-                        <a href="javascript:void(0)" onclick="hapusobat('${response.data.list_id}')" class="action-icon">
-                            <i class="mdi mdi-delete"></i>
-                        </a>
-                    </td>
-                </tr>
-            `;
-                    $("#obatList").append(newRow);
-                    console.log(response.data);
+                    if (response.success) {
+                        // Mengubah format tanggal
+                        var formattedDate = new Date(response.data.tanggal);
+                        var day = formattedDate.getDate();
+                        var month = formattedDate.getMonth() + 1;
+                        var year = formattedDate.getFullYear();
+                        var formattedDateString =
+                            `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Data berhasil disimpan',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                        var newRow = `
+                    <tr id="row-${response.data.list_id}">
+                        <td class="tanggal-cell">${formattedDateString}</td>
+                        <td>${response.data.nama_obat}</td>
+                        <td>${response.data.kategori_obat}</td>
+                        <td>
+                            <input type="text" name="qty" id="qty-${response.data.list_id}" class="form-control" value="${response.data.qty}" style="max-width: 100px;">
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" class="action-icon" onclick="editobat('${response.data.list_id}')">
+                                <i class="mdi mdi-square-edit-outline"></i>
+                            </a>
+                            <a href="javascript:void(0)" onclick="hapusobat('${response.data.list_id}')" class="action-icon">
+                                <i class="mdi mdi-delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                        $("#obatList").append(newRow);
+                        $("#obat-modal").modal("hide");
+                        console.log(response.data);
+                    } else {
+                        alert('Terjadi kesalahan saat menyimpan data.');
+                    }
+                },
+                error: function() {
+                    alert('Terjadi kesalahan saat menyimpan data.');
                 }
             });
+            return false;
         });
 
-        function formatTanggal(isoDateString) {
-            try {
-                var tanggalResponse = new Date(isoDateString);
-
-                if (!isNaN(tanggalResponse.getTime())) {
-                    return tanggalResponse.toLocaleDateString('en-GB');
-                } else {
-                    return "Invalid Date";
-                }
-            } catch (error) {
-                console.error("Error parsing date:", error);
-                return "Invalid Date";
-            }
-        }
-
-
-        function edit(list_id) {
-            var url = "{{ route('listdaftarobat_pasienInap.update') }}";
+        function editobat(list_id) {
+            var url = "{{ route('detail.updateobatpasien') }}";
             var currentQty = $('#qty-' + list_id).val();
             var newData = {
                 'list_id': list_id,
@@ -1335,13 +1685,40 @@
             })
         }
 
+        // Mencari DataTindakan didalam modal Add Tindakan
+        $(document).ready(function() {
+            var path = "{{ route('autocomplete_tindakan_pasienInap') }}";
+            $("#search-tindakan").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: path,
+                        type: 'GET',
+                        dataType: "json",
+                        data: {
+                            cari: request.term
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $('#search-tindakan').val(ui.item.label);
+                    console.log(ui.item);
+                    return false;
+                }
+            });
+        });
 
-
-        $("#add-tindakan").click(function() {
+        // Menambahkan tindakan melalui modal add tindakan
+        $("#submit-tindakan").click(function() {
             var listtindakan = "{{ route('listdaftartindakan_pasienInap.insert') }}";
             var search = $("#search-tindakan").val();
             var kode = $("#kode").val();
+            var tgl = $("#tgltindakan").val();
             let token = $("meta[name='csrf-token']").attr("content");
+
             $.ajax({
                 url: listtindakan,
                 type: "POST",
@@ -1349,24 +1726,180 @@
                 data: {
                     "search": search,
                     "kode": kode,
+                    "tgltindakan": tgl,
                     "_token": token
                 },
+                dataType: "json", // Mengatur tipe respons menjadi "json"
                 success: function(response) {
-                    var newRow = `
-                        <tr id="row-${response.data.list_id}">
-                            <td>${response.data.nama_tindakan}</td>
-                            <td>
-                                <a href="javascript:void(0)" onclick="hapus('${response.data.list_id}')" class="action-icon"><i class="mdi mdi-delete"></i></a>
-                            </td>
-                        </tr>
-                    `;
-                    $("#tindakanList").append(newRow);
-                    console.log(response.data);
+                    if (response.success) {
+                        // Mengubah format tanggal
+                        var formattedDate = new Date(response.data.tanggal);
+                        var day = formattedDate.getDate();
+                        var month = formattedDate.getMonth() + 1;
+                        var year = formattedDate.getFullYear();
+                        var formattedDateString =
+                            `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Data berhasil disimpan',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function() {
+                            var newRow = `
+                    <tr id="row-${response.data.list_id}">
+                        <td>${formattedDateString}</td>
+                        <td>${response.data.nama_tindakan}</td>
+                        <td>
+                            <a href="#" class="tindakan" data-bs-toggle="modal"
+                                data-bs-target="#edittindakan-modal"
+                                data-id="${response.data.list_id}"
+                                data-tgltindakan="${response.data.tanggal}"
+                                data-tindakan="${response.data.nama_tindakan}"
+                                id="open-edittindakan-modal"><i class="mdi mdi-square-edit-outline"></i></a>
+                            <a href="javascript:void(0)" onclick="hapustindakan('${response.data.list_id}')" class="action-icon"><i class="mdi mdi-delete"></i></a>
+                        </td>
+                    </tr>
+                `;
+                            $("#tindakanList").append(newRow);
+                            $("#tindakan-modal").modal("hide");
+                        });
+                    } else {
+                        // Tampilkan pesan error jika diperlukan
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi kesalahan saat menyimpan data',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                },
+                error: function() {
+                    // Tampilkan pesan error jika terjadi kesalahan AJAX
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi kesalahan saat menyimpan data',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+            return false;
+        });
+
+        $(document).on('click', '.tindakan', function() {
+            var listId = $(this).data('id');
+            var tgltindakan = $(this).data('tgltindakan');
+            var tindakan = $(this).data('tindakan');
+
+            $('#edit-tindakan-id').val(listId);
+            $('#edittgltindakan').val(tgltindakan);
+            $('#search-edittindakan').val(tindakan);
+
+            $('#edittindakan-modal').modal('show');
+        });
+
+        // Mencari DataTindakan didalam modal Edit Tindakan
+        $(document).ready(function() {
+            var path = "{{ route('autocomplete_tindakan_pasienInap') }}";
+            $("#search-edittindakan").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: path,
+                        type: 'GET',
+                        dataType: "json",
+                        data: {
+                            cari: request.term
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $('#search-edittindakan').val(ui.item.label);
+                    console.log(ui.item);
+                    return false;
                 }
             });
         });
 
-        function hapus(list_id) {
+        $(document).ready(function() {
+            $("#submit-edittindakan").click(function(e) {
+                e.preventDefault();
+
+                var url = "{{ route('listdaftartindakan_pasienInap.update') }}";
+                var search = $("#search-edittindakan").val();
+                var kode = $("#kodedaftar").val();
+                var tgl = $("#edittgltindakan").val();
+                var list_id = $("#edit-tindakan-id").val();
+                let token = $("meta[name='csrf-token']").attr("content");
+
+                var newData = {
+                    "search": search,
+                    "kode": kode,
+                    "tgltindakan": tgl,
+                    "list_id": list_id,
+                    "_token": token
+                }
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    cache: false,
+                    data: newData,
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                        if (response.success) {
+                            // Mengubah format tanggal
+                            var formattedDate = new Date(response.data.tanggal);
+                            var day = formattedDate.getDate();
+                            var month = formattedDate.getMonth() + 1;
+                            var year = formattedDate.getFullYear();
+                            var formattedDateString =
+                                `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+
+                            // Memperbarui data pada tabel
+                            var $tableRow = $(`#row-${response.data.list_id}`);
+                            if ($tableRow.length) {
+                                $tableRow.find('td:first-child').text(formattedDateString);
+                                $tableRow.find('td:nth-child(2)').text(response.data
+                                    .nama_tindakan);
+                            }
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Data berhasil disimpan',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                            $("#edittindakan-modal").modal("hide");
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi kesalahan saat menyimpan data',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi kesalahan saat menyimpan data',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                });
+                return false;
+            });
+        });
+
+        function hapustindakan(list_id) {
             var url = "{{ route('listdaftartindakan_pasienInap.destroy', ':list_id') }}";
             url = url.replace(':list_id', list_id);
             Swal.fire({
@@ -1394,127 +1927,138 @@
                             });
                             console.log("berhasil hapus data");
                             $("#row-" + list_id).remove();
-                            $("#row-" + $tindakan.list_id).remove();
+                            $("#row-" + tindakan.list_id).remove();
                         }
                     })
                 }
             })
         }
 
-        // $(document).ready(function() {
-        //     $('form.comment-area-box').on('submit', function(event) {
-        //         event.preventDefault();
+        $(document).ready(function() {
+            $('#pemeriksaan-selesai').click(function() {
+                var pemeriksaan = 'Tertangani';
+                var kode = $("#kode").val();
+                let token = $("meta[name='csrf-token']").attr("content");
 
-        //         var form = $(this);
-        //         var url = form.attr('action');
-        //         var formData = form.serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('detail.pemeriksaanpasieninap') }}",
+                    data: {
+                        action: 'update',
+                        pemeriksaan: 'Tertangani',
+                        kode: kode,
+                        _token: token,
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses',
+                            text: response.message,
+                        }).then(function() {
+                            window.location.href =
+                                '{{ route('list-daftar-pasienInap') }}';
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
 
-        //         $.ajax({
-        //             type: 'POST',
-        //             url: url,
-        //             data: formData,
-        //             dataType: 'json',
-        //             success: function(response) {
-        //                 if (response.success) {
-        //                     $('#notification').html(
-        //                         '<div class="alert alert-success">Pengisian data diagnosa berhasil!</div>'
-        //                     );
-        //                     setTimeout(function() {
-        //                         window.location.href =
-        //                             "{{ route('list-daftar-pasienInap') }}";
-        //                     }, 250);
-        //                 } else {
-        //                     $('#notification').html('<div class="alert alert-danger">' +
-        //                         response.message + '</div>');
-        //                 }
-        //             }
-        //         });
-        //     });
-        // });
+        $(document).ready(function() {
+            var path = "{{ route('autocomplete_rujukan_pasieninap') }}";
+            $("#search-rujukan").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: path,
+                        type: 'GET',
+                        dataType: "json",
+                        data: {
+                            cari: request.term
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $('#search-rujukan').val(ui.item.label);
+                    $("#search-rujukan").data("selected-id", ui.item.value);
+                    console.log(ui.item);
+                    return false;
+                }
+            });
+        });
 
+        $("#add-rujukan").click(function() {
+            var listrujukan = "{{ route('listdaftarrujukanpasieninap.insert') }}";
+            var search = $("#search-rujukan").data("selected-id");
+            var kode = $("#kode").val();
+            let token = $("meta[name='csrf-token']").attr("content");
+            $.ajax({
+                url: listrujukan,
+                type: "POST",
+                cache: false,
+                data: {
+                    "search": search,
+                    "kode": kode,
+                    "_token": token
+                },
+                success: function(response) {
+                    var newRow = `
+                        <tr id="row-${response.data.list_id}">
+                            <td>${response.data.nama_lab}</td>
+                            <td>${response.data.keterangan || 'Belum ada keterangan'}</td>
+        <td>
+            ${response.data.file ? `<a href="${response.data.file}" download><i class="uil-download-alt h3"></i></a>` : 'Belum ada file'}
+        </td>
+                            <td>${response.data.status}</td>
+                            <td>
+                                <a href="javascript:void(0)" onclick="hapusrujukan('${response.data.list_id}')" class="action-icon"><i class="mdi mdi-delete"></i></a>
+                            </td>
+                        </tr>
+                    `;
+                    $("#rujukanList").append(newRow);
+                    console.log(response.data);
+                }
+            });
+        });
 
-
-        // var simpan = "{{ route('detail.insertdiagnosapasien') }}";
-        // $('#submit-diagnosa').click(function(e) {
-        //     e.preventDefault();
-        //     let kode = $('#kodedaftar').val();
-        //     let diagnosa = $('#diagnosapasien').val();
-        //     let token = $("meta[name='csrf-token']").attr("content");
-
-        //     $.ajax({
-        //         url: simpan,
-        //         type: "POST",
-        //         cache: false,
-        //         data: {
-        //             "kode": kode,
-        //             "diagnosa": diagnosa,
-        //             "_token": token
-        //         },
-        //         success: function(response) {
-        //             if (response.error) {
-        //                 swal.fire({
-        //                     icon: 'error',
-        //                     title: 'Gagal!',
-        //                     text: 'Diagnosa gagal ditambahkan.',
-        //                     showConfirmButton: true,
-        //                 });
-        //             } else {
-        //                 swal.fire({
-        //                     icon: 'success',
-        //                     title: 'Berhasil!',
-        //                     text: 'Data diagnosa berhasil disimpan.',
-        //                     timer: 1500,
-        //                     showConfirmButton: true,
-        //                 });
-        //             }
-        //             console.log(response.data);
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.log(xhr.responseText);
-        //         }
-        //     });
-        // });
-
-        // $.ajax({
-        //     url: '/api/get_obat', // Ganti dengan URL endpoint yang sesuai
-        //     method: 'GET',
-        //     dataType: 'json',
-        //     success: function(response) {
-        //         $('#multipleSelect').empty();
-
-        //         // Mengisi select dengan opsi-obat yang diambil dari server
-        //         $.each(response.data, function(index, obat) {
-        //             $('#multipleSelect').append($('<option>', {
-        //                 value: obat.id,
-        //                 text: obat.nama_obat
-        //             }));
-        //         });
-
-        //         // Menginisialisasi kembali select2
-        //         $('#multipleSelect').select2();
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error('Terjadi kesalahan dalam mengambil data obat: ' + error);
-        //     }
-        // });
-
-        // Fungsi untuk membuka modal edit diagnosa
-        // function editdiagnosa(id) {
-        //     // Di sini Anda dapat mengambil data diagnosa berdasarkan ID dari server (AJAX)
-
-        //     // Misalnya, jika Anda memiliki data diagnosa yang ingin diedit
-        //     var diagnosaData = {
-        //         id: id,
-        //         diagnosa: "Isi diagnosa awal di sini" // Gantilah dengan data diagnosa yang sesuai
-        //     };
-
-        //     // Isi data diagnosa ke dalam formulir modal
-        //     $("#diagnosa").val(diagnosaData.diagnosa);
-
-        //     // Tampilkan modal
-        //     $("#editDiagnosaModal").modal("show");
-
-        //     // Selanjutnya, Anda dapat menambahkan logika AJAX untuk mengirim perubahan ke server ketika tombol "Simpan Perubahan" ditekan.
-        // }
+        function hapusrujukan(list_id) {
+            var url = "{{ route('listdaftarrujukanpasieninap.destroy', ':list_id') }}";
+            url = url.replace(':list_id', list_id);
+            Swal.fire({
+                title: "Yakin ingin menghapus data ini?",
+                text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersbut!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Hapus!"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: url,
+                        type: "get",
+                        dataType: "JSON",
+                        success: function(data) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Data berhasil dihapus',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            console.log("berhasil hapus data");
+                            $("#row-" + list_id).remove();
+                            $("#row-" + $rujukan.list_id).remove();
+                        }
+                    })
+                }
+            })
+        }
     </script>
 @endsection

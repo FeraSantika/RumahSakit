@@ -103,6 +103,11 @@
                             </div>
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
+                    <div class="mt-3 text-center">
+                        <div class="pagination">
+                            {{ $dtMenu->links('pagination::bootstrap-4') }}
+                        </div>
+                    </div>
                 </div> <!-- end col -->
             </div>
             <!-- end row -->

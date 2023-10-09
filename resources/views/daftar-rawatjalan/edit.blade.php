@@ -4,7 +4,7 @@
         <h3>Edit Data Pasien</h3>
         <div class="content bg-white border">
             <div class="m-5">
-                <form action="{{ route('daftar.online.update', $dtpendaftaran->id_pendaftaran) }}" method="POST"
+                <form action="{{ route('daftar-pasienjalan.update', $dtpendaftaran->id_pendaftaran) }}" method="POST"
                     class="mb-3" id="pasien-form" enctype="multipart/form-data">
                     @csrf
 

@@ -22,7 +22,7 @@
                         <div class="col-md-2">
                             <label for="search" class="form-label-md-6"> Detail Pasien</label>
                         </div>
-                        <div class="col-md-10">
+                        <div class="col-md-4">
                             <div class="input-group">
                                 <input class="typeahead form-control" name="search" id="search" class="form-control"
                                     placeholder="NIK | Nama pasien">
@@ -30,6 +30,10 @@
                                     <i class="ri-check-fill"></i>
                                 </button>
                             </div>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ route('pasien.create') }}" class="btn btn-success mb-2"><i
+                                    class="mdi mdi-plus-circle me-2"></i> Add Pasien</a>
                         </div>
                     </div>
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataMenu;
 use App\Models\RumahSakit;
+use App\Models\DataRoleMenu;
 use Illuminate\Http\Request;
 
 class RumahsakitController extends Controller
@@ -10,12 +12,19 @@ class RumahsakitController extends Controller
     public function index()
     {
         $rumahsakit = RumahSakit::get();
-        return view('rumahsakit.rumahsakit', compact('rumahsakit'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('rumahsakit.rumahsakit', compact('rumahsakit', 'menu', 'roleuser'));
     }
 
     public function create()
     {
-        return view('rumahsakit.create');
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+
+        return view('rumahsakit.create', compact('roleuser', 'menu'));
     }
 
     public function store(Request $request)
@@ -48,7 +57,11 @@ class RumahsakitController extends Controller
     public function edit($id)
     {
         $rumahsakit = RumahSakit::where('id_rumahsakit', $id)->first();
-        return view('rumahsakit.edit', compact('rumahsakit'));
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+
+        return view('rumahsakit.edit', compact('rumahsakit', 'roleuser', 'menu'));
     }
 
     public function update(Request $request, $id)

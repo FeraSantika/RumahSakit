@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataKamarInap;
+use Carbon\Carbon;
+use App\Models\DataLab;
+use App\Models\DataMenu;
 use App\Models\DataObat;
 use App\Models\DataPasien;
+use App\Models\DataRoleMenu;
 use App\Models\DataTindakan;
-use App\Models\DiagnosaPasienInap;
-use App\Models\KamarPasienInap;
 use Illuminate\Http\Request;
+use App\Models\DataKamarInap;
 use App\Models\ListDaftarObat;
+use App\Models\DataTindakanLab;
+use App\Models\KamarPasienInap;
+use App\Models\DiagnosaPasienInap;
 use App\Models\ListDaftarTindakan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PendaftaranPasienInap;
 use App\Models\ListDaftarObatPasienInap;
+use App\Models\ListDaftarRujukanPasienInap;
 use App\Models\ListDaftarTindakanPasienInap;
-use Carbon\Carbon;
 
 class ListdaftarpasienInapController extends Controller
 {
@@ -24,8 +29,10 @@ class ListdaftarpasienInapController extends Controller
     {
         $dokter = Auth::user()->User_name;
         $dtpendaftar = PendaftaranPasienInap::paginate(10);
-
-        return view('listpasienrawatinap.listdaftarpasien', compact('dtpendaftar', 'dokter'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('listpasienrawatinap.listdaftarpasien', compact('dtpendaftar', 'dokter', 'menu', 'roleuser'));
     }
 
     public function autocomplete(Request $request)
@@ -43,17 +50,20 @@ class ListdaftarpasienInapController extends Controller
 
     public function search(Request $request)
     {
+        $dokter = Auth::user()->User_name;
         $searchTerm = $request->get('cari');
 
-        $data = DataPasien::where('pasien_nama', 'LIKE', '%' . $searchTerm . '%')
-            ->orWhere('pasien_kode', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_nama', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_NIK', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_tempat_lahir', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_tgl_lahir', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_jenis_kelamin', 'LIKE', '%' . $request->get('cari') . '%')
-            ->orWhere('pasien_alamat', 'LIKE', '%' . $request->get('cari') . '%')
+        $responsedata = PendaftaranPasienInap::with('pasien')->whereHas('pasien', function ($query) use ($searchTerm) {
+            $query->where('pasien_nama', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('kode_pendaftaran', 'LIKE', '%' . $searchTerm . '%');
+        })
+
             ->get();
+
+        $data = [
+            'dokter' => $dokter,
+            'data' => $responsedata,
+        ];
 
         return response()->json($data);
     }
@@ -68,14 +78,31 @@ class ListdaftarpasienInapController extends Controller
         $editkamarpasien = KamarPasienInap::where('kode_pendaftaran', $id)->with('kamar')->first();
         $dtdiagnosa = DiagnosaPasienInap::where('kode_pendaftaran', $id)->get();
         $editdiagnosa = DiagnosaPasienInap::where('kode_pendaftaran', $id)->first();
+        $dtlistrujukan = ListDaftarRujukanPasienInap::where('kode_pendaftaran', $id)->get();
+        $rujukan = ListDaftarRujukanPasienInap::where('kode_pendaftaran', $id)->first();
 
         foreach ($dtpendaftar as $pendaftaran) {
             $pasien_id = $pendaftaran->pasien_id;
-            $dtriwayat = PendaftaranPasienInap::where('pasien_id', $pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('poli', 'user', 'listobat', 'listtindakan')->get();
+            $dtriwayat = PendaftaranPasienInap::where('pasien_id', $pasien_id)->where('status_pemeriksaan', 'Tertangani')->with('user', 'listobat', 'listtindakan')->get();
         }
-        return view('listpasienrawatinap.detailpasien', compact('dtpendaftar', 'dtriwayat', 'dtlistobat', 'dtlisttindakan', 'dtkamarpasien', 'editkamarpasien', 'dtdiagnosa', 'editdiagnosa'));
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('listpasienrawatinap.detailpasien', compact(
+            'dtpendaftar',
+            'dtriwayat',
+            'dtlistobat',
+            'dtlisttindakan',
+            'dtkamarpasien',
+            'editkamarpasien',
+            'dtdiagnosa',
+            'editdiagnosa',
+            'menu',
+            'roleuser',
+            'dtlistrujukan',
+            'rujukan'
+        ));
     }
-
 
     public function insertlistobat(Request $request)
     {
@@ -114,7 +141,7 @@ class ListdaftarpasienInapController extends Controller
         }
     }
 
-    public function updatelist(Request $request)
+    public function updatelistobat(Request $request)
     {
         $updatedData = [
             'qty' => $request->qty,
@@ -161,52 +188,74 @@ class ListdaftarpasienInapController extends Controller
         return response()->json($data);
     }
 
-    // public function inserttindakan(Request $request)
-    // {
-    //     $datatindakan = DataTindakan::where('nama_tindakan', $request->search)->first();
-    //     $dtpasien =  PendaftaranPasienInap::where('kode_pendaftaran', $request->kode)->first();
+    public function inserttindakan(Request $request)
+    {
+        $datatindakan = DataTindakan::where('nama_tindakan', $request->search)->first();
+        $dtpasien =  PendaftaranPasienInap::where('kode_pendaftaran', $request->kode)->first();
 
-    //     if ($datatindakan && $dtpasien) {
-    //         $listdaftartindakan = ListDaftarTindakanPasienInap::create([
-    //             'nama_tindakan' => $datatindakan->nama_tindakan,
-    //             'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
-    //             'harga_tindakan' => $datatindakan->harga_tindakan,
-    //         ]);
+        if ($datatindakan && $dtpasien) {
+            $listdaftartindakan = ListDaftarTindakanPasienInap::create([
+                'nama_tindakan' => $datatindakan->nama_tindakan,
+                'tanggal' => $request->tgltindakan,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
+                'harga_tindakan' => $datatindakan->harga_tindakan,
+            ]);
 
-    //         $description_data = [
-    //             'nama_tindakan' => $datatindakan->nama_tindakan,
-    //             'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
-    //             'harga_tindakan' => $datatindakan->harga_tindakan,
-    //             'list_id' => $listdaftartindakan->id,
-    //         ];
+            $description_data = [
+                'nama_tindakan' => $datatindakan->nama_tindakan,
+                'tanggal' => $request->tgltindakan,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
+                'harga_tindakan' => $datatindakan->harga_tindakan,
+                'list_id' => $listdaftartindakan->id,
+            ];
 
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Data Berhasil Disimpan!',
-    //             'data' => $description_data
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Data Obat atau Pasien tidak ditemukan.',
-    //             'data' => null
-    //         ]);
-    //     }
-    // }
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berhasil Disimpan!',
+                'data' => $description_data
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Obat atau Pasien tidak ditemukan.',
+                'data' => null
+            ]);
+        }
+    }
 
-    // public function destroytindakan($list_id)
-    // {
-    //     $listtindakan = ListDaftarTindakanPasienInap::where('list_id', $list_id);
-    //     $listtindakan->delete();
+    public function updatetindakan(Request $request)
+    {
+        $datatindakan = DataTindakan::where('nama_tindakan', $request->search)->first();
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Data Berhasil Dihapus!.',
-    //         'data' => $listtindakan,
-    //     ]);
-    // }
+        $updatedData = [
+            'nama_tindakan' => $datatindakan->nama_tindakan,
+            'tanggal' => $request->tgltindakan,
+            'harga_tindakan' => $datatindakan->harga_tindakan,
+            'list_id' => $request->list_id
+        ];
 
+        ListDaftarTindakanPasienInap::where('list_id', $request->list_id)->update($updatedData);
 
+        $responseData = [
+            'success' => true,
+            'message' => 'Data Berhasil Diubah!',
+            'data' => $updatedData,
+        ];
+
+        return response()->json($responseData);
+    }
+
+    public function destroytindakan($list_id)
+    {
+        $listtindakan = ListDaftarTindakanPasienInap::where('list_id', $list_id);
+        $listtindakan->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!.',
+            'data' => $listtindakan,
+        ]);
+    }
 
     public function insertkamarpasien(Request $request)
     {
@@ -217,10 +266,12 @@ class ListdaftarpasienInapController extends Controller
             'kode_pendaftaran' => $request->kode
         ]);
 
+        $responseData = KamarPasienInap::with('kamar')->where('id_kamar_inap', $request->id)->first();
+
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Disimpan!',
-            'data' => $kamarpasien,
+            'data' => $responseData,
         ]);
     }
 
@@ -230,19 +281,20 @@ class ListdaftarpasienInapController extends Controller
             'tanggal_masuk' => $request->tglmasuk,
             'tanggal_keluar' => $request->perkiraankeluar,
             'id_kamar_inap' => $request->idkamar,
-            'kode_pendaftaran' => $request->kode
+            'kode_pendaftaran' => $request->kode,
         ];
 
         KamarPasienInap::where('id_kamar_pasieninap', $request->id)->update($updatedData);
 
-        $responseData = [
-            'success' => true,
-            'message' => 'Data Berhasil Diubah!',
-            'data' => $updatedData
-        ];
+        $updatedData = KamarPasienInap::with('kamar')->where('id_kamar_pasieninap', $request->id)->first();
 
-        return response()->json($responseData);
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Disimpan!',
+            'data' => $updatedData,
+        ]);
     }
+
 
     public function destroykamarpasien($id)
     {
@@ -258,31 +310,33 @@ class ListdaftarpasienInapController extends Controller
 
     public function insertdiagnosapasien(Request $request)
     {
-        DiagnosaPasienInap::create([
+        $responseData = DiagnosaPasienInap::create([
             'tanggal' => $request->tgldiagnosa,
             'diagnosa' => $request->diagnosa,
             'kode_pendaftaran' => $request->kode
         ]);
-        return redirect()->back()->with('success', 'Diagnosa berhasil ditambahkan.');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Disimpan!',
+            'data' => $responseData,
+        ]);
     }
 
     public function updatediagnosapasien(Request $request)
     {
-        $diagnosaId = $request->input('edit-diagnosa-id');
-
-        $diagnosa = DiagnosaPasienInap::find($diagnosaId);
-        if (!$diagnosa) {
-            return redirect()->back()->with('error', 'Diagnosa tidak ditemukan.');
-        }
-
         $updatedData = [
             'tanggal' => $request->tgldiagnosa,
             'diagnosa' => $request->diagnosa,
         ];
 
-        DiagnosaPasienInap::where('id_diagnosa_pasieninap', $diagnosaId)->update($updatedData);
-
-        return redirect()->back()->with('success', 'Diagnosa berhasil diperbarui.');
+        DiagnosaPasienInap::where('id_diagnosa_pasieninap', $request->id)->update($updatedData);
+        $updatedData = DiagnosaPasienInap::where('id_diagnosa_pasieninap', $request->id)->first();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Disimpan!',
+            'data' => $updatedData,
+        ]);
     }
 
     public function destroydiagnosapasien($id)
@@ -297,18 +351,149 @@ class ListdaftarpasienInapController extends Controller
         ]);
     }
 
-    public function getObat()
+    public function statuspemeriksaanupdate(Request $request)
     {
-        $obat = DataObat::all();
+        $user = Auth::user();
+        $updatedData = [
+            'status_pemeriksaan' => $request->pemeriksaan,
+            'petugas' => $user->User_id
+        ];
+
+        PendaftaranPasienInap::where('kode_pendaftaran', $request->kode)->update($updatedData);
+
+        $responseData = [
+            'success' => true,
+            'message' => 'Data Berhasil Diubah!',
+            'data' => $updatedData
+        ];
+
+        return response()->json($responseData);
+    }
+
+    public function autocomplete_rujukan(Request $request)
+    {
+        $data = DataLab::select("nama_lab as label", "id_lab as value")
+            ->where('nama_lab', 'LIKE', '%' . $request->get('cari') . '%')
+            ->get();
+
+        return response()->json($data);
+    }
+
+    public function insertrujukan(Request $request)
+    {
+        $datarujukan = DataLab::where('id_lab', $request->search)->first();
+        $dtpasien =  PendaftaranPasienInap::where('kode_pendaftaran', $request->kode)->first();
+        $rujukanpasien = ListDaftarRujukanPasienInap::where('kode_pendaftaran', $request->kode)->first();
+
+        if ($datarujukan && $dtpasien) {
+            $listdaftarrujukan = ListDaftarRujukanPasienInap::create([
+                'id_lab' => $datarujukan->id_lab,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
+            ]);
+
+            $description_data = [
+                'id_lab' => $datarujukan->id_lab,
+                'kode_pendaftaran' => $dtpasien->kode_pendaftaran,
+                'list_id' => $listdaftarrujukan->id,
+                'nama_lab' => $datarujukan->nama_lab,
+                'keterangan' => $rujukanpasien->keterangan,
+                'file' => $rujukanpasien->filerujukan,
+                'status' => $rujukanpasien->status
+            ];
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berhasil Disimpan!',
+                'data' => $description_data
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Obat atau Pasien tidak ditemukan.',
+                'data' => null
+            ]);
+        }
+    }
+
+    public function destroyrujukan($list_id)
+    {
+        $listrujukan = ListDaftarRujukanPasienInap::where('list_id', $list_id);
+        $listrujukan->delete();
 
         return response()->json([
-            'data' => $obat,
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!.',
+            'data' => $listrujukan,
         ]);
     }
 
-    public function datakamar($id)
+    public function pasienrujukan()
     {
-        $dtkamarpasien = KamarPasienInap::where('kode_pendaftaran', $id)->with('kamar')->get();
-        return response()->json($dtkamarpasien);
+        $user = Auth::user();
+        $akses = $user->poliakses;
+        $dtpendaftar = ListDaftarRujukanPasienInap::with(['daftar.user', 'lab'])->paginate(10);
+
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('listrujukanrawatinap.listrujukanpasien', compact('dtpendaftar', 'menu', 'roleuser'));
+    }
+
+    public function detailpasienrujukan($id)
+    {
+        $pendaftar = ListDaftarRujukanPasienInap::where('list_id', $id)->with('daftar.pasien')->first();
+        $pasien_id = $pendaftar->daftar->pasien->pasien_id;
+        $dtriwayat = PendaftaranPasienInap::where('pasien_id', $pasien_id)->where('status_pemeriksaan', 'Tertangani')
+            ->with('poli', 'user', 'listobat', 'listtindakan')->get();
+        $dtlistrujukan = ListDaftarRujukanPasienInap::where('list_id', $id)->with('lab')->get();
+        $tindakanlab = [];
+        foreach ($dtlistrujukan as $rujukan) {
+            $id_lab = $rujukan->lab->id_lab;
+            $tindakanlab[] = DataTindakanLab::where('id_lab', $id_lab)->get();
+        }
+
+        $menu = DataMenu::where('Menu_category', 'Master Menu')->with('menu')->orderBy('Menu_position', 'ASC')->get();
+        $user = auth()->user()->role;
+        $roleuser = DataRoleMenu::where('Role_id', $user->Role_id)->get();
+        return view('listrujukanrawatinap.detailrujukanpasien', compact(
+            'menu',
+            'roleuser',
+            'pendaftar',
+            'dtriwayat',
+            'tindakanlab'
+        ));
+    }
+
+    public function uploadfilerujukan(Request $request, $id)
+    {
+        $request->validate([
+            'keterangan' => 'required|string',
+            'file' => 'file|max:5120',
+            'tindakan' => 'required'
+        ]);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+
+            if (in_array(strtolower($extension), ['php', 'html'])) {
+                return redirect()->back()->with('error', 'File dengan ekstensi .php atau .html tidak diizinkan.');
+            }
+
+            $destinationPath = 'uploads/';
+            $filename = 'rujukan' . date('YmdHis') . "." . $extension;
+
+            $file->move($destinationPath, $filename);
+        }
+
+        $userData = [
+            'tindakan' => $request->tindakan,
+            'keterangan' => $request->keterangan,
+            'filerujukan' => $filename,
+            'status' => 'Tertangani'
+        ];
+
+        ListDaftarRujukanPasienInap::where('list_id', $id)->update($userData);
+        return redirect()->route('list-rujukan-pasienInap');
     }
 }
