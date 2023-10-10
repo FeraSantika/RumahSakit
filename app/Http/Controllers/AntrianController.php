@@ -75,15 +75,18 @@ class AntrianController extends Controller
         $id_poli = $request->input('id_poli');
         $today = now()->format('Y-m-d');
         $nomor_antrian = DataAntrian::whereDate('tanggal_antrian', $today)->latest('updated_at')->value('nomor_antrian');
-        return response()->json(['nomor_antrian' => $nomor_antrian]);
-    }
-
-    public function getNamaPoli(Request $request)
-    {
-        $id_poli = $request->input('id_poli');
-        $today = now()->format('Y-m-d');
         $dataAntrian = DataAntrian::whereDate('tanggal_antrian', $today)->latest('updated_at')->with('poli')->first();
         $nama_poli = $dataAntrian->poli->nama_poli;
-        return response()->json(['nama_poli' => $nama_poli]);
+        $kode_poli = $dataAntrian->poli->kode_poli;
+
+        $update = DataAntrian::where('id_antrian', $dataAntrian->id_antrian)->update([
+            'status_antrian' => '0'
+        ]);
+        return response()->json([
+            'nomor_antrian' => $nomor_antrian,
+            'nama_poli' => $nama_poli,
+            'status' => $dataAntrian->status_antrian,
+            'kode' => $kode_poli,
+        ]);
     }
 }

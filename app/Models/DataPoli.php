@@ -11,6 +11,7 @@ class DataPoli extends Model
     protected $table = 'data_poli';
     protected $fillable = [
         'id_poli',
+        'kode_poli',
         'nama_poli',
     ];
 

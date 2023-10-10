@@ -11,14 +11,22 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <label for="nama" class="form-label-md-6">Nama</label>
+                            <label for="nama" class="form-label-md-6">Nama poli</label>
                         </div>
                         <div class="col-md-10">
                             <input type="text" name="nama" id="nama" class="form-control"
                                 value="{{ $poli->nama_poli }}">
                         </div>
                     </div>
-
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <label for="kode" class="form-label-md-6">Kode poli</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" name="kode" id="kode" class="form-control"
+                                value="{{ $poli->kode_poli }}">
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="mt-3 text-center">
                             <a class="btn btn-danger" href="javascript:void(0);" onclick="history.back();">Kembali</a>

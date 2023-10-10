@@ -38,6 +38,7 @@
                                             <th>No.</th>
                                             <th>ID Poli</th>
                                             <th>Nama Poli</th>
+                                            <th>Kode Poli</th>
                                             <th>Nomor Antrian</th>
                                             <th>Status Antrian</th>
                                             <th style="width: 350px;">Action</th>
@@ -52,6 +53,7 @@
                                                 <td>{{ $rowNumber }}</td>
                                                 <td>{{ $item->id_poli }}</td>
                                                 <td id="nama_poli">{{ $item->nama_poli }}</td>
+                                                <td>{{ $item->kode_poli }}</td>
                                                 <td id="nomor_antrian">
                                                     @if ($item->antrian)
                                                         {{ $item->antrian->nomor_antrian }}

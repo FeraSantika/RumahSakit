@@ -34,6 +34,7 @@ class PoliController extends Controller
 
         DataPoli::create([
             'nama_poli' => $request->nama,
+            'kode_poli' => $request->kode,
         ]);
 
         return redirect()->route('poli');
@@ -52,6 +53,7 @@ class PoliController extends Controller
     {
         $poli = [
             'nama_poli' => $request->nama,
+            'kode_poli' => $request->kode,
         ];
 
         DataPoli::where('id_poli', $id)->update($poli);

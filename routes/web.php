@@ -312,5 +312,4 @@ Route::get('/admin/antrian', [AntrianController::class, 'antrian'])->name('antri
 Route::post('/admin/antrian/update', [AntrianController::class, 'hitungantrian'])->name('antrian-update');
 Route::post('/admin/antrian/updatestatus', [AntrianController::class, 'ubahstatus'])->name('antrian-updatestatus');
 Route::get('/get-nomor-antrian', [AntrianController::class, 'getNomorAntrian'])->name('get-nomor-antrian');
-Route::get('/get-nama-poli', [AntrianController::class, 'getNamaPoli'])->name('get-nama-poli');
 

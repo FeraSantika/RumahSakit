@@ -47,6 +47,7 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>ID Poli</th>
+                                            <th>Kode Poli</th>
                                             <th>Nama Poli</th>
                                             <th style="width: 100px;">Action</th>
                                         </tr>
@@ -61,7 +62,9 @@
                                                 <td>
                                                     {{ $item->id_poli }}
                                                 </td>
-
+                                                <td>
+                                                    {{ $item->kode_poli }}
+                                                </td>
                                                 <td>
                                                     {{ $item->nama_poli }}
                                                 </td>

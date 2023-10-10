@@ -139,7 +139,8 @@
                             <hr>
                             <div class="row mb-5 mt-5">
                                 <div class="col md-6">
-                                    <h2 id="nomor-antrian">{{ $antrian->nomor_antrian }}</h2>
+                                    <h2 id="nomor-antrian">
+                                        {{ $antrian->poli->kode_poli }}{{ $antrian->nomor_antrian }}</h2>
                                 </div>
                                 <div class="col md-2">
                                     <h1>&gt;</h1>
@@ -212,12 +213,10 @@
     <script src="https://cdn.jsdelivr.net/npm/recta/dist/recta.js"></script>
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=6zFzZrfQ"></script>
     <script type="text/javascript">
-        /*
-            		maksimal 30 nomor antrian dan 9 loket
-            	*/
+        /*maksimal 30 nomor antrian dan 9 loket*/
 
-        function playAudioAntrian(nomor_antrian, nomor_loket) {
-            let pathAudio = "http://127.0.0.1:8000/assets/audio1/";
+        function playAudioAntrian(kode_poli, nomor_antrian, nomor_loket) {
+            let pathAudio = "{{ asset('assets/audio1') }}/";
 
             if (nomor_antrian < 10) {
                 pathAudio += nomor_antrian + '.wav';
@@ -240,68 +239,82 @@
             const startBell = new Audio("{{ asset('assets/audio1/in.wav') }}");
             const endBell = new Audio("{{ asset('assets/audio1/out.wav') }}");
             const audioNomorUrut = new Audio("{{ asset('assets/audio1/nomor-urut.wav') }}");
-            const audioLoket = new Audio("{{ asset('assets/audio1/loket.wav') }}");
+            const audioLoket = new Audio("{{ asset('assets/audio1/poli.wav') }}");
             const audioBelas = new Audio("{{ asset('assets/audio1/belas.wav') }}");
             const audioPuluh = new Audio("{{ asset('assets/audio1/puluh.wav') }}");
+            const kodePoli = new Audio("{{ asset('assets/audio1/') }}/" + kode_poli + '.wav');
             const number_antrian = new Audio(pathAudio);
-            const number_loket = new Audio("http://127.0.0.1:8000/assets/audio1/" + nomor_loket + '.wav');
+            const number_loket = new Audio("{{ asset('assets/audio1/') }}/" + nomor_loket + '.wav');
 
             if (nomor_antrian <= 11) {
                 playAudio(startBell, function() {
                     playAudio(audioNomorUrut, function() {
-                        playAudio(number_antrian, function() {
-                            playAudio(audioLoket, function() {
-                                playAudio(number_loket, function() {
-                                    playAudio(endBell);
-                                });
-                            });
-                        })
-                    });
-                });
-            } else if (nomor_antrian < 20) {
-                playAudio(startBell, function() {
-                    playAudio(audioNomorUrut, function() {
-                        playAudio(number_antrian, function() {
-                            playAudio(audioBelas, function() {
+                        playAudio(kodePoli, function() {
+                            playAudio(number_antrian, function() {
                                 playAudio(audioLoket, function() {
                                     playAudio(number_loket, function() {
                                         playAudio(endBell);
                                     });
                                 });
-                            });
-                        })
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 20) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(kodePoli, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioBelas, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(number_loket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                });
+                            })
+                        });
                     });
                 });
             } else if (nomor_antrian < 30) {
                 playAudio(startBell, function() {
                     playAudio(audioNomorUrut, function() {
-                        playAudio(number_antrian, function() {
-                            playAudio(audioPuluh, function() {
+                        playAudio(kodePoli, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 20) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(1);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        // const audioNew = new Audio("{{ asset('assets/audio1/') }}" + split2 + ".wav");
 
-                                if (nomor_antrian > 20) {
-                                    const split2 = nomor_antrian.toString().charAt(1);
-                                    const audioNew = new Audio(
-                                        "http://127.0.0.1:8000/assets/audio1/" +
-                                        split2 + ".wav");
-                                    // const audioNew = new Audio("{{ asset('assets/audio1/') }}" + split2 + ".wav");
-
-                                    playAudio(audioNew, function() {
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(
+                                                        number_loket,
+                                                        function() {
+                                                            playAudio
+                                                                (
+                                                                    endBell
+                                                                );
+                                                        });
+                                                });
+                                        });
+                                    } else {
                                         playAudio(audioLoket, function() {
                                             playAudio(number_loket,
                                                 function() {
                                                     playAudio(endBell);
                                                 });
                                         });
-                                    });
-                                } else {
-                                    playAudio(audioLoket, function() {
-                                        playAudio(number_loket, function() {
-                                            playAudio(endBell);
-                                        });
-                                    });
-                                }
-                            });
-                        })
+                                    }
+                                });
+                            })
+                        });
                     });
                 });
             } else if (nomor_antrian == 30) {
@@ -309,15 +322,17 @@
 
                 playAudio(startBell, function() {
                     playAudio(audioNomorUrut, function() {
-                        playAudio(audioNew, function() {
-                            playAudio(audioPuluh, function() {
-                                playAudio(audioLoket, function() {
-                                    playAudio(number_loket, function() {
-                                        playAudio(endBell);
+                        playAudio(kodePoli, function() {
+                            playAudio(audioNew, function() {
+                                playAudio(audioPuluh, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(number_loket, function() {
+                                            playAudio(endBell);
+                                        });
                                     });
                                 });
-                            });
-                        })
+                            })
+                        });
                     });
                 });
             }
@@ -366,42 +381,28 @@
         }
 
         const nomorAntrianElement = document.getElementById('nomor-antrian');
+        const namaPoli = document.getElementById('nama_poli');
 
-        function updateNomorAntrian() {
+        function updateDataAntrian() {
             fetch("/get-nomor-antrian")
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
-                    nomorAntrianElement.textContent = data.nomor_antrian;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        }
-        setInterval(updateNomorAntrian, 5000);
-        updateNomorAntrian();
-
-        const namaPoli = document.getElementById('nama_poli');
-
-        function updateNamaPoli() {
-            fetch("/get-nama-poli")
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
+                    console.log(data);
+                    nomorAntrianElement.textContent = data.kode + " " + data.nomor_antrian;
                     namaPoli.textContent = data.nama_poli;
-
+                    if (data.status == 1) {
+                        const nomor_antrian = data.nomor_antrian;
+                        const nomor_loket = data.nama_poli;
+                        const kode_poli = data.kode;
+                        playAudioAntrian(kode_poli, nomor_antrian, nomor_loket);
+                    }
                 })
                 .catch(error => {
                     console.error(error);
                 });
         }
-
-        const nomor_antrian = document.getElementById('nomor-antrian');
-        const nomor_loket = "1";
-
-        playAudioAntrian(nomor_antrian, nomor_loket);
-        setInterval(updateNamaPoli, 50000);
-        updateNamaPoli();
+        setInterval(updateDataAntrian, 10000);
+        updateDataAntrian();
     </script>
 </body>
 

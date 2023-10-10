@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('data_poli', function (Blueprint $table) {
             $table->bigIncrements('id_poli');
+            $table->char('kode_poli');
             $table->char('nama_poli');
             $table->timestamps();
         });
