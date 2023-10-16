@@ -126,9 +126,7 @@
                     <div class="alert alert-block alert-info"
                         style="height: 100%; background-color: #14959a!important; border-color: #14959a!important; color: #ffffff!important;">
                         <div class="col md-8 mb-3">
-                            <div class="row mt-5"></div>
-                            <div class="row mt-4"></div>
-                            <div class="row mt-5">
+                            <div class="row mt-3">
                                 <div class="col md-8" style="background-color: #1ab2b8">
                                     <h2>Nomor Antrian</h2>
                                 </div>
@@ -140,19 +138,35 @@
                             <div class="row mb-5 mt-5">
                                 <div class="col md-6">
                                     <h2 id="nomor-antrian">
-                                        {{ $antrian->poli->kode_poli }}{{ $antrian->nomor_antrian }}</h2>
+                                        {{ $antrian->poli->kode_poli ?? '' }} - {{ $antrian->nomor_antrian ?? '' }}
+                                    </h2>
                                 </div>
                                 <div class="col md-2">
                                     <h1>&gt;</h1>
                                 </div>
                                 <div class="col md-4">
-                                    <h2 id="nama_poli">{{ $antrian->poli->nama_poli }}</h2>
+                                    <h2 id="nama_poli">{{ $antrian->poli->nama_poli ?? '-' }}</h2>
                                 </div>
                             </div>
                         </div>
                         <hr class="my-1">
                         <hr class="my-1" style="height: 10px; background-color: white; width: 100%; margin: 5px 0;">
                         <hr class="my-1">
+                        <div class="col md-8 mb-3">
+                            <div class="row mt-5">
+                                <div class="col md-8" style="background-color: #1ab2b8">
+                                    <h2>Nomor Antrian Obat</h2>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mb-5 mt-5">
+                                <div class="col md-6">
+                                    <h2 id="nomor-antrian_obat">
+                                        {{ $antrianobat->nomor_antrian ?? '' }}
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -289,7 +303,6 @@
                                             "{{ asset('assets/audio1/') }}/" +
                                             split2 +
                                             ".wav");
-                                        // const audioNew = new Audio("{{ asset('assets/audio1/') }}" + split2 + ".wav");
 
                                         playAudio(audioNew, function() {
                                             playAudio(audioLoket,
@@ -319,7 +332,6 @@
                 });
             } else if (nomor_antrian == 30) {
                 const audioNew = new Audio("{{ asset('assets/audio1/3.wav') }}");
-
                 playAudio(startBell, function() {
                     playAudio(audioNomorUrut, function() {
                         playAudio(kodePoli, function() {
@@ -341,6 +353,802 @@
         function playAudio(objAudio, callback) {
             objAudio.play();
             objAudio.addEventListener('ended', callback);
+        }
+
+        function playAudioAntrianObat(nomor_antrian) {
+            let pathAudio = "{{ asset('assets/audio1') }}/";
+
+            if (nomor_antrian < 10) {
+                pathAudio += nomor_antrian + '.wav';
+            } else if (nomor_antrian == 10) {
+                pathAudio += 'sepuluh.wav';
+            } else if (nomor_antrian == 11) {
+                pathAudio += 'sebelas.wav';
+            } else if (nomor_antrian < 20) {
+                // 12 - 19
+                const split = nomor_antrian.toString().charAt(1);
+                pathAudio += split + '.wav';
+            } else if (nomor_antrian == 20) {
+                pathAudio += '2.wav';
+            } else if (nomor_antrian < 30 || nomor_antrian < 40 || nomor_antrian < 50 || nomor_antrian < 60 ||
+                nomor_antrian < 70 || nomor_antrian < 80 || nomor_antrian < 90 || nomor_antrian < 100) {
+                const split = nomor_antrian.toString().charAt(0);
+                pathAudio += split + '.wav';
+            } else if (nomor_antrian == 30 || nomor_antrian == 40 || nomor_antrian == 50 || nomor_antrian == 60 ||
+                nomor_antrian == 70 || nomor_antrian == 80 || nomor_antrian == 90) {
+                const split = nomor_antrian.toString().charAt(0);
+                pathAudio += split + '.wav';
+            } else if (nomor_antrian == 100) {
+                pathAudio += 'seratus.wav';
+            } else if (nomor_antrian < 110) {
+                const split = nomor_antrian.toString().charAt(2);
+                pathAudio += split + '.wav';
+            } else if (nomor_antrian == 110) {
+                pathAudio += 'sepuluh.wav';
+            } else if (nomor_antrian == 111) {
+                pathAudio += 'sebelas.wav';
+            } else if (nomor_antrian < 120) {
+                // 112 - 119
+                const split = nomor_antrian.toString().charAt(2);
+                pathAudio += split + '.wav';
+            } else if (nomor_antrian < 130 || nomor_antrian < 140 || nomor_antrian < 150 || nomor_antrian < 160 ||
+                nomor_antrian < 170 || nomor_antrian < 180 || nomor_antrian < 190 || nomor_antrian < 200) {
+                const split = nomor_antrian.toString().charAt(1);
+                pathAudio += split + '.wav';
+            } else if (nomor_antrian == 120 || nomor_antrian == 130 || nomor_antrian == 140 || nomor_antrian == 150 ||
+                nomor_antrian == 160 ||
+                nomor_antrian == 170 || nomor_antrian == 180 || nomor_antrian == 190) {
+                const split = nomor_antrian.toString().charAt(1);
+                pathAudio += split + '.wav';
+            } else if (nomor_antrian == 200) {
+                pathAudio += '2.wav';
+            }
+
+            const startBell = new Audio("{{ asset('assets/audio1/in.wav') }}");
+            const endBell = new Audio("{{ asset('assets/audio1/out.wav') }}");
+            const audioNomorUrut = new Audio("{{ asset('assets/audio1/nomor-urut-apotek.wav') }}");
+            const audioLoket = new Audio("{{ asset('assets/audio1/loket-obat.wav') }}");
+            const audioBelas = new Audio("{{ asset('assets/audio1/belas.wav') }}");
+            const audioPuluh = new Audio("{{ asset('assets/audio1/puluh.wav') }}");
+            const audioRatus = new Audio("{{ asset('assets/audio1/seratus.wav') }}");
+            const ratusAudio = new Audio("{{ asset('assets/audio1/ratus.wav') }}");
+            const number_antrian = new Audio(pathAudio);
+
+            if (nomor_antrian <= 11) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioLoket, function() {
+                                playAudio(endBell);
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 20) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioBelas, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 30) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioPuluh, function() {
+                                if (nomor_antrian > 20) {
+                                    const split2 = nomor_antrian.toString().charAt(1);
+                                    const audioNew = new Audio(
+                                        "{{ asset('assets/audio1/') }}/" + split2 +
+                                        ".wav");
+                                    playAudio(audioNew, function() {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                } else {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                }
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 30) {
+                const audioNew = new Audio("{{ asset('assets/audio1/3.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(audioPuluh, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 40) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioPuluh, function() {
+                                if (nomor_antrian > 30) {
+                                    const split2 = nomor_antrian.toString().charAt(1);
+                                    const audioNew = new Audio(
+                                        "{{ asset('assets/audio1/') }}/" + split2 +
+                                        ".wav");
+
+                                    playAudio(audioNew, function() {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                } else {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 40) {
+                const audioNew = new Audio("{{ asset('assets/audio1/4.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(audioPuluh, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 50) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioPuluh, function() {
+                                if (nomor_antrian > 40) {
+                                    const split2 = nomor_antrian.toString().charAt(1);
+                                    const audioNew = new Audio(
+                                        "{{ asset('assets/audio1/') }}/" + split2 +
+                                        ".wav");
+
+                                    playAudio(audioNew, function() {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                } else {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 50) {
+                const audioNew = new Audio("{{ asset('assets/audio1/5.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(audioPuluh, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 60) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioPuluh, function() {
+                                if (nomor_antrian > 50) {
+                                    const split2 = nomor_antrian.toString().charAt(1);
+                                    const audioNew = new Audio(
+                                        "{{ asset('assets/audio1/') }}/" + split2 +
+                                        ".wav");
+
+                                    playAudio(audioNew, function() {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                } else {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 60) {
+                const audioNew = new Audio("{{ asset('assets/audio1/6.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(audioPuluh, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 70) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioPuluh, function() {
+                                if (nomor_antrian > 60) {
+                                    const split2 = nomor_antrian.toString().charAt(1);
+                                    const audioNew = new Audio(
+                                        "{{ asset('assets/audio1/') }}/" + split2 +
+                                        ".wav");
+
+                                    playAudio(audioNew, function() {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                } else {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 70) {
+                const audioNew = new Audio("{{ asset('assets/audio1/7.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(audioPuluh, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 80) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioPuluh, function() {
+                                if (nomor_antrian > 70) {
+                                    const split2 = nomor_antrian.toString().charAt(1);
+                                    const audioNew = new Audio(
+                                        "{{ asset('assets/audio1/') }}/" + split2 +
+                                        ".wav");
+
+                                    playAudio(audioNew, function() {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                } else {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 80) {
+                const audioNew = new Audio("{{ asset('assets/audio1/8.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(audioPuluh, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 90) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioPuluh, function() {
+                                if (nomor_antrian > 80) {
+                                    const split2 = nomor_antrian.toString().charAt(1);
+                                    const audioNew = new Audio(
+                                        "{{ asset('assets/audio1/') }}/" + split2 +
+                                        ".wav");
+
+                                    playAudio(audioNew, function() {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                } else {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 90) {
+                const audioNew = new Audio("{{ asset('assets/audio1/9.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(audioPuluh, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 100) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(number_antrian, function() {
+                            playAudio(audioPuluh, function() {
+                                if (nomor_antrian > 90) {
+                                    const split2 = nomor_antrian.toString().charAt(1);
+                                    const audioNew = new Audio(
+                                        "{{ asset('assets/audio1/') }}/" + split2 +
+                                        ".wav");
+
+                                    playAudio(audioNew, function() {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    });
+                                } else {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 100) {
+                const audioNew = new Audio("{{ asset('assets/audio1/seratus.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(audioLoket, function() {
+                                playAudio(endBell);
+                            });
+                        })
+                    });
+                });
+            } else if (nomor_antrian < 110) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            if (nomor_antrian > 100) {
+                                const split2 = nomor_antrian.toString().charAt(2);
+                                const audioNew = new Audio(
+                                    "{{ asset('assets/audio1/') }}/" + split2 +
+                                    ".wav");
+
+                                playAudio(audioNew, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            } else {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            }
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 110) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian == 111) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            });
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 120) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioBelas, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 130) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 120) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(2);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(endBell);
+                                                });
+                                        });
+                                    } else {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    }
+                                });
+                            })
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 130) {
+                const audioNew = new Audio("{{ asset('assets/audio1/3.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(audioNew, function() {
+                                playAudio(audioPuluh, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 140) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 130) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(2);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(endBell);
+                                                });
+                                        });
+                                    } else {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    }
+                                });
+                            })
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 140) {
+                const audioNew = new Audio("{{ asset('assets/audio1/4.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(audioNew, function() {
+                                playAudio(audioPuluh, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 150) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 140) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(2);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(endBell);
+                                                });
+                                        });
+                                    } else {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    }
+                                });
+                            })
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 150) {
+                const audioNew = new Audio("{{ asset('assets/audio1/5.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(audioNew, function() {
+                                playAudio(audioPuluh, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 160) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 150) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(2);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(endBell);
+                                                });
+                                        });
+                                    } else {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    }
+                                });
+                            })
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 160) {
+                const audioNew = new Audio("{{ asset('assets/audio1/6.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(audioNew, function() {
+                                playAudio(audioPuluh, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 170) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 160) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(2);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(endBell);
+                                                });
+                                        });
+                                    } else {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    }
+                                });
+                            })
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 170) {
+                const audioNew = new Audio("{{ asset('assets/audio1/7.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(audioNew, function() {
+                                playAudio(audioPuluh, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 180) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 170) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(2);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(endBell);
+                                                });
+                                        });
+                                    } else {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    }
+                                });
+                            })
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 180) {
+                const audioNew = new Audio("{{ asset('assets/audio1/8.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(audioNew, function() {
+                                playAudio(audioPuluh, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 190) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 180) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(2);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(endBell);
+                                                });
+                                        });
+                                    } else {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    }
+                                });
+                            })
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 190) {
+                const audioNew = new Audio("{{ asset('assets/audio1/9.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(audioNew, function() {
+                                playAudio(audioPuluh, function() {
+                                    playAudio(audioLoket, function() {
+                                        playAudio(endBell);
+                                    });
+                                });
+                            })
+                        });
+                    });
+                });
+            } else if (nomor_antrian < 200) {
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioRatus, function() {
+                            playAudio(number_antrian, function() {
+                                playAudio(audioPuluh, function() {
+                                    if (nomor_antrian > 190) {
+                                        const split2 = nomor_antrian.toString()
+                                            .charAt(2);
+                                        const audioNew = new Audio(
+                                            "{{ asset('assets/audio1/') }}/" +
+                                            split2 +
+                                            ".wav");
+                                        playAudio(audioNew, function() {
+                                            playAudio(audioLoket,
+                                                function() {
+                                                    playAudio(endBell);
+                                                });
+                                        });
+                                    } else {
+                                        playAudio(audioLoket, function() {
+                                            playAudio(endBell);
+                                        });
+                                    }
+                                });
+                            })
+                        })
+                    });
+                });
+            } else if (nomor_antrian == 200) {
+                const audioNew = new Audio("{{ asset('assets/audio1/2.wav') }}");
+                playAudio(startBell, function() {
+                    playAudio(audioNomorUrut, function() {
+                        playAudio(audioNew, function() {
+                            playAudio(ratusAudio, function() {
+                                playAudio(audioLoket, function() {
+                                    playAudio(endBell);
+                                });
+                            })
+                        });
+                    });
+                });
+            }
         }
 
         function startTime() {
@@ -388,7 +1196,7 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    nomorAntrianElement.textContent = data.kode + " " + data.nomor_antrian;
+                    nomorAntrianElement.textContent = data.kode + " - " + data.nomor_antrian;
                     namaPoli.textContent = data.nama_poli;
                     if (data.status == 1) {
                         const nomor_antrian = data.nomor_antrian;
@@ -401,8 +1209,28 @@
                     console.error(error);
                 });
         }
-        setInterval(updateDataAntrian, 10000);
+        setInterval(updateDataAntrian, 7000);
         updateDataAntrian();
+
+        const antrianObat = document.getElementById('nomor-antrian_obat');
+
+        function updateDataAntrianObat() {
+            fetch("/get-nomor-antrian-obat")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    antrianObat.textContent = data.nomor_antrian;
+                    if (data.status == 1) {
+                        const nomor_antrian = data.nomor_antrian;
+                        playAudioAntrianObat(nomor_antrian);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+        setInterval(updateDataAntrianObat, 7000);
+        updateDataAntrianObat();
     </script>
 </body>
 

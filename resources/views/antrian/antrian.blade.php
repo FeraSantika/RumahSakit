@@ -85,7 +85,8 @@
                                                     <form action="{{ route('antrian-updatestatus') }}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="id_poli" value="{{ $item->id_poli }}">
-                                                        <button onclick="submit()" type="submit" class="btn btn-success mb-2">Panggil</button>
+                                                        <button onclick="submit()" type="submit"
+                                                            class="btn btn-success mb-2">Panggil</button>
                                                     </form>
                             </div>
                             </td>
@@ -107,4 +108,3 @@
 
     </div>
 @endsection
-

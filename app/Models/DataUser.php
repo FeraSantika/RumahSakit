@@ -48,7 +48,7 @@ class DataUser extends Authenticatable
 
     public function poliakses()
     {
-        return $this->belongsTo(DataAksesPoli::class, 'id_user', 'User_id');
+        return $this->hasMany(DataAksesPoli::class, 'id_user', 'User_id');
     }
 
     public function isAdmin()

@@ -66,7 +66,10 @@ Route::get('/admin/register', [RegisterController::class, 'showRegisterForm'])->
 
 Route::get('/admin/home', [HomeController::class, 'index'])->name('admin.home');
 Route::get('/admin/home-apoteker', [HomeApotekerController::class, 'index'])->name('apoteker.home');
+Route::get('/admin/antrian-obat', [HomeApotekerController::class, 'antrian'])->name('apoteker.antrian');
+
 Route::get('/admin/home-dokter', [HomeDokterController::class, 'index'])->name('dokter.home');
+Route::get('/admin/antrian-dokter', [HomeDokterController::class, 'antrian'])->name('dokter.antrian');
 Route::get('/admin/home-kasir', [HomeKasirController::class, 'index'])->name('kasir.home');
 Route::get('/admin/home-resepsionis', [HomeResepsionisController::class, 'index'])->name('resepsionis.home');
 Route::get('/admin/home-analis-lab', [HomeAnalisLabController::class, 'index'])->name('analis-lab.home');
@@ -312,4 +315,7 @@ Route::get('/admin/antrian', [AntrianController::class, 'antrian'])->name('antri
 Route::post('/admin/antrian/update', [AntrianController::class, 'hitungantrian'])->name('antrian-update');
 Route::post('/admin/antrian/updatestatus', [AntrianController::class, 'ubahstatus'])->name('antrian-updatestatus');
 Route::get('/get-nomor-antrian', [AntrianController::class, 'getNomorAntrian'])->name('get-nomor-antrian');
+Route::post('/admin/antrian-obat/update', [AntrianController::class, 'hitungantrianobat'])->name('antrian_obat-update');
+Route::post('/admin/antrian-obat/updatestatus', [AntrianController::class, 'ubahstatusobat'])->name('antrian_obat-updatestatus');
+Route::get('/get-nomor-antrian-obat', [AntrianController::class, 'getNomorAntrianobat'])->name('get-nomor-antrian_obat');
 
