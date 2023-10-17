@@ -77,8 +77,10 @@
                     <ul class="navbar-nav">
                         <li class="nav-item d-none d-sm-inline-block">
                             <div class="flex-container">
-                                <img src="{{ 'data:image/png;base64,' . base64_encode(file_get_contents($rs->logo_rumahsakit)) }}"
-                                    alt="Logo" height="110" class="p-2">
+                                {{-- <img src="{{ 'data:image/png;base64,' . base64_encode(file_get_contents($rs->logo_rumahsakit)) }}"
+                                    alt="Logo" height="110" class="p-2"> --}}
+                                <img src="{{ asset($rs->logo_rumahsakit) }}"
+                                    class="rounded-circle avatar-lg img-thumbnail" alt="profile-image" width="100px">
                                 <div class="nav-link align-items-center">
                                     <h1 class="display-4">
                                         <b>{{ $rs->nama_rumahsakit }}</b>

@@ -20,7 +20,7 @@ class AntrianController extends Controller
         $today = now()->format('Y-m-d');
         $antrian = DataAntrian::orderBy('updated_at', 'desc')->whereDate('tanggal_antrian', $today)->with('poli')->first();
         $antrianobat = DataAntrianObat::orderBy('updated_at', 'desc')->whereDate('tanggal_antrian', $today)->first();
-        return view('antrian', compact('rs', 'antrian', 'antrianobat'));
+        return view('antrian.antrianView', compact('rs', 'antrian', 'antrianobat'));
     }
 
     public function antrian()
@@ -154,8 +154,8 @@ class AntrianController extends Controller
         $antrian = DataAntrian::orderBy('updated_at', 'desc')->whereDate('tanggal_antrian', $today)->with('poli')->first();
         $antrianobat = DataAntrianObat::orderBy('updated_at', 'desc')->whereDate('tanggal_antrian', $today)->first();
         $cetakantrianapotek = CetakDataAntrianObat::whereDate('tanggal_antrian', $today)->first();
-        
-        return view('cetakantrian', compact('rs', 'antrian', 'antrianobat', 'cetakantrianapotek'));
+
+        return view('antrian.cetakantrian', compact('rs', 'antrian', 'antrianobat', 'cetakantrianapotek'));
     }
 
     public function printAntrianDokter($id)
@@ -184,7 +184,7 @@ class AntrianController extends Controller
             $nomor_antrian = $antrian->nomor_antrian;
         }
         $nama_poli = DataPoli::where('id_poli', $id)->value('nama_poli');
-        return view('kartu-antrian', compact('rs', 'nama_poli', 'nomor_antrian'));
+        return view('antrian.kartu-antrian', compact('rs', 'nama_poli', 'nomor_antrian'));
     }
 
     public function printAntrianApotek($id)
@@ -218,7 +218,7 @@ class AntrianController extends Controller
         if (request()->wantsJson()) {
             return response()->json($rsData);
         } else {
-            return view('kartu-antrianApotek', compact('rs', 'nomor_antrian'));
+            return view('antrian.kartu-antrianApotek', compact('rs', 'nomor_antrian'));
         }
     }
 }

@@ -77,8 +77,10 @@
                     <ul class="navbar-nav">
                         <li class="nav-item d-none d-sm-inline-block">
                             <div class="flex-container">
-                                <img src="{{ 'data:image/png;base64,' . base64_encode(file_get_contents($rs->logo_rumahsakit)) }}"
-                                    alt="Logo" height="110" class="p-2">
+                                {{-- <img src="{{ 'data:image/png;base64,' . base64_encode(file_get_contents($rs->logo_rumahsakit)) }}"
+                                    alt="Logo" height="110" class="p-2"> --}}
+                                <img src="{{ asset($rs->logo_rumahsakit) }}"
+                                    class="rounded-circle avatar-lg img-thumbnail" alt="profile-image" width="100px">
                                 <div class="nav-link align-items-center">
                                     <h1 class="display-4">
                                         <b>{{ $rs->nama_rumahsakit }}</b>
@@ -209,7 +211,7 @@
                                 @else
                                     onclick="printantrianapotek(0)" @endif>
                                     <div class="card-body">
-                                        <h1>Apotek</h1>
+                                        <h1 class="mt-4">Apotek</h1>
                                     </div> <!-- end card-body-->
                                 </div>
                             </div>
@@ -340,51 +342,6 @@
                     console.error('Error:', error);
                 });
         }
-
-
-        // const nomorAntrianElement = document.getElementById('nomor-antrian');
-        // const namaPoli = document.getElementById('nama_poli');
-
-        // function updateDataAntrian() {
-        //     fetch("/get-nomor-antrian")
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log(data);
-        //             nomorAntrianElement.textContent = data.kode + " - " + data.nomor_antrian;
-        //             namaPoli.textContent = data.nama_poli;
-        //             if (data.status == 1) {
-        //                 const nomor_antrian = data.nomor_antrian;
-        //                 const nomor_loket = data.nama_poli;
-        //                 const kode_poli = data.kode;
-        //                 playAudioAntrian(kode_poli, nomor_antrian, nomor_loket);
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error(error);
-        //         });
-        // }
-        // setInterval(updateDataAntrian, 7000);
-        // updateDataAntrian();
-
-        // const antrianObat = document.getElementById('nomor-antrian_obat');
-
-        // function updateDataAntrianObat() {
-        //     fetch("/get-nomor-antrian-obat")
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log(data);
-        //             antrianObat.textContent = data.nomor_antrian;
-        //             if (data.status == 1) {
-        //                 const nomor_antrian = data.nomor_antrian;
-        //                 playAudioAntrianObat(nomor_antrian);
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error(error);
-        //         });
-        // }
-        // setInterval(updateDataAntrianObat, 7000);
-        // updateDataAntrianObat();
     </script>
 </body>
 

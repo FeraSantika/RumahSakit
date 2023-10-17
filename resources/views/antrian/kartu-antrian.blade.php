@@ -107,7 +107,7 @@
                                 <div class="d-flex align-items-center">
                                     <img src="{{ asset($rs->logo_rumahsakit) }}"
                                         class="rounded-circle avatar-lg img-thumbnail" alt="profile-image"
-                                        width="25px">
+                                        width="15px">
                                     <div class="ms-3 text-center">
                                         <h2>{{ $rs->nama_rumahsakit }}</h2>
                                         <h4>{{ $rs->alamat_rumahsakit }}|| {{ $rs->telp_rumahsakit }}||
@@ -132,7 +132,7 @@
                             <hr class="my-1">
                             <div class="card-footer"
                                 style="height: 130px; background-color: #14959a!important; color: #ffffff!important;">
-                                <h5>Tanggal : 16 Oktober 2023</h5>
+                                <h5 id="printDate" ></h5>
                                 <p>Simpan kartu antrian dengan baik, harap antri dan tunggu dengan tenang <i
                                         class="ri-emotion-line"></i></p>
                             </div>

@@ -215,7 +215,7 @@
                                             @foreach ($dtlistrujukan as $rujukan)
                                                 <tr id="row-{{ $rujukan->list_id }}">
                                                     <td>{{ $rujukan->lab->nama_lab }}</td>
-                                                    <td>{{$rujukan->tindakanlab->nama_tindakan}}</td>
+                                                    <td>{{ $rujukan->tindakanlab->nama_tindakan }}</td>
                                                     <td>{{ number_format($rujukan->tindakanlab->harga_tindakan, 0, ',', '.') }}
                                                     </td>
                                                 </tr>
@@ -276,65 +276,6 @@
 @endsection
 @section('script')
     <script type="text/javascript">
-        // function edit(list_id) {
-        //     var url = "{{ route('transaksi-obat.list.update') }}";
-        //     var currentStatus = $('#status-' + list_id).val();
-        //     var newData = {
-        //         'list_id': list_id,
-        //         'status': currentStatus,
-        //         '_token': $("meta[name='csrf-token']").attr("content")
-        //     }
-        //     $.ajax({
-        //         url: url,
-        //         type: "post",
-        //         dataType: "JSON",
-        //         data: newData,
-        //         success: function(response) {
-        //             Swal.fire({
-        //                 toast: true,
-        //                 position: 'top-end',
-        //                 icon: 'success',
-        //                 title: 'Data berhasil diubah',
-        //                 showConfirmButton: false,
-        //                 timer: 1500
-        //             });
-        //             $('#status-' + list_id).val(response.data.status);
-        //             console.log(response.data);
-        //         }
-        //     });
-        // }
-
-        // $(document).ready(function() {
-        //     $('form.comment-area-box').on('submit', function(event) {
-        //         event.preventDefault();
-
-        //         var form = $(this);
-        //         var url = form.attr('action');
-        //         var formData = form.serialize();
-
-        //         $.ajax({
-        //             type: 'POST',
-        //             url: url,
-        //             data: formData,
-        //             dataType: 'json',
-        //             success: function(response) {
-        //                 if (response.success) {
-        //                     $('#notification').html(
-        //                         '<div class="alert alert-success">Pengisian data diagnosa berhasil!</div>'
-        //                     );
-        //                     setTimeout(function() {
-        //                         window.location.href =
-        //                             "{{ route('transaksi-obat') }}";
-        //                     }, 250);
-        //                 } else {
-        //                     $('#notification').html('<div class="alert alert-danger">' +
-        //                         response.message + '</div>');
-        //                 }
-        //             }
-        //         });
-        //     });
-        // });
-
         const grandtotalInput = document.getElementById('grandtotal');
         const dibayarInput = document.getElementById('dibayar');
         const kembalianInput = document.getElementById('kembalian');

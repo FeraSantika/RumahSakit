@@ -132,7 +132,7 @@
                             <hr class="my-1">
                             <div class="card-footer"
                                 style="height: 130px; background-color: #14959a!important; color: #ffffff!important;">
-                                <h5>Tanggal : 16 Oktober 2023</h5>
+                                <h5 id="printDate"></h5>
                                 <p>Simpan kartu antrian dengan baik, harap antri dan tunggu dengan tenang <i
                                         class="ri-emotion-line"></i></p>
                             </div>
@@ -226,6 +226,18 @@
         @if (isset($url))
             window.open("{{ $url }}", "_blank");
         @endif
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var currentDate = new Date();
+            var options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            var formattedDate = currentDate.toLocaleDateString('id-ID', options);
+            document.getElementById("printDate").innerHTML = formattedDate;
+        });
     </script>
 
 </body>
