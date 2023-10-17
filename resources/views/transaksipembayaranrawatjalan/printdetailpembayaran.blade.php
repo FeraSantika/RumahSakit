@@ -159,7 +159,6 @@
                                             </table>
                                         </div>
 
-
                                         <div class="col-md-6">
                                             <table class="table-custom">
                                                 <tr>
@@ -184,9 +183,6 @@
                                                 </tr>
                                             </table>
                                         </div>
-                                        {{-- <div class="col-md-6"> --}}
-
-                                        {{-- </div> --}}
                                     </div>
                                     @endforeach
                                 </div>

@@ -32,7 +32,6 @@ class TransaksiPembayaranRawatJalanController extends Controller
     public function search(Request $request)
     {
         $searchTerm = $request->get('cari');
-
         $data = PendaftaranPasien::where('status_pemeriksaan', 'Tertangani')->where('status_obat', 'Tertangani')->with('pasien')
             ->where(function ($query) use ($searchTerm) {
                 $query->whereHas('pasien', function ($subquery) use ($searchTerm) {
@@ -40,7 +39,6 @@ class TransaksiPembayaranRawatJalanController extends Controller
                 });
             })
             ->get();
-
         return response()->json($data);
     }
 

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Laporan Obat Pasien Rawat Inap</title>
+    <title>Laporan Antrian Pasien Rawat Jalan</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,7 +53,8 @@
                         style="display: inline-block; vertical-align: middle; margin-right: 10px;">
                     <h1 style="display: inline-block; vertical-align: middle; margin-right: 10px;">
                         {{ $rs->nama_rumahsakit }}</h1>
-                    <h5 style="margin-bottom: 5px; margin-top: 2px">{{ $rs->alamat_rumahsakit }} || {{ $rs->telp_rumahsakit }} ||
+                    <h5 style="margin-bottom: 5px; margin-top: 2px">{{ $rs->alamat_rumahsakit }} ||
+                        {{ $rs->telp_rumahsakit }} ||
                         {{ $rs->email_rumahsakit }}</h5>
                     <hr class="my-1" style="height: 2px; background-color: black; width: 100%; margin: 5px 0;">
                     <hr class="my-1">
@@ -66,31 +67,27 @@
                     Data tanggal tidak diinputkan
                 @endif
             </p>
-            <p>Status Pasien :
-                @if (!empty($statusPasien))
-                    {{ $statusPasien }}
+            <p>Poli :
+                @if (!empty($pilihpoli))
+                    @foreach ($antrian as $item)
+                        {{ $item->poli->nama_poli }}
+                    @endforeach
                 @else
-                    Semua status
-                @endif
-            </p>
-            <p>Status Pemeriksaan :
-                @if (!empty($statusPemeriksaan))
-                    {{ $statusPemeriksaan }}
-                @else
-                    Semua pemeriksaan
+                    Semua poli
                 @endif
             </p>
         </div>
-        <h4>Laporan Obat Pasien Rawat Inap</h4>
+        <h4>Laporan Antrian Pasien Rawat Jalan</h4>
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th scope="col">Nama Obat</th>
-                        <th scope="col">Jumlah Terjual</th>
+                        <th scope="col">Tanggal</th>
+                        <th scope="col">Poli</th>
+                        <th scope="col">Jumlah Antrian</th>
                     </tr>
-                    @if ($dtobat->isEmpty())
+                    @if ($antrian->isEmpty())
                         <tr>
                             <th style="border-top: 1px solid #fff; border-bottom: 1px solid #fff;"></th>
                             <th style="border-top: 1px solid #000; border-bottom: 1px solid #fff;"></th>
@@ -99,20 +96,21 @@
                     @endif
                 </thead>
                 <tbody>
-                    @if ($dtobat->isEmpty())
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    @if ($antrian->isEmpty())
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     @endif
-                    @foreach ($dtobat as $item)
+                    @foreach ($antrian as $item)
                         <tr>
                             <td>
                                 {{ $loop->iteration }}
                             </td>
-                            <td>{{ $item->nama_obat }}</td>
-                            <td>{{ $item->total_qty }}</td>
+                            <td>{{ $item->tanggal_antrian }}</td>
+                            <td>{{ $item->poli->nama_poli }}</td>
+                            <td>{{ $item->nomor_antrian }}</td>
                         </tr>
                     @endforeach
                 </tbody>

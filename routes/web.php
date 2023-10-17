@@ -30,6 +30,8 @@ use App\Http\Controllers\TransaksiObatController;
 use App\Http\Controllers\HomeResepsionisController;
 use App\Http\Controllers\ListdaftarpasienController;
 use App\Http\Controllers\ListRujukanPasienController;
+use App\Http\Controllers\LaporanAntrianObatController;
+use App\Http\Controllers\LaporanAntrianDokterController;
 use App\Http\Controllers\LaporanObatRawatInapController;
 use App\Http\Controllers\ListdaftarpasienInapController;
 use App\Http\Controllers\LaporanHasilRawatInapController;
@@ -310,7 +312,10 @@ Route::delete('/admin/jadwal-dokter/destroy/{id}', [JadwalDokterController::clas
 Route::get('/autocomplete_jadwal-dokter', [JadwalDokterController::class, 'autocomplete'])->name('autocomplete_jadwal-dokter');
 Route::get('/search/jadwal-dokter', [JadwalDokterController::class, 'search'])->name('search.jadwal-dokter');
 
-Route::get('/antrian', [AntrianController::class, 'index'])->name('antrian.view');
+Route::get('/admin/antrianView', [AntrianController::class, 'index'])->name('antrian.view');
+Route::get('/admin/cetak-antrian', [AntrianController::class, 'cetakantrian'])->name('cetak-antrian.view');
+Route::post('/admin/cetak-antrian/dokter/{id}', [AntrianController::class, 'printAntrianDokter'])->name('cetak-antrian.Dokter');
+Route::post('/admin/cetak-antrian/apotek/{id}', [AntrianController::class, 'printAntrianApotek'])->name('cetak-antrian.Apotek');
 Route::get('/admin/antrian', [AntrianController::class, 'antrian'])->name('antrian');
 Route::post('/admin/antrian/update', [AntrianController::class, 'hitungantrian'])->name('antrian-update');
 Route::post('/admin/antrian/updatestatus', [AntrianController::class, 'ubahstatus'])->name('antrian-updatestatus');
@@ -319,3 +324,12 @@ Route::post('/admin/antrian-obat/update', [AntrianController::class, 'hitungantr
 Route::post('/admin/antrian-obat/updatestatus', [AntrianController::class, 'ubahstatusobat'])->name('antrian_obat-updatestatus');
 Route::get('/get-nomor-antrian-obat', [AntrianController::class, 'getNomorAntrianobat'])->name('get-nomor-antrian_obat');
 
+Route::get('/admin/laporan-antriandokter', [LaporanAntrianDokterController::class, 'index'])->name('laporan-antriandokter');
+Route::get('/admin/laporan-antriandokter/get_data', [LaporanAntrianDokterController::class, 'getDataByDate'])->name('laporan-antriandokter.get_data');
+Route::get('/admin/laporan-antriandokter/export-pdf', [LaporanAntrianDokterController::class, 'exportPDF'])->name('laporan-antriandokter.export-pdf');
+Route::get('/admin/laporan-antriandokter/export-excel', [LaporanAntrianDokterController::class, 'exportExcel'])->name('laporan-antriandokter.export-excel');
+
+Route::get('/admin/laporan-antrianobat', [LaporanAntrianObatController::class, 'index'])->name('laporan-antrianobat');
+Route::get('/admin/laporan-antrianobat/get_data', [LaporanAntrianObatController::class, 'getDataByDate'])->name('laporan-antrianobat.get_data');
+Route::get('/admin/laporan-antrianobat/export-pdf', [LaporanAntrianObatController::class, 'exportPDF'])->name('laporan-antrianobat.export-pdf');
+Route::get('/admin/laporan-antrianobat/export-excel', [LaporanAntrianObatController::class, 'exportExcel'])->name('laporan-antrianobat.export-excel');

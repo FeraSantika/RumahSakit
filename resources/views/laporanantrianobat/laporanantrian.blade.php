@@ -12,13 +12,12 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Laporan Obat</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Laporan Obat Pasien Rawat
-                                        Inap</a>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Laporan Antrian</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Laporan Antrian Apoteker</a>
                                 </li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Laporan Obat Pasien Rawat Inap</h4>
+                        <h4 class="page-title">Laporan Antrian Apoteker</h4>
                     </div>
                 </div>
             </div>
@@ -39,23 +38,6 @@
                                         <input type="date" id="tanggalAkhir" name="tanggalAkhir" class="form-control">
                                     </div>
                                     <div class="col-md-2">
-                                        <label for="statusPasien" class="form-label form-inline">Status Pasien :</label>
-                                        <select id="statusPasien" name="statusPasien" class="form-control">
-                                            <option value="">Pilih Status Pasien</option>
-                                            <option value="BPJS">BPJS</option>
-                                            <option value="Umum">Umum</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label for="statusPemeriksaan" class="form-label form-inline">Status Pemeriksaan
-                                            :</label>
-                                        <select id="statusPemeriksaan" name="statusPemeriksaan" class="form-control">
-                                            <option value="">Pilih Status Pemeriksaan</option>
-                                            <option value="Tertangani">Tertangani</option>
-                                            <option value="Belum tertangani">Belum tertangani</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
                                         <label for=""></label>
                                         <button type="button" class="btn btn-success"
                                             onclick="tampilkanData()">Filter</button>
@@ -72,23 +54,23 @@
 
                             <div class="card-body pt-0">
                                 <div class="table-responsive">
-                                    <table class="table table-centered table-nowrap mb-0" id="tabelobat">
+                                    <table class="table table-centered table-nowrap mb-0" id="tabelantrian">
                                         <thead>
                                             <tr>
                                                 <th scope="col">No.</th>
-                                                <th scope="col">Nama Obat</th>
-                                                <th scope="col">Jumlah Terjual</th>
+                                                <th scope="col">Tanggal</th>
+                                                <th scope="col">Jumlah Antrian</th>
                                             </tr>
                                         </thead>
                                         <tbody id="datarawatjalan">
                                             @php
                                                 $rowNumber = 1;
                                             @endphp
-                                            @foreach ($dtobat as $item)
+                                            @foreach ($dtantrian as $antrian)
                                                 <tr>
                                                     <td>{{ $rowNumber }}</td>
-                                                    <td>{{ $item->nama_obat }}</td>
-                                                    <td>{{ $item->total_qty }}</td>
+                                                    <td>{{ $antrian->tanggal_antrian }}</td>
+                                                    <td>{{ $antrian->nomor_antrian }}</td>
                                                 </tr>
                                                 @php
                                                     $rowNumber++;
@@ -102,7 +84,7 @@
                     </div> <!-- end card-->
                     <div class="mt-3 text-center">
                         <div class="pagination">
-                            {{ $dtobat->links('pagination::bootstrap-4') }}
+                            {{-- {{ $dtobat->links('pagination::bootstrap-4') }} --}}
                         </div>
                     </div>
                 </div> <!-- end col -->
@@ -118,14 +100,11 @@
         function tampilkanData() {
             const tanggalAwal = $("#tanggalAwal").val();
             const tanggalAkhir = $("#tanggalAkhir").val();
-            const statusPasien = $("#statusPasien").val();
-            const statusPemeriksaan = $("#statusPemeriksaan").val();
 
-            const hasilData = document.getElementById('tabelobat');
+            const hasilData = document.getElementById('tabelantrian');
             hasilData.innerHTML = '';
 
-            const url = `/admin/laporan-obatInap/get_data?tanggalAwal=${tanggalAwal}&tanggalAkhir=${tanggalAkhir}
-            &statusPasien=${statusPasien}&statusPemeriksaan=${statusPemeriksaan}`;
+            const url = `/admin/laporan-antrianobat/get_data?tanggalAwal=${tanggalAwal}&tanggalAkhir=${tanggalAkhir}`;
             fetch(url)
                 .then(response => response.json())
                 .then(dataTerfilter => {
@@ -133,8 +112,8 @@
                         let tableHTML = '<table class="table table-centered w-100 dt-responsive nowrap">';
                         tableHTML += '<thead>';
                         tableHTML += '<tr>';
-                        tableHTML += '<th>Nama Obat</th>';
-                        tableHTML += '<th>Jumlah Terjual</th>';
+                        tableHTML += '<th>Tanggal</th>';
+                        tableHTML += '<th>Jumlah Antrian</th>';
                         tableHTML += '</tr>';
                         tableHTML += '</thead>';
                         tableHTML += '<tbody>';
@@ -142,8 +121,8 @@
                         dataTerfilter.forEach(item => {
                             console.log(item)
                             tableHTML += '<tr>';
-                            tableHTML += `<td>${item.nama_obat}</td>`;
-                            tableHTML += `<td>${item.total_qty}</td>`;
+                            tableHTML += `<td>${item.tanggal_antrian}</td>`;
+                            tableHTML += `<td>${item.nomor_antrian}</td>`;
                             tableHTML += `<td></td>`;
                             tableHTML += '</tr>';
                         });
@@ -172,20 +151,10 @@
         function exportPDFWithDates() {
             var tanggalAwal = document.getElementById('tanggalAwal').value;
             var tanggalAkhir = document.getElementById('tanggalAkhir').value;
-            const statusPasien = $("#statusPasien").val();
-            const statusPemeriksaan = $("#statusPemeriksaan").val();
 
-            var pdfURL = "{{ route('laporan-obatInap.export-pdf') }}" + "?tanggalAwal=" + tanggalAwal +
+            var pdfURL = "{{ route('laporan-antrianobat.export-pdf') }}" + "?tanggalAwal=" + tanggalAwal +
                 "&tanggalAkhir=" +
                 tanggalAkhir;
-
-            if (statusPasien) {
-                pdfURL += "&statusPasien=" + statusPasien;
-            }
-
-            if (statusPemeriksaan) {
-                pdfURL += "&statusPemeriksaan=" + statusPemeriksaan;
-            }
 
             window.location.href = pdfURL;
         }
@@ -193,19 +162,9 @@
         function exportExcel() {
             var tanggalAwal = document.getElementById('tanggalAwal').value;
             var tanggalAkhir = document.getElementById('tanggalAkhir').value;
-            const statusPasien = $("#statusPasien").val();
-            const statusPemeriksaan = $("#statusPemeriksaan").val();
 
-            var excelURL = "{{ route('laporan-obatInap.export-excel') }}" + "?tanggalAwal=" + tanggalAwal +
+            var excelURL = "{{ route('laporan-antrianobat.export-excel') }}" + "?tanggalAwal=" + tanggalAwal +
                 "&tanggalAkhir=" + tanggalAkhir;
-
-            if (statusPasien) {
-                excelURL += "&statusPasien=" + statusPasien;
-            }
-
-            if (statusPemeriksaan) {
-                excelURL += "&statusPemeriksaan=" + statusPemeriksaan;
-            }
 
             window.location.href = excelURL;
         }

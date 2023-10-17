@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Laporan Obat Pasien Rawat Inap</title>
+    <title>Laporan Antrian Apotek</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,31 +66,17 @@
                     Data tanggal tidak diinputkan
                 @endif
             </p>
-            <p>Status Pasien :
-                @if (!empty($statusPasien))
-                    {{ $statusPasien }}
-                @else
-                    Semua status
-                @endif
-            </p>
-            <p>Status Pemeriksaan :
-                @if (!empty($statusPemeriksaan))
-                    {{ $statusPemeriksaan }}
-                @else
-                    Semua pemeriksaan
-                @endif
-            </p>
         </div>
-        <h4>Laporan Obat Pasien Rawat Inap</h4>
+        <h4>Laporan Antrian Apotek</h4>
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th scope="col">Nama Obat</th>
-                        <th scope="col">Jumlah Terjual</th>
+                        <th scope="col">Tanggal</th>
+                        <th scope="col">Jumlah Antrian</th>
                     </tr>
-                    @if ($dtobat->isEmpty())
+                    @if ($dtantrian->isEmpty())
                         <tr>
                             <th style="border-top: 1px solid #fff; border-bottom: 1px solid #fff;"></th>
                             <th style="border-top: 1px solid #000; border-bottom: 1px solid #fff;"></th>
@@ -99,20 +85,20 @@
                     @endif
                 </thead>
                 <tbody>
-                    @if ($dtobat->isEmpty())
+                    @if ($dtantrian->isEmpty())
                     <tr>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     @endif
-                    @foreach ($dtobat as $item)
+                    @foreach ($dtantrian as $item)
                         <tr>
                             <td>
                                 {{ $loop->iteration }}
                             </td>
-                            <td>{{ $item->nama_obat }}</td>
-                            <td>{{ $item->total_qty }}</td>
+                            <td>{{ $item->tanggal_antrian }}</td>
+                            <td>{{ $item->nomor_antrian }}</td>
                         </tr>
                     @endforeach
                 </tbody>

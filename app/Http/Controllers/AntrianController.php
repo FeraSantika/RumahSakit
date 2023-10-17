@@ -6,9 +6,11 @@ use App\Models\DataMenu;
 use App\Models\DataPoli;
 use App\Models\RumahSakit;
 use App\Models\DataAntrian;
-use App\Models\DataAntrianObat;
 use App\Models\DataRoleMenu;
 use Illuminate\Http\Request;
+use App\Models\DataAntrianObat;
+use App\Models\CetakDataAntrian;
+use App\Models\CetakDataAntrianObat;
 
 class AntrianController extends Controller
 {
@@ -18,7 +20,6 @@ class AntrianController extends Controller
         $today = now()->format('Y-m-d');
         $antrian = DataAntrian::orderBy('updated_at', 'desc')->whereDate('tanggal_antrian', $today)->with('poli')->first();
         $antrianobat = DataAntrianObat::orderBy('updated_at', 'desc')->whereDate('tanggal_antrian', $today)->first();
-        // dd($antrian);
         return view('antrian', compact('rs', 'antrian', 'antrianobat'));
     }
 
@@ -144,5 +145,80 @@ class AntrianController extends Controller
             'nomor_antrian' => $nomor_antrian,
             'status' => $dataAntrian->status_antrian,
         ]);
+    }
+
+    public function cetakantrian()
+    {
+        $rs = RumahSakit::first();
+        $today = now()->format('Y-m-d');
+        $antrian = DataAntrian::orderBy('updated_at', 'desc')->whereDate('tanggal_antrian', $today)->with('poli')->first();
+        $antrianobat = DataAntrianObat::orderBy('updated_at', 'desc')->whereDate('tanggal_antrian', $today)->first();
+        $cetakantrianapotek = CetakDataAntrianObat::whereDate('tanggal_antrian', $today)->first();
+        
+        return view('cetakantrian', compact('rs', 'antrian', 'antrianobat', 'cetakantrianapotek'));
+    }
+
+    public function printAntrianDokter($id)
+    {
+        $rs = RumahSakit::first();
+        $today = now()->format('Y-m-d');
+
+        $antrian = CetakDataAntrian::orderBy('updated_at', 'desc')
+            ->whereDate('tanggal_antrian', $today)
+            ->where('id_poli', $id)
+            ->with('poli')
+            ->first();
+
+        if (!$antrian) {
+            $nomorantrian = CetakDataAntrian::create([
+                'id_poli' => $id,
+                'nomor_antrian' => 1,
+                'tanggal_antrian' => now(),
+            ]);
+            $nomor_antrian = $nomorantrian->nomor_antrian;
+        } else {
+            $antrian->where('id_poli', $id)->update([
+                'nomor_antrian' => $antrian->nomor_antrian + 1,
+                'tanggal_antrian' => now(),
+            ]);
+            $nomor_antrian = $antrian->nomor_antrian;
+        }
+        $nama_poli = DataPoli::where('id_poli', $id)->value('nama_poli');
+        return view('kartu-antrian', compact('rs', 'nama_poli', 'nomor_antrian'));
+    }
+
+    public function printAntrianApotek($id)
+    {
+        $rs = RumahSakit::first();
+        $today = now()->format('Y-m-d');
+        $antrian = CetakDataAntrianObat::whereDate('tanggal_antrian', $today)->first();
+
+        if ($antrian) {
+            $antrian->where('id_antrian', $id)->update([
+                'nomor_antrian' => $antrian->nomor_antrian + 1,
+                'tanggal_antrian' => now(),
+            ]);
+            $nomor_antrian = $antrian->nomor_antrian;
+            $id_antrian = $antrian->id_antrian;
+        } else {
+            $antrianBaru = CetakDataAntrianObat::create([
+                'nomor_antrian' => 1,
+                'tanggal_antrian' => now(),
+            ]);
+            $nomor_antrian = $antrianBaru->nomor_antrian;
+            $id_antrian = $antrianBaru->id_antrian;
+        }
+
+        $rsData = [
+            'rs' => $rs,
+            'nomor_antrian' => $nomor_antrian,
+            'id_antrian' => $id_antrian,
+        ];
+
+        if (request()->wantsJson()) {
+            return response()->json($rsData);
+        } else {
+            return view('kartu-antrianApotek', compact('rs', 'nomor_antrian'));
+        }
     }
 }
