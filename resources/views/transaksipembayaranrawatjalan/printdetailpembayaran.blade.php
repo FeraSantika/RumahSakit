@@ -109,7 +109,7 @@
                                 <div class="d-flex align-items-center">
                                     <img src="{{ asset($rs->logo_rumahsakit) }}"
                                         class="rounded-circle avatar-lg img-thumbnail" alt="profile-image"
-                                        width="25px">
+                                        width="15px">
                                     <div class="ms-3 text-center">
                                         <h2>{{ $rs->nama_rumahsakit }}</h2>
                                         <h6>{{ $rs->alamat_rumahsakit }}|| {{ $rs->telp_rumahsakit }}||

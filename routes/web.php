@@ -25,6 +25,7 @@ use App\Http\Controllers\TindakanLabController;
 use App\Http\Controllers\HomeApotekerController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CekRiwayatPasienController;
 use App\Http\Controllers\HomeAnalisLabController;
 use App\Http\Controllers\TransaksiObatController;
 use App\Http\Controllers\HomeResepsionisController;
@@ -41,7 +42,9 @@ use App\Http\Controllers\PendaftaranPasienInapController;
 use App\Http\Controllers\LaporanHasilRawatJalanController;
 use App\Http\Controllers\LaporanPasienRawatInapController;
 use App\Http\Controllers\PendaftaranPasienJalanController;
+use App\Http\Controllers\LaporanKartuAntrianObatController;
 use App\Http\Controllers\LaporanPasienRawatJalanController;
+use App\Http\Controllers\LaporanKartuAntrianDokterController;
 use App\Http\Controllers\TransaksiPembayaranRawatInapController;
 use App\Http\Controllers\TransaksiPembayaranRawatJalanController;
 
@@ -333,3 +336,15 @@ Route::get('/admin/laporan-antrianobat', [LaporanAntrianObatController::class, '
 Route::get('/admin/laporan-antrianobat/get_data', [LaporanAntrianObatController::class, 'getDataByDate'])->name('laporan-antrianobat.get_data');
 Route::get('/admin/laporan-antrianobat/export-pdf', [LaporanAntrianObatController::class, 'exportPDF'])->name('laporan-antrianobat.export-pdf');
 Route::get('/admin/laporan-antrianobat/export-excel', [LaporanAntrianObatController::class, 'exportExcel'])->name('laporan-antrianobat.export-excel');
+
+Route::get('/admin/laporan-kartuantriandokter', [LaporanKartuAntrianDokterController::class, 'index'])->name('laporan-kartuantriandokter');
+Route::get('/admin/laporan-kartuantriandokter/get_data', [LaporanKartuAntrianDokterController::class, 'getDataByDate'])->name('laporan-kartuantriandokter.get_data');
+Route::get('/admin/laporan-kartuantriandokter/export-pdf', [LaporanKartuAntrianDokterController::class, 'exportPDF'])->name('laporan-kartuantriandokter.export-pdf');
+Route::get('/admin/laporan-kartuantriandokter/export-excel', [LaporanKartuAntrianDokterController::class, 'exportExcel'])->name('laporan-kartuantriandokter.export-excel');
+
+Route::get('/admin/laporan-kartuantrianobat', [LaporanKartuAntrianObatController::class, 'index'])->name('laporan-kartuantrianobat');
+Route::get('/admin/laporan-kartuantrianobat/get_data', [LaporanKartuAntrianObatController::class, 'getDataByDate'])->name('laporan-kartuantrianobat.get_data');
+Route::get('/admin/laporan-kartuantrianobat/export-pdf', [LaporanKartuAntrianObatController::class, 'exportPDF'])->name('laporan-kartuantrianobat.export-pdf');
+Route::get('/admin/laporan-kartuantrianobat/export-excel', [LaporanKartuAntrianObatController::class, 'exportExcel'])->name('laporan-kartuantrianobat.export-excel');
+
+Route::get('/admin/cek-riwayatmedispasien', [CekRiwayatPasienController::class, 'index'])->name('cek-riwayatmedispasien');

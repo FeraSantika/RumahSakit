@@ -46,12 +46,8 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    {{-- <link href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui-min.css" rel="stylesheet">
-<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script> --}}
-
     <!-- Theme Config Js -->
     <script src="{{ asset('assets/js/hyper-config.js') }}"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> --}}
 
     <style>
         .user-photo-frame {
@@ -99,8 +95,7 @@
                             {{-- <h4 class="page-title">Detail Pembayaran</h4> --}}
                         </div>
                     </div>
-                </div>
-                <!-- end page title -->
+                </div><!-- end page title -->
 
                 <div class="row">
                     <div class="col-xl-8 col-lg-10">
@@ -109,7 +104,7 @@
                                 <div class="d-flex align-items-center">
                                     <img src="{{ asset($rs->logo_rumahsakit) }}"
                                         class="rounded-circle avatar-lg img-thumbnail" alt="profile-image"
-                                        width="25px">
+                                        width="15px">
                                     <div class="ms-3 text-center">
                                         <h2>{{ $rs->nama_rumahsakit }}</h2>
                                         <h6>{{ $rs->alamat_rumahsakit }}|| {{ $rs->telp_rumahsakit }}||
@@ -159,7 +154,6 @@
                                             </table>
                                         </div>
 
-
                                         <div class="col-md-6">
                                             <table class="table-custom">
                                                 <tr>
@@ -183,8 +177,7 @@
                                                     <td> : {{ $pendaftar->pasien->pasien_agama }}</td>
                                                 </tr>
                                             </table>
-                                        </div>
-                                        {{-- <div class="col-md-6"> --}}
+                                        </div>{{-- <div class="col-md-6"> --}}
 
                                         {{-- </div> --}}
                                     </div>
@@ -449,7 +442,6 @@
 
                                     $grandtotal = $totalhargaKamar + $totalhargaObat + $totalhargaTindakan + $totalhargaRujukan;
                                 @endphp
-
                                 <div class="tab-content mb-1">
                                     <table class="table">
                                         <tbody>
@@ -485,7 +477,6 @@
                                                 </tr>
                                             @endforeach
                                         </tbody>
-
                                     </table>
                                 </div>
                             </div>{{-- end car-body --}}
@@ -501,7 +492,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div> <!-- end tab-content -->
                     </div> <!-- end card body -->
                 </div> <!-- end card -->
