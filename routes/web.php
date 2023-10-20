@@ -348,3 +348,4 @@ Route::get('/admin/laporan-kartuantrianobat/export-pdf', [LaporanKartuAntrianOba
 Route::get('/admin/laporan-kartuantrianobat/export-excel', [LaporanKartuAntrianObatController::class, 'exportExcel'])->name('laporan-kartuantrianobat.export-excel');
 
 Route::get('/admin/cek-riwayatmedispasien', [CekRiwayatPasienController::class, 'index'])->name('cek-riwayatmedispasien');
+Route::post('/admin/cari-riwayatmedispasien', [CekRiwayatPasienController::class, 'cari'])->name('cari-riwayatmedispasien');

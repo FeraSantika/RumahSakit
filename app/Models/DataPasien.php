@@ -24,16 +24,6 @@ class DataPasien extends Model
         'pasien_kewarganegaraan',
     ];
 
-    // public function daftarobat()
-    // {
-    //     return $this->belongsTo(ListDaftarObat::class, 'pasien_kode','kode_pasien');
-    // }
-
-    // public function daftartindakan()
-    // {
-    //     return $this->belongsTo(ListDaftarTindakan::class, 'pasien_kode','kode_pasien');
-    // }
-
     public function daftar()
     {
         return $this->hasMany(PendaftaranPasien::class,'pasien_id', 'id_pasien');

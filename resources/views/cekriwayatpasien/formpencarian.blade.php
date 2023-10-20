@@ -24,8 +24,8 @@
                                 </p>
                             </div>
 
-                            {{-- <form method="POST" action="{{ route('Login') }}">
-                                @csrf --}}
+                            <form method="POST" action="{{ route('cari-riwayatmedispasien') }}">
+                                @csrf
                             <div class="mb-3">
                                 <label for="nik" class="form-label">NIK</label>
                                 <input class="form-control" name="nik" type="text" id="nik" required=""
@@ -35,19 +35,18 @@
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label">Tanggal Lahir</label>
                                 <div class="input-group input-group-merge">
-                                    <input class="form-control" name="nik" type="date" id="nik" required=""
+                                    <input class="form-control" name="tanggal" type="date" id="tanggal" required=""
                                         placeholder="Tanggal lahir">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-3 mb-0 text-center">
+                        <div class="mb-3 mb-5 text-center">
                             <button class="btn btn-primary"
-                                style="background-color: #14959a!important; color: #ffffff!important;" type="submit"> Log
-                                In </button>
+                                style="background-color: #14959a!important; color: #ffffff!important;" type="submit">Cari</button>
                         </div>
 
-                        {{-- </form> --}}
+                        </form>
                     </div>
                 </div>
             </div> <!-- end col -->
